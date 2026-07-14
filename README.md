@@ -320,7 +320,7 @@ sequenceDiagram
     BFF->>API: HTTP request with Authorization header
     API->>API: Validate JWT (RS256, JWKS) — shared/auth.py
     API->>API: require_engagement_member() — re-check membership in DB
-    API->>PG: SET app.current_user_id; run query
+    API->>PG: SET app.current_user_id, then run query
     PG-->>API: RLS-filtered rows only
     API-->>BFF: JSON response
     BFF-->>Web: JSON response
