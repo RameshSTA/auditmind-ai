@@ -1,0 +1,241 @@
+# Local development and CI integration-test environment only — never a deployment target
+# (Phase 12 §2). Runs the same container image apps/api/Dockerfile builds for production.
+#
+# Neo4j became load-bearing in Increment 09 (Knowledge Graph) — the `api` service's
+# AUDITMIND_NEO4J_* env vars below point it at this container by service hostname, not localhost.
+# Postgres is load-bearing as of Increment 02 (Identity & Access): the `migrate` service applies
+# every schema migration before `api` is allowed to start. Increment 03 (Ingestion) adds a
+# `blob_storage` volume — the local-filesystem stand-in for Azure Blob Storage
+# (`ingestion/infrastructure/local_blob_storage.py`) needs to persist uploaded evidence across
+# container restarts the same way Postgres's data does. Increment 13 (Observability) adds
+# `otel-collector`/`prometheus`/`grafana` — `api` pushes traces/metrics to the Collector via OTLP
+# (Phase 10 §5's "services never talk to Prometheus... directly"), which forwards metrics to
+# Prometheus over remote-write (§6); Grafana (§7) is pre-provisioned with a datasource and
+# dashboard so `docker compose up` gives a working dashboard with no manual clicking. Increment 12
+# (Agent Orchestration) adds `agent-migrate`/`agent-orchestrator` — a second, independently
+# deployable service (ADR-001) sharing this same Postgres instance under its own schema/migration
+# history, built from services/agent-orchestrator/Dockerfile rather than apps/api/Dockerfile.
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    environment:
+      # This is the migration/admin role (Phase 11 §7/§8) — the running API never connects as
+      # this user. See the `api` service below for the least-privilege `auditmind_app` role it
+      # actually uses, which the `migrate` step creates.
+      POSTGRES_USER: auditmind
+      POSTGRES_PASSWORD: auditmind_local_dev_only
+      POSTGRES_DB: auditmind
+    ports:
+      # Host-side port only; container-to-container traffic still uses the `postgres` hostname on
+      # 5432. Remapped from 5432 because this dev machine already runs a native PostgreSQL 18
+      # service on that port.
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U auditmind"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  neo4j:
+    image: neo4j:5-community
+    environment:
+      NEO4J_AUTH: neo4j/auditmind_local_dev_only
+    ports:
+      - "7474:7474" # browser UI
+      - "7687:7687" # bolt
+    volumes:
+      - neo4j_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:7474 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  migrate:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+    environment:
+      AUDITMIND_MIGRATION_DATABASE_URL: "postgresql+asyncpg://auditmind:auditmind_local_dev_only@postgres:5432/auditmind"
+      AUDITMIND_APP_DB_PASSWORD: "auditmind_app_local_dev_only"
+    # Overriding `entrypoint` replaces apps/api/Dockerfile's ENTRYPOINT (docker-entrypoint.py)
+    # outright, so this service never runs it and never gets a free ride to non-root — this
+    # `user:` is what keeps it off root instead. It doesn't need the entrypoint script's chown
+    # logic anyway: `migrate` never mounts /data/blobs.
+    entrypoint: ["alembic"]
+    command: ["upgrade", "head"]
+    user: "1000:1000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  agent-migrate:
+    # Agent Orchestration's own migration (Increment 12, ADR-001 separate deployable) — a distinct
+    # step from `migrate` above because it is a distinct Alembic history against a distinct
+    # version table (`agent_orchestrator_alembic_version`, see migrations/env.py's own comment for
+    # why sharing apps/api's `alembic_version` table breaks both services' `upgrade head`).
+    # `depends_on: migrate: service_completed_successfully` matters beyond ordering syntax: this
+    # migration's DDL declares real FOREIGN KEY constraints into `identity.users`/
+    # `identity.engagements`, which only exist once apps/api's own identity migration has run.
+    build:
+      context: ./services/agent-orchestrator
+      dockerfile: Dockerfile
+    environment:
+      AGENT_MIGRATION_DATABASE_URL: "postgresql+asyncpg://auditmind:auditmind_local_dev_only@postgres:5432/auditmind"
+    entrypoint: ["alembic"]
+    command: ["upgrade", "head"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+  agent-orchestrator:
+    build:
+      context: ./services/agent-orchestrator
+      dockerfile: Dockerfile
+    environment:
+      AGENT_ENVIRONMENT: dev
+      AGENT_LOG_LEVEL: INFO
+      # Same "unset in local dev, set to exercise auth" posture apps/api's ENTRA_* vars document
+      # above — this service validates the identical platform-wide Entra tenant's tokens
+      # (shared/auth.py), just as its own, separately-configured settings (ADR-001).
+      AGENT_ENTRA_TENANT_ID: ""
+      AGENT_ENTRA_CLIENT_ID: ""
+      AGENT_ENTRA_ISSUER: ""
+      AGENT_ENTRA_JWKS_URI: ""
+      # The same least-privilege `auditmind_app` role apps/api's `api` service connects as —
+      # `agent-migrate` (above) grants it access to the `agent` schema; RLS on `agent.*` only
+      # actually constrains this role, never the migration/admin role (Phase 11 §7/§8).
+      AGENT_DATABASE_HOST: postgres
+      AGENT_DATABASE_PORT: "5432"
+      AGENT_DATABASE_NAME: auditmind
+      AGENT_DATABASE_APP_USER: auditmind_app
+      AGENT_DATABASE_APP_PASSWORD: "auditmind_app_local_dev_only"
+      # The RAG tool client (infrastructure/api_client.py) — real hybrid_search/
+      # submit_finding_draft calls into apps/api, forwarding the caller's own bearer token.
+      # `api` (not `localhost`) because both services run in this compose network.
+      AGENT_CORE_API_BASE_URL: "http://api:8000"
+      # ADR-005 defaults to Anthropic's Claude (ANTHROPIC_API_KEY); this environment routes the
+      # LiteLLM gateway to OpenAI instead (config/litellm.yaml's header explains the swap), using
+      # whatever key is in the shell/`.env` at `docker compose up` time. `${OPENAI_API_KEY}` is a
+      # reference, never the value — the real key lives only in the gitignored root `.env` file
+      # (never committed) or the invoking shell's environment. Unset, the service still starts and
+      # every non-LLM step of a run still works; the first model call raises a typed 503.
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+    ports:
+      - "8001:8000" # 8000 is apps/api's port — this is the second HTTP service in this stack.
+    depends_on:
+      postgres:
+        condition: service_healthy
+      agent-migrate:
+        condition: service_completed_successfully
+
+  api:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+    environment:
+      AUDITMIND_ENVIRONMENT: dev
+      AUDITMIND_LOG_LEVEL: INFO
+      # Entra ID values are left empty on purpose in local dev — this increment's auth middleware
+      # requires them to be set to validate tokens; unset them to develop against /healthz and
+      # /readyz only, or set them to point at a real (or emulated) Entra tenant to exercise auth.
+      AUDITMIND_ENTRA_TENANT_ID: ""
+      AUDITMIND_ENTRA_CLIENT_ID: ""
+      AUDITMIND_ENTRA_ISSUER: ""
+      AUDITMIND_ENTRA_JWKS_URI: ""
+      # The least-privilege role `migrate` (above) creates and grants — never the superuser
+      # `auditmind` role Postgres itself is configured with (Phase 11 §7/§8).
+      AUDITMIND_DATABASE_HOST: postgres
+      AUDITMIND_DATABASE_PORT: "5432"
+      AUDITMIND_DATABASE_NAME: auditmind
+      AUDITMIND_DATABASE_APP_USER: auditmind_app
+      AUDITMIND_DATABASE_APP_PASSWORD: "auditmind_app_local_dev_only"
+      # Knowledge Graph context (Increment 09, Phase 4 §3) — `neo4j`, not `localhost`, is the
+      # right hostname here: container-to-container traffic on the compose network, the same
+      # `postgres`-not-`localhost` pattern the database settings above already use.
+      AUDITMIND_NEO4J_URI: "bolt://neo4j:7687"
+      AUDITMIND_NEO4J_USER: neo4j
+      AUDITMIND_NEO4J_PASSWORD: "auditmind_local_dev_only"
+      # Local filesystem stand-in for Azure Blob Storage (Increment 03, Phase 6 §1) — mounted as
+      # a named volume below so uploaded evidence survives a container restart, the same
+      # guarantee `postgres_data` gives the database.
+      AUDITMIND_BLOB_STORAGE_ROOT: /data/blobs
+      # Observability (Increment 13, Phase 10 §5) — `otel-collector`, not `localhost`, same
+      # container-to-container hostname convention as postgres/neo4j above.
+      AUDITMIND_OTEL_EXPORTER_ENDPOINT: "otel-collector:4317"
+    volumes:
+      - blob_storage:/data/blobs
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      neo4j:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+      otel-collector:
+        condition: service_started
+
+  otel-collector:
+    # `-contrib`, not the core image — the `prometheusremotewrite` exporter this config uses
+    # isn't in the core distribution (Phase 10 §6's remote-write choice needs it). Pinned to
+    # 0.156.0, not the originally-tried 0.116.0 — that older tag's arm64 manifest is broken
+    # (confirmed directly: `docker run otel/opentelemetry-collector-contrib:0.116.0 --version`
+    # fails with `exec /otelcol-contrib: no such file or directory` even with no config/volumes
+    # involved at all; 0.156.0, resolved from the `latest` tag at the time this was written and
+    # then pinned to its exact version, runs cleanly).
+    image: otel/opentelemetry-collector-contrib:0.156.0
+    volumes:
+      - ./infra/docker/otel-collector-config.yaml:/etc/otelcol-contrib/config.yaml:ro
+    ports:
+      - "4317:4317" # OTLP gRPC
+      - "4318:4318" # OTLP HTTP
+    depends_on:
+      prometheus:
+        condition: service_started
+
+  prometheus:
+    image: prom/prometheus:v3.0.1
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      # Phase 10 §6: push (remote-write), not pull (scrape) — Container Apps' dynamic scaling is
+      # the production reason, but the same flag is what makes the Collector's
+      # `prometheusremotewrite` exporter have anywhere to write to in local dev too.
+      - "--web.enable-remote-write-receiver"
+    volumes:
+      - ./infra/docker/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana:11.4.0
+    environment:
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
+      GF_SECURITY_ADMIN_PASSWORD: "auditmind_local_dev_only"
+    volumes:
+      # One mount, not two — a bind mount nested inside an already read-only parent mount fails
+      # to create its mountpoint (confirmed directly: `docker compose up` errored with "read-only
+      # file system" trying to mount a dashboards/ subdirectory inside this same path). The
+      # dashboard JSON lives inside provisioning/dashboards/files/ on the host instead.
+      - ./infra/docker/grafana/provisioning:/etc/grafana/provisioning:ro
+      - grafana_data:/var/lib/grafana
+    ports:
+      - "3001:3000" # 3000 is apps/web's dev server port — see docs/implementation/increment-11-frontend.md
+    depends_on:
+      prometheus:
+        condition: service_started
+
+volumes:
+  postgres_data:
+  neo4j_data:
+  blob_storage:
+  prometheus_data:
+  grafana_data:

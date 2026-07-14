@@ -1,0 +1,54 @@
+# Runs the same checks CI runs (.github/workflows/), locally, before a commit is made. Mirrors CI
+# exactly on purpose: a hook that's stricter or looser than CI just trains people to ignore one of
+# the two. Two independent hook groups, one per deployable (apps/api, services/agent-orchestrator,
+# ADR-001) — each only runs when a file under its own path changes.
+repos:
+  - repo: local
+    hooks:
+      - id: ruff
+        name: ruff check (apps/api)
+        entry: bash -c 'cd apps/api && .venv/bin/ruff check src tests migrations'
+        language: system
+        files: ^apps/api/
+        types: [python]
+        pass_filenames: false
+
+      - id: import-linter
+        name: import boundaries (apps/api)
+        entry: bash -c 'cd apps/api && PYTHONPATH=src .venv/bin/lint-imports'
+        language: system
+        files: ^apps/api/src/
+        types: [python]
+        pass_filenames: false
+
+      - id: mypy
+        name: mypy --strict (apps/api)
+        entry: bash -c 'cd apps/api && .venv/bin/mypy src'
+        language: system
+        files: ^apps/api/src/
+        types: [python]
+        pass_filenames: false
+
+      - id: ruff-agent-orchestrator
+        name: ruff check (services/agent-orchestrator)
+        entry: bash -c 'cd services/agent-orchestrator && .venv/bin/ruff check src tests migrations'
+        language: system
+        files: ^services/agent-orchestrator/
+        types: [python]
+        pass_filenames: false
+
+      - id: import-linter-agent-orchestrator
+        name: import boundaries (services/agent-orchestrator)
+        entry: bash -c 'cd services/agent-orchestrator && PYTHONPATH=src .venv/bin/lint-imports'
+        language: system
+        files: ^services/agent-orchestrator/src/
+        types: [python]
+        pass_filenames: false
+
+      - id: mypy-agent-orchestrator
+        name: mypy --strict (services/agent-orchestrator)
+        entry: bash -c 'cd services/agent-orchestrator && .venv/bin/mypy src'
+        language: system
+        files: ^services/agent-orchestrator/src/
+        types: [python]
+        pass_filenames: false

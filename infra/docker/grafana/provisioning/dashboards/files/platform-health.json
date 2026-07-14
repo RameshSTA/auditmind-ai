@@ -1,0 +1,124 @@
+{
+  "title": "AuditMind AI — Platform Health",
+  "uid": "auditmind-platform-health",
+  "timezone": "browser",
+  "refresh": "10s",
+  "time": { "from": "now-15m", "to": "now" },
+  "schemaVersion": 39,
+  "panels": [
+    {
+      "id": 1,
+      "title": "Request rate (req/s)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        {
+          "expr": "sum(rate(http_server_duration_milliseconds_count{job=\"auditmind-api\"}[1m])) by (http_target)",
+          "legendFormat": "{{http_target}}"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Error rate (5xx / total)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        {
+          "expr": "sum(rate(http_server_duration_milliseconds_count{job=\"auditmind-api\", http_status_code=~\"5..\"}[5m])) / sum(rate(http_server_duration_milliseconds_count{job=\"auditmind-api\"}[5m]))",
+          "legendFormat": "5xx ratio"
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "percentunit" }, "overrides": [] }
+    },
+    {
+      "id": 3,
+      "title": "In-flight requests",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        {
+          "expr": "sum(http_server_active_requests{job=\"auditmind-api\"})",
+          "legendFormat": "active"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Latency (p50 / p95 / p99, ms)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.50, sum(rate(http_server_duration_milliseconds_bucket{job=\"auditmind-api\"}[5m])) by (le))",
+          "legendFormat": "p50"
+        },
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(http_server_duration_milliseconds_bucket{job=\"auditmind-api\"}[5m])) by (le))",
+          "legendFormat": "p95"
+        },
+        {
+          "expr": "histogram_quantile(0.99, sum(rate(http_server_duration_milliseconds_bucket{job=\"auditmind-api\"}[5m])) by (le))",
+          "legendFormat": "p99"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Status codes",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        {
+          "expr": "sum(rate(http_server_duration_milliseconds_count{job=\"auditmind-api\"}[1m])) by (http_status_code)",
+          "legendFormat": "{{http_status_code}}"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Documents ingested",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 6, "x": 0, "y": 16 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        { "expr": "sum(auditmind_documents_ingested_total{job=\"auditmind-api\"})" }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Findings created",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 6, "x": 6, "y": 16 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        { "expr": "sum(auditmind_findings_created_total{job=\"auditmind-api\"})" }
+      ]
+    },
+    {
+      "id": 8,
+      "title": "Anomalies detected",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 6, "x": 12, "y": 16 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        { "expr": "sum(auditmind_anomalies_detected_total{job=\"auditmind-api\"})" }
+      ]
+    },
+    {
+      "id": 9,
+      "title": "Risk scores computed",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 6, "x": 18, "y": 16 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        { "expr": "sum(auditmind_risk_scores_computed_total{job=\"auditmind-api\"})" }
+      ]
+    }
+  ]
+}

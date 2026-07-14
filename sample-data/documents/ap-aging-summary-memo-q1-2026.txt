@@ -1,0 +1,30 @@
+MEMO — ACCOUNTS PAYABLE AGING SUMMARY, Q1 2026
+
+To: Corporate Controller
+From: Accounts Payable Manager
+Date: March 15, 2026
+
+This memo summarizes the accounts payable aging position as of March 14, 2026, for the FY2026 Q1
+Accounts Payable Audit engagement scope.
+
+AGING SUMMARY
+- Current (0-30 days): 78% of open payables by dollar value
+- 31-60 days: 15% of open payables by dollar value
+- 61-90 days: 5% of open payables by dollar value
+- Over 90 days: 2% of open payables by dollar value, concentrated in two disputed invoices under
+  review with Vendor Legal
+
+VENDOR CONCENTRATION
+Six vendors account for approximately 70% of Q1 payment volume: Meridian Logistics, Sterling
+Facilities Management, Blue Ridge Consulting Group, Northwind Office Solutions, Acme Supplies, and
+Vantage IT Services. This concentration is consistent with prior quarters and reflects the
+Company's core operating vendor relationships rather than a new risk.
+
+OBSERVATIONS
+Aging remains within target ranges. The Over-90-days bucket, while small, includes both disputed
+invoices flagged above; Accounts Payable recommends Internal Audit review the underlying dispute
+documentation as part of the current engagement scope, since a disputed invoice held open for this
+long increases the risk that a duplicate or replacement invoice gets paid without the original
+being properly closed out.
+
+Prepared by Accounts Payable, reviewed by the Controller prior to distribution.

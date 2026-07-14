@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Env
+.env
+.env.local
+
+# Node (future apps/web)
+node_modules/
+.next/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Claude Code agent worktrees — ephemeral, each is its own git worktree/branch already, not
+# content to track from the main working tree.
+.claude/worktrees/

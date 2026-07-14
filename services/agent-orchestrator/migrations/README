@@ -1,0 +1,9 @@
+Alembic migration environment for the Agent Orchestration service (ADR-001 separate deployable).
+
+Owns the `agent` Postgres schema (agent.runs / checkpoints / hitl_interrupts, Phase 4 §1). Runs
+against the same physical database as apps/api but from a separate migration chain — apps/api's
+`identity` schema and the `auditmind_app` role must exist first (the agent.* tables FK into
+identity.*, and the RLS grants target that role). Apply with:
+
+    AGENT_MIGRATION_DATABASE_URL=postgresql+asyncpg://<admin>:<pw>@<host>:<port>/<db> \
+      alembic upgrade head

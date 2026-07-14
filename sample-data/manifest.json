@@ -1,0 +1,43 @@
+{
+  "engagement_id": "00000000-0000-0000-0000-0000000000e1",
+  "engagement_name": "FY2026 Q1 Accounts Payable Audit",
+  "description": "Checked-in sample dataset for local development and demos. Seeded through the real apps/api endpoints by scripts/seed_sample_data.py, not written directly to the database, so it exercises the same ingestion/chunking/embedding and risk-scan pipeline a real user would.",
+  "documents_dir": "documents",
+  "document_count": 18,
+  "transactions_file": "transactions.json",
+  "transaction_count": 169,
+  "vendors": [
+    "Meridian Logistics",
+    "Sterling Facilities Management",
+    "Blue Ridge Consulting Group",
+    "Northwind Office Solutions",
+    "Acme Supplies",
+    "Vantage IT Services",
+    "Cascade Business Solutions",
+    "Harborview Freight & Logistics",
+    "Pinnacle Legal Advisors",
+    "Redwood Facilities Group",
+    "Summit Analytics Partners",
+    "Crestline Office Supply",
+    "Ironclad Security Services",
+    "Meadowbrook Catering Co.",
+    "Anchor Point Insurance Brokers",
+    "Talon Cybersecurity",
+    "Brightline Marketing Group",
+    "Union Square Print & Design"
+  ],
+  "planted_scenarios": [
+    {
+      "name": "Duplicate payment - Meridian Logistics",
+      "description": "INV-10456 and INV-10461 are the same shipment/amount re-invoiced 3 days apart - the exact pattern the vendor's master agreement and the invoice documents describe. The anomaly scan should flag this pair."
+    },
+    {
+      "name": "Duplicate payment - Acme Supplies",
+      "description": "Two $5,000.00 payments for the same description, six weeks apart - a softer duplicate signal than the Meridian pair (no date proximity match)."
+    },
+    {
+      "name": "Round-dollar clustering near approval threshold",
+      "description": "Six transactions across six different vendors, all in the $9,750-$9,975 range, just under the $10,000 Tier 2 approval threshold documented in the Purchase Order Approval Matrix and flagged in Priya Nandakumar's email."
+    }
+  ]
+}

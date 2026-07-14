@@ -1,0 +1,22 @@
+MERIDIAN LOGISTICS INC.
+1180 Harbor Freight Way, Suite 400
+Invoice
+
+Invoice Number: INV-10456
+Invoice Date: February 9, 2026
+Bill To: Accounts Payable, Company FY2026 Q1 Accounts Payable Audit engagement
+Terms: Net 15
+
+Shipment Manifest References: MAN-88231, MAN-88232, MAN-88240
+Service Period: February 2 - February 8, 2026
+
+Description of Services:
+- Scheduled freight pickup, Regional DC 2 to Regional DC 3 (3 runs)
+- Last-mile delivery batch, 41 stops
+
+Subtotal: $2,180.00
+Fuel Surcharge (6.5%): $141.70
+Total Due: $2,321.70
+
+Please remit payment referencing invoice number INV-10456. Questions regarding this invoice may
+be directed to billing@meridianlogistics.example.

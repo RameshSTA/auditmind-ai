@@ -1,0 +1,32 @@
+PROCUREMENT POLICY — SEGREGATION OF DUTIES
+
+Effective for all procurement and accounts payable activity, FY2026.
+
+1. PURPOSE
+This policy establishes the minimum segregation of duties required across the procure-to-pay
+cycle to reduce the risk of error or fraud going undetected.
+
+2. CORE SEGREGATION REQUIREMENTS
+- The individual who requests a purchase may not also approve it.
+- The individual who approves a purchase order may not also approve the corresponding invoice for
+  payment.
+- The individual who adds or modifies a vendor record in the vendor master file may not also
+  approve payments to that vendor within the same reporting period without a compensating review.
+- Accounts Payable staff who process payment runs may not also reconcile the accounts payable
+  sub-ledger to the general ledger.
+
+3. VENDOR MASTER FILE CHANGES
+All additions, bank detail changes, and reactivations of previously inactive vendors require
+two-person approval: one Procurement staff member to initiate the change and one Procurement
+Manager or above to approve it. Bank detail changes additionally require a callback verification
+to a phone number on file prior to the change (not a number provided in the change request itself).
+
+4. EXCEPTIONS
+Any exception to this policy must be documented, time-bound, and approved by the Controller. A
+standing log of active exceptions is maintained by Internal Audit and reviewed quarterly.
+
+5. MONITORING
+Internal Audit performs a quarterly sample review of vendor master file changes and a quarterly
+review of transactions exhibiting patterns associated with control override, including duplicate
+payments, round-dollar amounts clustered near approval thresholds, and payments processed outside
+normal business hours.

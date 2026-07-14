@@ -1,0 +1,15 @@
+# Auto-provisions the Prometheus datasource so `docker compose up` gives a working dashboard
+# without manual clicking (Phase 10 §7: "Grafana is the single operational entry point").
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    # Explicit, stable uid — without it, Grafana auto-generates a random one (confirmed directly:
+    # it came back as "PBFA97CFB590B2093" with no uid set here), which the dashboard JSON's own
+    # `"datasource": {"uid": "prometheus"}` references would silently fail to resolve.
+    uid: prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    editable: false

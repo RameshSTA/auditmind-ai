@@ -1,0 +1,36 @@
+VENDOR MASTER AGREEMENT
+
+Vendor: Acme Supplies LLC
+Vendor ID: VEN-1042
+Effective Date: March 3, 2025
+Contract Term: 24 months, auto-renewing unless terminated with 60 days' written notice
+Category: Office and warehouse consumables
+
+1. SCOPE OF SUPPLY
+Acme Supplies LLC ("Vendor") shall supply office consumables, packaging materials, and warehouse
+supplies to the Company on an as-ordered basis under individual purchase orders issued against
+this master agreement. No minimum purchase commitment applies.
+
+2. PRICING AND PAYMENT TERMS
+Pricing is fixed per the attached rate card (Exhibit A) for the first 12 months, subject to a
+single CPI-indexed adjustment thereafter. Payment terms are net 30 from invoice receipt. Invoices
+over $5,000 require a matching purchase order and receiving confirmation before payment release.
+Invoices are to be submitted to accountspayable@company.example with the purchase order number
+in the subject line.
+
+3. APPROVAL AUTHORITY
+Purchase orders up to $10,000 may be approved by a Procurement Manager. Purchase orders between
+$10,000 and $50,000 require Director-level approval. Any single transaction at or above $50,000
+requires Controller sign-off regardless of budget availability.
+
+4. VENDOR CONTACT
+Primary contact: Denise Coulter, Account Manager, Acme Supplies LLC
+Billing contact: ap@acmesupplies.example
+
+5. TERMINATION
+Either party may terminate for convenience with 60 days' written notice. The Company may terminate
+immediately for material breach, including repeated invoicing discrepancies exceeding 2% of total
+annual spend.
+
+Signed on behalf of the Company by the VP of Procurement.
+Signed on behalf of Acme Supplies LLC by the Director of Sales.

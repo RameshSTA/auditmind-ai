@@ -1,0 +1,1694 @@
+{
+  "transactions": [
+    {
+      "external_id": "TXN-1001",
+      "vendor_name": "Meridian Logistics",
+      "amount": 32.73,
+      "currency": "USD",
+      "transaction_date": "2026-01-01",
+      "description": "Scheduled freight and last-mile delivery",
+      "invoice_number": "INV-60001",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1149",
+      "vendor_name": "Brightline Marketing Group",
+      "amount": 20865.54,
+      "currency": "USD",
+      "transaction_date": "2026-01-01",
+      "description": "Marketing campaign services",
+      "invoice_number": "INV-60149",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1061",
+      "vendor_name": "Acme Supplies",
+      "amount": 1401.12,
+      "currency": "USD",
+      "transaction_date": "2026-01-02",
+      "description": "Warehouse and packaging consumables",
+      "invoice_number": "INV-60061",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1158",
+      "vendor_name": "Union Square Print & Design",
+      "amount": 2729.45,
+      "currency": "USD",
+      "transaction_date": "2026-01-02",
+      "description": "Print and design services",
+      "invoice_number": "INV-60158",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1003",
+      "vendor_name": "Meridian Logistics",
+      "amount": 623.25,
+      "currency": "USD",
+      "transaction_date": "2026-01-03",
+      "description": "Scheduled freight and last-mile delivery",
+      "invoice_number": "INV-60003",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1055",
+      "vendor_name": "Northwind Office Solutions",
+      "amount": 1187.42,
+      "currency": "USD",
+      "transaction_date": "2026-01-03",
+      "description": "Office furniture and equipment",
+      "invoice_number": "INV-60055",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1102",
+      "vendor_name": "Redwood Facilities Group",
+      "amount": 10361.47,
+      "currency": "USD",
+      "transaction_date": "2026-01-03",
+      "description": "Facilities repair work order",
+      "invoice_number": "INV-60102",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1063",
+      "vendor_name": "Acme Supplies",
+      "amount": 82.93,
+      "currency": "USD",
+      "transaction_date": "2026-01-04",
+      "description": "Warehouse and packaging consumables",
+      "invoice_number": "INV-60063",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1069",
+      "vendor_name": "Acme Supplies",
+      "amount": 1295.32,
+      "currency": "USD",
+      "transaction_date": "2026-01-04",
+      "description": "Warehouse and packaging consumables",
+      "invoice_number": "INV-60069",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1106",
+      "vendor_name": "Redwood Facilities Group",
+      "amount": 12922.87,
+      "currency": "USD",
+      "transaction_date": "2026-01-04",
+      "description": "Facilities repair work order",
+      "invoice_number": "INV-60106",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1027",
+      "vendor_name": "Sterling Facilities Management",
+      "amount": 555.39,
+      "currency": "USD",
+      "transaction_date": "2026-01-05",
+      "description": "Monthly janitorial and HVAC retainer",
+      "invoice_number": "INV-60027",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1037",
+      "vendor_name": "Blue Ridge Consulting Group",
+      "amount": 21799.3,
+      "currency": "USD",
+      "transaction_date": "2026-01-05",
+      "description": "Supply chain consulting statement of work",
+      "invoice_number": "INV-60037",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1059",
+      "vendor_name": "Northwind Office Solutions",
+      "amount": 1220.9,
+      "currency": "USD",
+      "transaction_date": "2026-01-05",
+      "description": "Office furniture and equipment",
+      "invoice_number": "INV-60059",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1114",
+      "vendor_name": "Crestline Office Supply",
+      "amount": 11540.74,
+      "currency": "USD",
+      "transaction_date": "2026-01-05",
+      "description": "Office supplies restock",
+      "invoice_number": "INV-60114",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1076",
+      "vendor_name": "Acme Supplies",
+      "amount": 152.77,
+      "currency": "USD",
+      "transaction_date": "2026-01-06",
+      "description": "Warehouse and packaging consumables",
+      "invoice_number": "INV-60076",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1002",
+      "vendor_name": "Meridian Logistics",
+      "amount": 179.97,
+      "currency": "USD",
+      "transaction_date": "2026-01-07",
+      "description": "Scheduled freight and last-mile delivery",
+      "invoice_number": "INV-60002",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1067",
+      "vendor_name": "Acme Supplies",
+      "amount": 220.69,
+      "currency": "USD",
+      "transaction_date": "2026-01-07",
+      "description": "Warehouse and packaging consumables",
+      "invoice_number": "INV-60067",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1153",
+      "vendor_name": "Brightline Marketing Group",
+      "amount": 9889.22,
+      "currency": "USD",
+      "transaction_date": "2026-01-09",
+      "description": "Marketing campaign services",
+      "invoice_number": "INV-60153",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1034",
+      "vendor_name": "Sterling Facilities Management",
+      "amount": 654.84,
+      "currency": "USD",
+      "transaction_date": "2026-01-10",
+      "description": "Monthly janitorial and HVAC retainer",
+      "invoice_number": "INV-60034",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1051",
+      "vendor_name": "Northwind Office Solutions",
+      "amount": 510.91,
+      "currency": "USD",
+      "transaction_date": "2026-01-10",
+      "description": "Office furniture and equipment",
+      "invoice_number": "INV-60051",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1093",
+      "vendor_name": "Harborview Freight & Logistics",
+      "amount": 9346.35,
+      "currency": "USD",
+      "transaction_date": "2026-01-10",
+      "description": "Bulk freight shipment",
+      "invoice_number": "INV-60093",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1145",
+      "vendor_name": "Talon Cybersecurity",
+      "amount": 6310.4,
+      "currency": "USD",
+      "transaction_date": "2026-01-10",
+      "description": "Incident response engagement",
+      "invoice_number": "INV-60145",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1168",
+      "vendor_name": "Acme Supplies",
+      "amount": 5000.0,
+      "currency": "USD",
+      "transaction_date": "2026-01-10",
+      "description": "Warehouse shelving and packaging materials",
+      "invoice_number": "INV-77821",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1081",
+      "vendor_name": "Cascade Business Solutions",
+      "amount": 18808.96,
+      "currency": "USD",
+      "transaction_date": "2026-01-13",
+      "description": "Business process outsourcing services",
+      "invoice_number": "INV-60081",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1098",
+      "vendor_name": "Pinnacle Legal Advisors",
+      "amount": 3444.96,
+      "currency": "USD",
+      "transaction_date": "2026-01-13",
+      "description": "Outside counsel - contract review",
+      "invoice_number": "INV-60098",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1036",
+      "vendor_name": "Blue Ridge Consulting Group",
+      "amount": 11319.86,
+      "currency": "USD",
+      "transaction_date": "2026-01-14",
+      "description": "Supply chain consulting statement of work",
+      "invoice_number": "INV-60036",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1041",
+      "vendor_name": "Blue Ridge Consulting Group",
+      "amount": 4569.68,
+      "currency": "USD",
+      "transaction_date": "2026-01-14",
+      "description": "Supply chain consulting statement of work",
+      "invoice_number": "INV-60041",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1087",
+      "vendor_name": "Harborview Freight & Logistics",
+      "amount": 20362.94,
+      "currency": "USD",
+      "transaction_date": "2026-01-14",
+      "description": "Bulk freight shipment",
+      "invoice_number": "INV-60087",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1089",
+      "vendor_name": "Harborview Freight & Logistics",
+      "amount": 16859.96,
+      "currency": "USD",
+      "transaction_date": "2026-01-14",
+      "description": "Bulk freight shipment",
+      "invoice_number": "INV-60089",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1115",
+      "vendor_name": "Crestline Office Supply",
+      "amount": 311.51,
+      "currency": "USD",
+      "transaction_date": "2026-01-14",
+      "description": "Office supplies restock",
+      "invoice_number": "INV-60115",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1138",
+      "vendor_name": "Anchor Point Insurance Brokers",
+      "amount": 300.55,
+      "currency": "USD",
+      "transaction_date": "2026-01-15",
+      "description": "Commercial insurance premium",
+      "invoice_number": "INV-60138",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1140",
+      "vendor_name": "Anchor Point Insurance Brokers",
+      "amount": 21972.51,
+      "currency": "USD",
+      "transaction_date": "2026-01-15",
+      "description": "Commercial insurance premium",
+      "invoice_number": "INV-60140",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1100",
+      "vendor_name": "Redwood Facilities Group",
+      "amount": 18377.14,
+      "currency": "USD",
+      "transaction_date": "2026-01-16",
+      "description": "Facilities repair work order",
+      "invoice_number": "INV-60100",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1127",
+      "vendor_name": "Meadowbrook Catering Co.",
+      "amount": 11010.74,
+      "currency": "USD",
+      "transaction_date": "2026-01-16",
+      "description": "Corporate event catering",
+      "invoice_number": "INV-60127",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1151",
+      "vendor_name": "Brightline Marketing Group",
+      "amount": 19938.06,
+      "currency": "USD",
+      "transaction_date": "2026-01-17",
+      "description": "Marketing campaign services",
+      "invoice_number": "INV-60151",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1006",
+      "vendor_name": "Meridian Logistics",
+      "amount": 456.26,
+      "currency": "USD",
+      "transaction_date": "2026-01-18",
+      "description": "Scheduled freight and last-mile delivery",
+      "invoice_number": "INV-60006",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1028",
+      "vendor_name": "Sterling Facilities Management",
+      "amount": 334.33,
+      "currency": "USD",
+      "transaction_date": "2026-01-18",
+      "description": "Monthly janitorial and HVAC retainer",
+      "invoice_number": "INV-60028",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1152",
+      "vendor_name": "Brightline Marketing Group",
+      "amount": 18643.88,
+      "currency": "USD",
+      "transaction_date": "2026-01-19",
+      "description": "Marketing campaign services",
+      "invoice_number": "INV-60152",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1012",
+      "vendor_name": "Meridian Logistics",
+      "amount": 1386.15,
+      "currency": "USD",
+      "transaction_date": "2026-01-20",
+      "description": "Scheduled freight and last-mile delivery",
+      "invoice_number": "INV-60012",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1116",
+      "vendor_name": "Crestline Office Supply",
+      "amount": 8300.61,
+      "currency": "USD",
+      "transaction_date": "2026-01-21",
+      "description": "Office supplies restock",
+      "invoice_number": "INV-60116",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1025",
+      "vendor_name": "Sterling Facilities Management",
+      "amount": 970.96,
+      "currency": "USD",
+      "transaction_date": "2026-01-22",
+      "description": "Monthly janitorial and HVAC retainer",
+      "invoice_number": "INV-60025",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1031",
+      "vendor_name": "Sterling Facilities Management",
+      "amount": 1383.37,
+      "currency": "USD",
+      "transaction_date": "2026-01-23",
+      "description": "Monthly janitorial and HVAC retainer",
+      "invoice_number": "INV-60031",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1119",
+      "vendor_name": "Crestline Office Supply",
+      "amount": 1273.43,
+      "currency": "USD",
+      "transaction_date": "2026-01-23",
+      "description": "Office supplies restock",
+      "invoice_number": "INV-60119",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1123",
+      "vendor_name": "Ironclad Security Services",
+      "amount": 1584.26,
+      "currency": "USD",
+      "transaction_date": "2026-01-23",
+      "description": "Physical security staffing",
+      "invoice_number": "INV-60123",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1139",
+      "vendor_name": "Anchor Point Insurance Brokers",
+      "amount": 18416.38,
+      "currency": "USD",
+      "transaction_date": "2026-01-23",
+      "description": "Commercial insurance premium",
+      "invoice_number": "INV-60139",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1131",
+      "vendor_name": "Meadowbrook Catering Co.",
+      "amount": 19494.66,
+      "currency": "USD",
+      "transaction_date": "2026-01-24",
+      "description": "Corporate event catering",
+      "invoice_number": "INV-60131",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1159",
+      "vendor_name": "Union Square Print & Design",
+      "amount": 15568.48,
+      "currency": "USD",
+      "transaction_date": "2026-01-24",
+      "description": "Print and design services",
+      "invoice_number": "INV-60159",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1074",
+      "vendor_name": "Acme Supplies",
+      "amount": 330.33,
+      "currency": "USD",
+      "transaction_date": "2026-01-25",
+      "description": "Warehouse and packaging consumables",
+      "invoice_number": "INV-60074",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1044",
+      "vendor_name": "Northwind Office Solutions",
+      "amount": 1481.92,
+      "currency": "USD",
+      "transaction_date": "2026-01-26",
+      "description": "Office furniture and equipment",
+      "invoice_number": "INV-60044",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1048",
+      "vendor_name": "Northwind Office Solutions",
+      "amount": 685.51,
+      "currency": "USD",
+      "transaction_date": "2026-01-26",
+      "description": "Office furniture and equipment",
+      "invoice_number": "INV-60048",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1082",
+      "vendor_name": "Cascade Business Solutions",
+      "amount": 9509.59,
+      "currency": "USD",
+      "transaction_date": "2026-01-27",
+      "description": "Business process outsourcing services",
+      "invoice_number": "INV-60082",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1121",
+      "vendor_name": "Ironclad Security Services",
+      "amount": 2778.33,
+      "currency": "USD",
+      "transaction_date": "2026-01-27",
+      "description": "Physical security staffing",
+      "invoice_number": "INV-60121",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1150",
+      "vendor_name": "Brightline Marketing Group",
+      "amount": 3222.87,
+      "currency": "USD",
+      "transaction_date": "2026-01-27",
+      "description": "Marketing campaign services",
+      "invoice_number": "INV-60150",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1029",
+      "vendor_name": "Sterling Facilities Management",
+      "amount": 540.87,
+      "currency": "USD",
+      "transaction_date": "2026-01-28",
+      "description": "Monthly janitorial and HVAC retainer",
+      "invoice_number": "INV-60029",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1054",
+      "vendor_name": "Northwind Office Solutions",
+      "amount": 1394.48,
+      "currency": "USD",
+      "transaction_date": "2026-01-29",
+      "description": "Office furniture and equipment",
+      "invoice_number": "INV-60054",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1068",
+      "vendor_name": "Acme Supplies",
+      "amount": 431.14,
+      "currency": "USD",
+      "transaction_date": "2026-01-29",
+      "description": "Warehouse and packaging consumables",
+      "invoice_number": "INV-60068",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1052",
+      "vendor_name": "Northwind Office Solutions",
+      "amount": 1315.1,
+      "currency": "USD",
+      "transaction_date": "2026-01-30",
+      "description": "Office furniture and equipment",
+      "invoice_number": "INV-60052",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1090",
+      "vendor_name": "Harborview Freight & Logistics",
+      "amount": 10889.75,
+      "currency": "USD",
+      "transaction_date": "2026-01-30",
+      "description": "Bulk freight shipment",
+      "invoice_number": "INV-60090",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1070",
+      "vendor_name": "Acme Supplies",
+      "amount": 696.13,
+      "currency": "USD",
+      "transaction_date": "2026-02-01",
+      "description": "Warehouse and packaging consumables",
+      "invoice_number": "INV-60070",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1137",
+      "vendor_name": "Anchor Point Insurance Brokers",
+      "amount": 9205.86,
+      "currency": "USD",
+      "transaction_date": "2026-02-01",
+      "description": "Commercial insurance premium",
+      "invoice_number": "INV-60137",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1005",
+      "vendor_name": "Meridian Logistics",
+      "amount": 209.8,
+      "currency": "USD",
+      "transaction_date": "2026-02-03",
+      "description": "Scheduled freight and last-mile delivery",
+      "invoice_number": "INV-60005",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1058",
+      "vendor_name": "Northwind Office Solutions",
+      "amount": 771.86,
+      "currency": "USD",
+      "transaction_date": "2026-02-03",
+      "description": "Office furniture and equipment",
+      "invoice_number": "INV-60058",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1088",
+      "vendor_name": "Harborview Freight & Logistics",
+      "amount": 21938.84,
+      "currency": "USD",
+      "transaction_date": "2026-02-03",
+      "description": "Bulk freight shipment",
+      "invoice_number": "INV-60088",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1035",
+      "vendor_name": "Blue Ridge Consulting Group",
+      "amount": 2417.75,
+      "currency": "USD",
+      "transaction_date": "2026-02-06",
+      "description": "Supply chain consulting statement of work",
+      "invoice_number": "INV-60035",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1136",
+      "vendor_name": "Anchor Point Insurance Brokers",
+      "amount": 19558.72,
+      "currency": "USD",
+      "transaction_date": "2026-02-06",
+      "description": "Commercial insurance premium",
+      "invoice_number": "INV-60136",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1099",
+      "vendor_name": "Pinnacle Legal Advisors",
+      "amount": 13307.1,
+      "currency": "USD",
+      "transaction_date": "2026-02-07",
+      "description": "Outside counsel - contract review",
+      "invoice_number": "INV-60099",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1042",
+      "vendor_name": "Northwind Office Solutions",
+      "amount": 788.27,
+      "currency": "USD",
+      "transaction_date": "2026-02-09",
+      "description": "Office furniture and equipment",
+      "invoice_number": "INV-60042",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1043",
+      "vendor_name": "Northwind Office Solutions",
+      "amount": 1471.33,
+      "currency": "USD",
+      "transaction_date": "2026-02-09",
+      "description": "Office furniture and equipment",
+      "invoice_number": "INV-60043",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1064",
+      "vendor_name": "Acme Supplies",
+      "amount": 1587.63,
+      "currency": "USD",
+      "transaction_date": "2026-02-09",
+      "description": "Warehouse and packaging consumables",
+      "invoice_number": "INV-60064",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1141",
+      "vendor_name": "Anchor Point Insurance Brokers",
+      "amount": 2702.1,
+      "currency": "USD",
+      "transaction_date": "2026-02-09",
+      "description": "Commercial insurance premium",
+      "invoice_number": "INV-60141",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1160",
+      "vendor_name": "Meridian Logistics",
+      "amount": 2321.7,
+      "currency": "USD",
+      "transaction_date": "2026-02-09",
+      "description": "Scheduled freight and last-mile delivery",
+      "invoice_number": "INV-10456",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1147",
+      "vendor_name": "Talon Cybersecurity",
+      "amount": 20239.87,
+      "currency": "USD",
+      "transaction_date": "2026-02-10",
+      "description": "Incident response engagement",
+      "invoice_number": "INV-60147",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1135",
+      "vendor_name": "Anchor Point Insurance Brokers",
+      "amount": 7233.41,
+      "currency": "USD",
+      "transaction_date": "2026-02-11",
+      "description": "Commercial insurance premium",
+      "invoice_number": "INV-60135",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1156",
+      "vendor_name": "Union Square Print & Design",
+      "amount": 15540.58,
+      "currency": "USD",
+      "transaction_date": "2026-02-11",
+      "description": "Print and design services",
+      "invoice_number": "INV-60156",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1157",
+      "vendor_name": "Union Square Print & Design",
+      "amount": 3378.14,
+      "currency": "USD",
+      "transaction_date": "2026-02-11",
+      "description": "Print and design services",
+      "invoice_number": "INV-60157",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1008",
+      "vendor_name": "Meridian Logistics",
+      "amount": 1319.62,
+      "currency": "USD",
+      "transaction_date": "2026-02-12",
+      "description": "Scheduled freight and last-mile delivery",
+      "invoice_number": "INV-60008",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1010",
+      "vendor_name": "Meridian Logistics",
+      "amount": 1002.99,
+      "currency": "USD",
+      "transaction_date": "2026-02-12",
+      "description": "Scheduled freight and last-mile delivery",
+      "invoice_number": "INV-60010",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1016",
+      "vendor_name": "Sterling Facilities Management",
+      "amount": 554.87,
+      "currency": "USD",
+      "transaction_date": "2026-02-12",
+      "description": "Monthly janitorial and HVAC retainer",
+      "invoice_number": "INV-60016",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1040",
+      "vendor_name": "Blue Ridge Consulting Group",
+      "amount": 10803.85,
+      "currency": "USD",
+      "transaction_date": "2026-02-12",
+      "description": "Supply chain consulting statement of work",
+      "invoice_number": "INV-60040",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1091",
+      "vendor_name": "Harborview Freight & Logistics",
+      "amount": 9989.78,
+      "currency": "USD",
+      "transaction_date": "2026-02-12",
+      "description": "Bulk freight shipment",
+      "invoice_number": "INV-60091",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1161",
+      "vendor_name": "Meridian Logistics",
+      "amount": 2321.7,
+      "currency": "USD",
+      "transaction_date": "2026-02-12",
+      "description": "Scheduled freight and last-mile delivery",
+      "invoice_number": "INV-10461",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1046",
+      "vendor_name": "Northwind Office Solutions",
+      "amount": 251.67,
+      "currency": "USD",
+      "transaction_date": "2026-02-13",
+      "description": "Office furniture and equipment",
+      "invoice_number": "INV-60046",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1056",
+      "vendor_name": "Northwind Office Solutions",
+      "amount": 1302.28,
+      "currency": "USD",
+      "transaction_date": "2026-02-13",
+      "description": "Office furniture and equipment",
+      "invoice_number": "INV-60056",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1079",
+      "vendor_name": "Vantage IT Services",
+      "amount": 5413.16,
+      "currency": "USD",
+      "transaction_date": "2026-02-13",
+      "description": "Managed IT support retainer",
+      "invoice_number": "INV-60079",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1009",
+      "vendor_name": "Meridian Logistics",
+      "amount": 366.41,
+      "currency": "USD",
+      "transaction_date": "2026-02-15",
+      "description": "Scheduled freight and last-mile delivery",
+      "invoice_number": "INV-60009",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1071",
+      "vendor_name": "Acme Supplies",
+      "amount": 858.09,
+      "currency": "USD",
+      "transaction_date": "2026-02-15",
+      "description": "Warehouse and packaging consumables",
+      "invoice_number": "INV-60071",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1096",
+      "vendor_name": "Pinnacle Legal Advisors",
+      "amount": 19697.49,
+      "currency": "USD",
+      "transaction_date": "2026-02-15",
+      "description": "Outside counsel - contract review",
+      "invoice_number": "INV-60096",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1110",
+      "vendor_name": "Summit Analytics Partners",
+      "amount": 4747.0,
+      "currency": "USD",
+      "transaction_date": "2026-02-15",
+      "description": "Data analytics consulting",
+      "invoice_number": "INV-60110",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1103",
+      "vendor_name": "Redwood Facilities Group",
+      "amount": 20518.45,
+      "currency": "USD",
+      "transaction_date": "2026-02-16",
+      "description": "Facilities repair work order",
+      "invoice_number": "INV-60103",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1007",
+      "vendor_name": "Meridian Logistics",
+      "amount": 1303.54,
+      "currency": "USD",
+      "transaction_date": "2026-02-17",
+      "description": "Scheduled freight and last-mile delivery",
+      "invoice_number": "INV-60007",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1014",
+      "vendor_name": "Meridian Logistics",
+      "amount": 308.62,
+      "currency": "USD",
+      "transaction_date": "2026-02-17",
+      "description": "Scheduled freight and last-mile delivery",
+      "invoice_number": "INV-60014",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1105",
+      "vendor_name": "Redwood Facilities Group",
+      "amount": 1210.65,
+      "currency": "USD",
+      "transaction_date": "2026-02-17",
+      "description": "Facilities repair work order",
+      "invoice_number": "INV-60105",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1049",
+      "vendor_name": "Northwind Office Solutions",
+      "amount": 1045.27,
+      "currency": "USD",
+      "transaction_date": "2026-02-18",
+      "description": "Office furniture and equipment",
+      "invoice_number": "INV-60049",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1065",
+      "vendor_name": "Acme Supplies",
+      "amount": 574.44,
+      "currency": "USD",
+      "transaction_date": "2026-02-18",
+      "description": "Warehouse and packaging consumables",
+      "invoice_number": "INV-60065",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1117",
+      "vendor_name": "Crestline Office Supply",
+      "amount": 4504.9,
+      "currency": "USD",
+      "transaction_date": "2026-02-18",
+      "description": "Office supplies restock",
+      "invoice_number": "INV-60117",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1030",
+      "vendor_name": "Sterling Facilities Management",
+      "amount": 1127.01,
+      "currency": "USD",
+      "transaction_date": "2026-02-19",
+      "description": "Monthly janitorial and HVAC retainer",
+      "invoice_number": "INV-60030",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1077",
+      "vendor_name": "Vantage IT Services",
+      "amount": 14367.81,
+      "currency": "USD",
+      "transaction_date": "2026-02-19",
+      "description": "Managed IT support retainer",
+      "invoice_number": "INV-60077",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1108",
+      "vendor_name": "Summit Analytics Partners",
+      "amount": 826.47,
+      "currency": "USD",
+      "transaction_date": "2026-02-19",
+      "description": "Data analytics consulting",
+      "invoice_number": "INV-60108",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1112",
+      "vendor_name": "Summit Analytics Partners",
+      "amount": 20912.41,
+      "currency": "USD",
+      "transaction_date": "2026-02-19",
+      "description": "Data analytics consulting",
+      "invoice_number": "INV-60112",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1020",
+      "vendor_name": "Sterling Facilities Management",
+      "amount": 1508.16,
+      "currency": "USD",
+      "transaction_date": "2026-02-20",
+      "description": "Monthly janitorial and HVAC retainer",
+      "invoice_number": "INV-60020",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1057",
+      "vendor_name": "Northwind Office Solutions",
+      "amount": 682.4,
+      "currency": "USD",
+      "transaction_date": "2026-02-20",
+      "description": "Office furniture and equipment",
+      "invoice_number": "INV-60057",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1118",
+      "vendor_name": "Crestline Office Supply",
+      "amount": 10648.33,
+      "currency": "USD",
+      "transaction_date": "2026-02-21",
+      "description": "Office supplies restock",
+      "invoice_number": "INV-60118",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1122",
+      "vendor_name": "Ironclad Security Services",
+      "amount": 15041.93,
+      "currency": "USD",
+      "transaction_date": "2026-02-21",
+      "description": "Physical security staffing",
+      "invoice_number": "INV-60122",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1169",
+      "vendor_name": "Acme Supplies",
+      "amount": 5000.0,
+      "currency": "USD",
+      "transaction_date": "2026-02-21",
+      "description": "Warehouse shelving and packaging materials",
+      "invoice_number": "INV-78430",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1023",
+      "vendor_name": "Sterling Facilities Management",
+      "amount": 24.31,
+      "currency": "USD",
+      "transaction_date": "2026-02-22",
+      "description": "Monthly janitorial and HVAC retainer",
+      "invoice_number": "INV-60023",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1162",
+      "vendor_name": "Blue Ridge Consulting Group",
+      "amount": 9750.0,
+      "currency": "USD",
+      "transaction_date": "2026-02-22",
+      "description": "Supply chain consulting statement of work",
+      "invoice_number": "INV-60160",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1146",
+      "vendor_name": "Talon Cybersecurity",
+      "amount": 3047.94,
+      "currency": "USD",
+      "transaction_date": "2026-02-23",
+      "description": "Incident response engagement",
+      "invoice_number": "INV-60146",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1039",
+      "vendor_name": "Blue Ridge Consulting Group",
+      "amount": 13188.8,
+      "currency": "USD",
+      "transaction_date": "2026-02-24",
+      "description": "Supply chain consulting statement of work",
+      "invoice_number": "INV-60039",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1109",
+      "vendor_name": "Summit Analytics Partners",
+      "amount": 21351.81,
+      "currency": "USD",
+      "transaction_date": "2026-02-24",
+      "description": "Data analytics consulting",
+      "invoice_number": "INV-60109",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1021",
+      "vendor_name": "Sterling Facilities Management",
+      "amount": 1295.76,
+      "currency": "USD",
+      "transaction_date": "2026-02-25",
+      "description": "Monthly janitorial and HVAC retainer",
+      "invoice_number": "INV-60021",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1107",
+      "vendor_name": "Summit Analytics Partners",
+      "amount": 21887.42,
+      "currency": "USD",
+      "transaction_date": "2026-02-26",
+      "description": "Data analytics consulting",
+      "invoice_number": "INV-60107",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1143",
+      "vendor_name": "Talon Cybersecurity",
+      "amount": 2436.88,
+      "currency": "USD",
+      "transaction_date": "2026-02-27",
+      "description": "Incident response engagement",
+      "invoice_number": "INV-60143",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1154",
+      "vendor_name": "Brightline Marketing Group",
+      "amount": 10888.5,
+      "currency": "USD",
+      "transaction_date": "2026-02-27",
+      "description": "Marketing campaign services",
+      "invoice_number": "INV-60154",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1018",
+      "vendor_name": "Sterling Facilities Management",
+      "amount": 1166.25,
+      "currency": "USD",
+      "transaction_date": "2026-02-28",
+      "description": "Monthly janitorial and HVAC retainer",
+      "invoice_number": "INV-60018",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1163",
+      "vendor_name": "Vantage IT Services",
+      "amount": 9800.0,
+      "currency": "USD",
+      "transaction_date": "2026-02-28",
+      "description": "Managed IT support retainer",
+      "invoice_number": "INV-60161",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1085",
+      "vendor_name": "Cascade Business Solutions",
+      "amount": 15055.46,
+      "currency": "USD",
+      "transaction_date": "2026-03-02",
+      "description": "Business process outsourcing services",
+      "invoice_number": "INV-60085",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1095",
+      "vendor_name": "Pinnacle Legal Advisors",
+      "amount": 855.31,
+      "currency": "USD",
+      "transaction_date": "2026-03-02",
+      "description": "Outside counsel - contract review",
+      "invoice_number": "INV-60095",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1083",
+      "vendor_name": "Cascade Business Solutions",
+      "amount": 12372.26,
+      "currency": "USD",
+      "transaction_date": "2026-03-04",
+      "description": "Business process outsourcing services",
+      "invoice_number": "INV-60083",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1094",
+      "vendor_name": "Pinnacle Legal Advisors",
+      "amount": 2240.09,
+      "currency": "USD",
+      "transaction_date": "2026-03-04",
+      "description": "Outside counsel - contract review",
+      "invoice_number": "INV-60094",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1113",
+      "vendor_name": "Crestline Office Supply",
+      "amount": 13376.07,
+      "currency": "USD",
+      "transaction_date": "2026-03-04",
+      "description": "Office supplies restock",
+      "invoice_number": "INV-60113",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1024",
+      "vendor_name": "Sterling Facilities Management",
+      "amount": 1162.17,
+      "currency": "USD",
+      "transaction_date": "2026-03-05",
+      "description": "Monthly janitorial and HVAC retainer",
+      "invoice_number": "INV-60024",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1120",
+      "vendor_name": "Crestline Office Supply",
+      "amount": 6530.48,
+      "currency": "USD",
+      "transaction_date": "2026-03-05",
+      "description": "Office supplies restock",
+      "invoice_number": "INV-60120",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1129",
+      "vendor_name": "Meadowbrook Catering Co.",
+      "amount": 19430.33,
+      "currency": "USD",
+      "transaction_date": "2026-03-05",
+      "description": "Corporate event catering",
+      "invoice_number": "INV-60129",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1038",
+      "vendor_name": "Blue Ridge Consulting Group",
+      "amount": 3707.77,
+      "currency": "USD",
+      "transaction_date": "2026-03-06",
+      "description": "Supply chain consulting statement of work",
+      "invoice_number": "INV-60038",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1092",
+      "vendor_name": "Harborview Freight & Logistics",
+      "amount": 577.75,
+      "currency": "USD",
+      "transaction_date": "2026-03-06",
+      "description": "Bulk freight shipment",
+      "invoice_number": "INV-60092",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1004",
+      "vendor_name": "Meridian Logistics",
+      "amount": 296.45,
+      "currency": "USD",
+      "transaction_date": "2026-03-07",
+      "description": "Scheduled freight and last-mile delivery",
+      "invoice_number": "INV-60004",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1032",
+      "vendor_name": "Sterling Facilities Management",
+      "amount": 1455.34,
+      "currency": "USD",
+      "transaction_date": "2026-03-07",
+      "description": "Monthly janitorial and HVAC retainer",
+      "invoice_number": "INV-60032",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1053",
+      "vendor_name": "Northwind Office Solutions",
+      "amount": 491.14,
+      "currency": "USD",
+      "transaction_date": "2026-03-07",
+      "description": "Office furniture and equipment",
+      "invoice_number": "INV-60053",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1078",
+      "vendor_name": "Vantage IT Services",
+      "amount": 1214.3,
+      "currency": "USD",
+      "transaction_date": "2026-03-09",
+      "description": "Managed IT support retainer",
+      "invoice_number": "INV-60078",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1101",
+      "vendor_name": "Redwood Facilities Group",
+      "amount": 7535.63,
+      "currency": "USD",
+      "transaction_date": "2026-03-10",
+      "description": "Facilities repair work order",
+      "invoice_number": "INV-60101",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1142",
+      "vendor_name": "Talon Cybersecurity",
+      "amount": 2720.28,
+      "currency": "USD",
+      "transaction_date": "2026-03-11",
+      "description": "Incident response engagement",
+      "invoice_number": "INV-60142",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1015",
+      "vendor_name": "Sterling Facilities Management",
+      "amount": 1558.65,
+      "currency": "USD",
+      "transaction_date": "2026-03-12",
+      "description": "Monthly janitorial and HVAC retainer",
+      "invoice_number": "INV-60015",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1050",
+      "vendor_name": "Northwind Office Solutions",
+      "amount": 829.38,
+      "currency": "USD",
+      "transaction_date": "2026-03-14",
+      "description": "Office furniture and equipment",
+      "invoice_number": "INV-60050",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1134",
+      "vendor_name": "Anchor Point Insurance Brokers",
+      "amount": 9909.72,
+      "currency": "USD",
+      "transaction_date": "2026-03-14",
+      "description": "Commercial insurance premium",
+      "invoice_number": "INV-60134",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1017",
+      "vendor_name": "Sterling Facilities Management",
+      "amount": 702.3,
+      "currency": "USD",
+      "transaction_date": "2026-03-15",
+      "description": "Monthly janitorial and HVAC retainer",
+      "invoice_number": "INV-60017",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1045",
+      "vendor_name": "Northwind Office Solutions",
+      "amount": 1208.25,
+      "currency": "USD",
+      "transaction_date": "2026-03-15",
+      "description": "Office furniture and equipment",
+      "invoice_number": "INV-60045",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1060",
+      "vendor_name": "Acme Supplies",
+      "amount": 1470.27,
+      "currency": "USD",
+      "transaction_date": "2026-03-15",
+      "description": "Warehouse and packaging consumables",
+      "invoice_number": "INV-60060",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1066",
+      "vendor_name": "Acme Supplies",
+      "amount": 757.57,
+      "currency": "USD",
+      "transaction_date": "2026-03-15",
+      "description": "Warehouse and packaging consumables",
+      "invoice_number": "INV-60066",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1073",
+      "vendor_name": "Acme Supplies",
+      "amount": 24.22,
+      "currency": "USD",
+      "transaction_date": "2026-03-15",
+      "description": "Warehouse and packaging consumables",
+      "invoice_number": "INV-60073",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1164",
+      "vendor_name": "Cascade Business Solutions",
+      "amount": 9825.0,
+      "currency": "USD",
+      "transaction_date": "2026-03-15",
+      "description": "Business process outsourcing services",
+      "invoice_number": "INV-60162",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1022",
+      "vendor_name": "Sterling Facilities Management",
+      "amount": 42.82,
+      "currency": "USD",
+      "transaction_date": "2026-03-16",
+      "description": "Monthly janitorial and HVAC retainer",
+      "invoice_number": "INV-60022",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1080",
+      "vendor_name": "Vantage IT Services",
+      "amount": 6441.33,
+      "currency": "USD",
+      "transaction_date": "2026-03-16",
+      "description": "Managed IT support retainer",
+      "invoice_number": "INV-60080",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1033",
+      "vendor_name": "Sterling Facilities Management",
+      "amount": 1323.74,
+      "currency": "USD",
+      "transaction_date": "2026-03-17",
+      "description": "Monthly janitorial and HVAC retainer",
+      "invoice_number": "INV-60033",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1086",
+      "vendor_name": "Harborview Freight & Logistics",
+      "amount": 15268.3,
+      "currency": "USD",
+      "transaction_date": "2026-03-18",
+      "description": "Bulk freight shipment",
+      "invoice_number": "INV-60086",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1165",
+      "vendor_name": "Summit Analytics Partners",
+      "amount": 9900.0,
+      "currency": "USD",
+      "transaction_date": "2026-03-18",
+      "description": "Data analytics consulting",
+      "invoice_number": "INV-60163",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1019",
+      "vendor_name": "Sterling Facilities Management",
+      "amount": 1218.0,
+      "currency": "USD",
+      "transaction_date": "2026-03-19",
+      "description": "Monthly janitorial and HVAC retainer",
+      "invoice_number": "INV-60019",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1104",
+      "vendor_name": "Redwood Facilities Group",
+      "amount": 8170.17,
+      "currency": "USD",
+      "transaction_date": "2026-03-19",
+      "description": "Facilities repair work order",
+      "invoice_number": "INV-60104",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1125",
+      "vendor_name": "Ironclad Security Services",
+      "amount": 9222.19,
+      "currency": "USD",
+      "transaction_date": "2026-03-19",
+      "description": "Physical security staffing",
+      "invoice_number": "INV-60125",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1111",
+      "vendor_name": "Summit Analytics Partners",
+      "amount": 1481.83,
+      "currency": "USD",
+      "transaction_date": "2026-03-20",
+      "description": "Data analytics consulting",
+      "invoice_number": "INV-60111",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1148",
+      "vendor_name": "Brightline Marketing Group",
+      "amount": 8957.2,
+      "currency": "USD",
+      "transaction_date": "2026-03-20",
+      "description": "Marketing campaign services",
+      "invoice_number": "INV-60148",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1072",
+      "vendor_name": "Acme Supplies",
+      "amount": 1316.11,
+      "currency": "USD",
+      "transaction_date": "2026-03-21",
+      "description": "Warehouse and packaging consumables",
+      "invoice_number": "INV-60072",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1097",
+      "vendor_name": "Pinnacle Legal Advisors",
+      "amount": 19850.2,
+      "currency": "USD",
+      "transaction_date": "2026-03-21",
+      "description": "Outside counsel - contract review",
+      "invoice_number": "INV-60097",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1132",
+      "vendor_name": "Meadowbrook Catering Co.",
+      "amount": 3812.86,
+      "currency": "USD",
+      "transaction_date": "2026-03-21",
+      "description": "Corporate event catering",
+      "invoice_number": "INV-60132",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1130",
+      "vendor_name": "Meadowbrook Catering Co.",
+      "amount": 9973.02,
+      "currency": "USD",
+      "transaction_date": "2026-03-22",
+      "description": "Corporate event catering",
+      "invoice_number": "INV-60130",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1011",
+      "vendor_name": "Meridian Logistics",
+      "amount": 1194.25,
+      "currency": "USD",
+      "transaction_date": "2026-03-24",
+      "description": "Scheduled freight and last-mile delivery",
+      "invoice_number": "INV-60011",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1128",
+      "vendor_name": "Meadowbrook Catering Co.",
+      "amount": 17172.93,
+      "currency": "USD",
+      "transaction_date": "2026-03-25",
+      "description": "Corporate event catering",
+      "invoice_number": "INV-60128",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1124",
+      "vendor_name": "Ironclad Security Services",
+      "amount": 1840.92,
+      "currency": "USD",
+      "transaction_date": "2026-03-26",
+      "description": "Physical security staffing",
+      "invoice_number": "INV-60124",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1075",
+      "vendor_name": "Acme Supplies",
+      "amount": 1171.27,
+      "currency": "USD",
+      "transaction_date": "2026-03-27",
+      "description": "Warehouse and packaging consumables",
+      "invoice_number": "INV-60075",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1133",
+      "vendor_name": "Meadowbrook Catering Co.",
+      "amount": 18793.39,
+      "currency": "USD",
+      "transaction_date": "2026-03-27",
+      "description": "Corporate event catering",
+      "invoice_number": "INV-60133",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1062",
+      "vendor_name": "Acme Supplies",
+      "amount": 1549.17,
+      "currency": "USD",
+      "transaction_date": "2026-03-28",
+      "description": "Warehouse and packaging consumables",
+      "invoice_number": "INV-60062",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1166",
+      "vendor_name": "Redwood Facilities Group",
+      "amount": 9950.0,
+      "currency": "USD",
+      "transaction_date": "2026-03-28",
+      "description": "Facilities repair work order",
+      "invoice_number": "INV-60164",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1167",
+      "vendor_name": "Brightline Marketing Group",
+      "amount": 9975.0,
+      "currency": "USD",
+      "transaction_date": "2026-03-28",
+      "description": "Marketing campaign services",
+      "invoice_number": "INV-60165",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1026",
+      "vendor_name": "Sterling Facilities Management",
+      "amount": 1504.88,
+      "currency": "USD",
+      "transaction_date": "2026-03-29",
+      "description": "Monthly janitorial and HVAC retainer",
+      "invoice_number": "INV-60026",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1155",
+      "vendor_name": "Brightline Marketing Group",
+      "amount": 18203.57,
+      "currency": "USD",
+      "transaction_date": "2026-03-29",
+      "description": "Marketing campaign services",
+      "invoice_number": "INV-60155",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1013",
+      "vendor_name": "Meridian Logistics",
+      "amount": 111.71,
+      "currency": "USD",
+      "transaction_date": "2026-03-30",
+      "description": "Scheduled freight and last-mile delivery",
+      "invoice_number": "INV-60013",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1126",
+      "vendor_name": "Meadowbrook Catering Co.",
+      "amount": 7529.8,
+      "currency": "USD",
+      "transaction_date": "2026-03-30",
+      "description": "Corporate event catering",
+      "invoice_number": "INV-60126",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1144",
+      "vendor_name": "Talon Cybersecurity",
+      "amount": 10456.4,
+      "currency": "USD",
+      "transaction_date": "2026-03-30",
+      "description": "Incident response engagement",
+      "invoice_number": "INV-60144",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1047",
+      "vendor_name": "Northwind Office Solutions",
+      "amount": 1365.23,
+      "currency": "USD",
+      "transaction_date": "2026-03-31",
+      "description": "Office furniture and equipment",
+      "invoice_number": "INV-60047",
+      "source_system": "sample_data_seed"
+    },
+    {
+      "external_id": "TXN-1084",
+      "vendor_name": "Cascade Business Solutions",
+      "amount": 417.0,
+      "currency": "USD",
+      "transaction_date": "2026-03-31",
+      "description": "Business process outsourcing services",
+      "invoice_number": "INV-60084",
+      "source_system": "sample_data_seed"
+    }
+  ]
+}

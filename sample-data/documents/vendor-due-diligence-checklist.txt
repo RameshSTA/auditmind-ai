@@ -1,0 +1,19 @@
+VENDOR DUE DILIGENCE CHECKLIST
+
+Used by Procurement for every new vendor onboarding, prior to activating a vendor master file
+record.
+
+1. Legal entity verification (business registration, tax ID / W-9 or W-8 on file)
+2. Bank account ownership verification (bank letter or voided check matching the legal entity name)
+3. Sanctions and watchlist screening (OFAC and equivalent)
+4. Related-party disclosure question answered by the vendor's Company sponsor
+5. Certificate of insurance on file, where the vendor will be on Company premises or handling
+   Company data
+6. Data security questionnaire, for any vendor with access to Company systems or data
+7. Two-person sign-off on the vendor master file record (Procurement Analyst + Procurement Manager)
+8. Initial purchase order capped at $10,000 for the first 90 days of the relationship, regardless
+   of the vendor's proposed contract value, to establish a payment history before higher-value
+   purchase orders are approved
+
+Any step skipped requires a documented exception approved by the Controller, logged in the
+Procurement exception register.

@@ -1,0 +1,19 @@
+ACME SUPPLIES LLC
+Invoice
+
+Invoice Number: INV-77821
+Invoice Date: January 10, 2026
+Purchase Order Reference: PO-30187
+Bill To: Accounts Payable, Company FY2026 Q1 Accounts Payable Audit engagement
+Terms: Net 30
+
+Line Items:
+1. Warehouse shelving units (qty 40) — $4,200.00
+2. Packaging tape, industrial grade (qty 200 rolls) — $600.00
+3. Installation labor — $200.00
+
+Subtotal: $5,000.00
+Total Due: $5,000.00
+
+This invoice is matched against Purchase Order PO-30187 and receiving confirmation RC-30187 on
+file. Please remit payment to ap@acmesupplies.example with the invoice number referenced.

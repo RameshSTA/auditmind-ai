@@ -1,0 +1,35 @@
+# DEV-ONLY overlay that switches the API from "no auth configured" to "trust the frontend's
+# dev-auth JWKS" (Increment 11). Compose merges this on top of docker-compose.yml:
+#
+#   docker compose -f docker-compose.yml -f docker-compose.dev-auth.yml up -d postgres neo4j migrate api
+#
+# It points the API's Entra settings at the values apps/web/src/server/dev-auth.ts mints tokens
+# with, and its JWKS URI at the Next.js BFF's /api/dev-auth/jwks.json (reached from inside the
+# api container via host.docker.internal, since the frontend runs on the host with `npm run dev`).
+#
+# This is the api-side half of the same dev-auth stand-in the frontend documents at length — it
+# exists ONLY so the real UI can drive the real API end-to-end without an Entra tenant. It is never
+# part of any deployment; production points AUDITMIND_ENTRA_* at a real Entra tenant and this file
+# is not used.
+services:
+  api:
+    environment:
+      AUDITMIND_ENTRA_TENANT_ID: "auditmind-dev-tenant"
+      AUDITMIND_ENTRA_CLIENT_ID: "auditmind-dev-api"
+      AUDITMIND_ENTRA_ISSUER: "https://login.microsoftonline.com/auditmind-dev-tenant/v2.0"
+      AUDITMIND_ENTRA_JWKS_URI: "http://host.docker.internal:3000/api/dev-auth/jwks.json"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+  # agent-orchestrator validates the identical platform-wide Entra tenant apps/api does (ADR-001)
+  # but reads its own, independently-configured AGENT_ENTRA_* settings — this block was missing
+  # entirely until the AI Copilot frontend needed to exercise the service end-to-end, which surfaced
+  # it as `httpx.UnsupportedProtocol: Request URL is missing an 'http://' or 'https://' protocol`
+  # (an empty AGENT_ENTRA_JWKS_URI passed straight to an httpx.get call).
+  agent-orchestrator:
+    environment:
+      AGENT_ENTRA_TENANT_ID: "auditmind-dev-tenant"
+      AGENT_ENTRA_CLIENT_ID: "auditmind-dev-api"
+      AGENT_ENTRA_ISSUER: "https://login.microsoftonline.com/auditmind-dev-tenant/v2.0"
+      AGENT_ENTRA_JWKS_URI: "http://host.docker.internal:3000/api/dev-auth/jwks.json"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

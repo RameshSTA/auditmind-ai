@@ -1,0 +1,36 @@
+VENDOR MASTER AGREEMENT
+
+Vendor: Meridian Logistics Inc.
+Vendor ID: VEN-1017
+Effective Date: January 15, 2024
+Contract Term: 36 months
+Category: Freight, courier, and last-mile delivery services
+
+1. SCOPE OF SUPPLY
+Meridian Logistics Inc. ("Vendor") provides scheduled freight pickup, courier delivery, and
+warehouse-to-warehouse transfer services across the Company's three regional distribution centers.
+Services are billed per shipment against the rate schedule in Exhibit B, with fuel surcharges
+adjusted monthly.
+
+2. INVOICING
+Vendor invoices weekly, batching all shipments completed in the prior seven days into a single
+invoice. Each invoice must reference the shipment manifest numbers it covers. The Company's
+accounts payable team has flagged, in the past, that Vendor occasionally re-submits a batch invoice
+under a new invoice number when the original is not paid within 10 business days — this practice is
+a known source of duplicate-payment risk and is called out here so that any invoice review should
+cross-check manifest numbers, not invoice numbers alone, before releasing payment.
+
+3. PAYMENT TERMS
+Net 15 from invoice date. Late payment does not accrue interest under this agreement, which is why
+Vendor's collections team follows up quickly and, per section 2, sometimes re-invoices.
+
+4. APPROVAL AUTHORITY
+Standard weekly invoices under $2,000 are approved by the Logistics Coordinator. Invoices at or
+above $2,000 require Logistics Manager approval and a matched shipment manifest.
+
+5. VENDOR CONTACT
+Primary contact: Owen Baptiste, Client Services Lead, Meridian Logistics Inc.
+Billing contact: billing@meridianlogistics.example
+
+Signed on behalf of the Company by the Director of Supply Chain.
+Signed on behalf of Meridian Logistics Inc. by the VP of Client Services.

@@ -1,0 +1,110 @@
+[project]
+name = "agent-orchestrator"
+version = "0.1.0"
+description = "AuditMind AI — Agent Orchestration service (LangGraph 9-agent runtime, ADR-001 separate deployable)"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.115,<0.116",
+    "uvicorn[standard]>=0.32,<0.33",
+    "pydantic>=2.9,<3.0",
+    "pydantic-settings>=2.6,<3.0",
+    "structlog>=24.4,<25.0",
+    "sqlalchemy[asyncio]>=2.0,<2.1",
+    "asyncpg>=0.30,<0.31",
+    "alembic>=1.13,<1.14",
+    # No direct import in this service's own code, but required at runtime by langsmith (a
+    # transitive dependency of litellm/langchain-core) — declared explicitly so this service's
+    # dependency graph does not silently rely on another package's transitive choice, same
+    # reasoning as httpx below.
+    "anyio>=4.0,<5.0",
+    # JWT validation (shared/auth.py) — same library and pin as apps/api's identical validator.
+    "python-jose[cryptography]>=3.3,<4.0",
+    # JWKS fetch (shared/auth.py) and the LiteLLM gateway config loader (infrastructure/
+    # gateway_config.py) both need these directly; declared explicitly even though litellm/
+    # langchain also transitively pull them in, so this service's own dependency graph does not
+    # silently rely on another package's transitive choice.
+    "httpx>=0.27,<1.0",
+    "pyyaml>=6.0,<7.0",
+    # The 9-agent state graph itself (Phase 5, ADR-004). Pinned to the 0.6 line — the API this
+    # service builds its graph against (StateGraph, add_conditional_edges, interrupt/Command,
+    # the checkpointer protocol) is stable across 0.6.x.
+    "langgraph>=0.6,<0.7",
+    "langgraph-checkpoint-postgres>=2.0,<3.0",
+    # `langchain-core` is used directly for `RunnableConfig` (application/orchestrator.py) and
+    # transitively required by langgraph's own API surface.
+    "langchain-core>=0.3,<0.4",
+    # Model access goes through the LiteLLM gateway, never a provider SDK imported directly
+    # (Phase 2 ADR-005) — see infrastructure/llm_client.py.
+    "litellm>=1.77,<2.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3,<9.0",
+    "pytest-asyncio>=0.24,<0.25",
+    "ruff>=0.7,<0.8",
+    "mypy>=1.13,<2.0",
+    "types-python-jose>=3.3,<4.0",
+    "types-PyYAML>=6.0,<7.0",
+    # Enforces the same hexagonal layering apps/api enforces (Phase 3 §1) — see [tool.importlinter].
+    "import-linter>=2.0,<3.0",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+# B008: FastAPI's dependency-injection convention is `param: T = Depends(...)` in the signature
+# itself — the documented, idiomatic pattern, not the mutable-default footgun this rule targets.
+# Matches apps/api/pyproject.toml's identical ignore.
+ignore = ["B008"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+mypy_path = "src"
+
+# litellm and langgraph ship runtime code but no complete py.typed stub coverage as of the pinned
+# versions — an upstream gap, scoped narrowly to these packages so --strict is not weakened for
+# anything else (same discipline apps/api uses for pgvector/hdbscan/sklearn).
+[[tool.mypy.overrides]]
+module = ["litellm.*", "langgraph.*"]
+ignore_missing_imports = true
+
+# The same two contracts apps/api enforces (Phase 3 §1), applied to this service's single package.
+# This service is one bounded context (Agent Orchestration, ADR-001), so only the layers contract
+# is meaningful here — there is no second context in this deployable to keep independent from. The
+# layer order matches apps/api exactly: interface -> infrastructure -> application -> domain, one
+# direction only.
+[tool.importlinter]
+root_package = "agent_orchestrator"
+include_external_packages = true
+
+[[tool.importlinter.contracts]]
+name = "Hexagonal layering (interface -> infrastructure -> application -> domain)"
+type = "layers"
+layers = [
+    "interface",
+    "infrastructure",
+    "application",
+    "domain",
+]
+containers = ["agent_orchestrator"]
+
+# `shared` (settings, logging) is deliberately excluded from the layers contract above: it is the
+# cross-cutting kernel every layer may import (the same role apps/api's `shared` plays), not a
+# layer in the dependency chain. It never imports any of the four layers back, keeping the
+# direction acyclic — verified by import-linter passing with this exclusion.

@@ -1,0 +1,10 @@
+# Auto-provisions every dashboard JSON in ../../dashboards/ — same "no manual clicking to get a
+# working dashboard" reasoning as the datasource provisioning alongside this file.
+apiVersion: 1
+
+providers:
+  - name: AuditMind AI
+    folder: ""
+    type: file
+    options:
+      path: /etc/grafana/provisioning/dashboards/files

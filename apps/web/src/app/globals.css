@@ -1,0 +1,711 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Minimal design system (Increment 11 redesign) — near-monochrome, generous whitespace, hairline
+ * dividers instead of boxed cards, color spent only where it's load-bearing (risk severity). See
+ * docs/implementation/increment-11-frontend.md and tailwind.config.ts for the token rationale.
+ *
+ * Component classes are defined here via @apply rather than inlined per-component, so every page
+ * re-themes from one file — the same "one place, not scattered" discipline the backend applies to
+ * its own shared modules.
+ */
+
+/* Every value is space-separated "R G B" (no `rgb()`, no commas) — the format Tailwind's
+   `rgb(var(--x) / <alpha-value>)` color definition (tailwind.config.ts) needs to support opacity
+   modifiers like `ring-ink/10`. A plain hex or `rgb(...)` string here compiles but silently breaks
+   every `/NN` opacity utility (confirmed: `ring-ink/10` failed the production build with "the
+   class does not exist" the first time these were hex strings) — this triplet format is required,
+   not a style preference. */
+:root {
+  --ink: 13 13 13;
+  --ink-secondary: 110 110 128;
+  --ink-muted: 142 142 160;
+  --line: 236 236 236;
+  --line-strong: 229 229 229;
+  --paper: 255 255 255;
+  --surface: 250 250 250;
+  --risk-critical: 217 48 37;
+  --risk-critical-bg: 253 236 234;
+  --risk-high: 184 134 11;
+  --risk-high-bg: 251 243 221;
+  --risk-medium: 184 134 11;
+  --risk-medium-bg: 251 243 221;
+  --risk-low: 26 127 55;
+  --risk-low-bg: 233 247 238;
+  /* The topbar masthead — a deliberate, invariant brand color (not part of the near-monochrome
+     content palette below it), the same "colored top bar over a neutral workspace" pattern
+     enterprise consoles like Docker Desktop and Vertex AI use so the chrome always reads as
+     "platform" while the content underneath stays calm and readable. */
+  --brand: 30 64 175;
+}
+
+/* Dark theme (Settings' toggle, SettingsPanel.tsx) — only the neutral surface/text/line tokens
+   flip; the four risk-severity colors stay fixed across both themes (they're already saturated
+   enough to read on either background, and severity is the one place this palette spends color
+   deliberately — keeping it invariant means "critical" always means the same red regardless of
+   theme, never a second thing to keep in sync). */
+[data-theme="dark"] {
+  --ink: 242 242 240;
+  --ink-secondary: 168 168 156;
+  --ink-muted: 122 122 112;
+  --line: 42 42 38;
+  --line-strong: 58 58 52;
+  --paper: 18 18 16;
+  --surface: 26 26 23;
+  --risk-critical-bg: 58 26 22;
+  --risk-high-bg: 51 44 18;
+  --risk-medium-bg: 51 44 18;
+  --risk-low-bg: 20 38 28;
+}
+
+@layer base {
+  html,
+  body {
+    @apply m-0 p-0;
+  }
+
+  body {
+    @apply bg-paper text-ink font-sans antialiased;
+    line-height: 1.6;
+    /* Lets native form controls, scrollbars, etc. pick a matching light/dark rendering — the one
+       piece of theming Tailwind utility classes can't reach. */
+    color-scheme: light;
+  }
+  [data-theme="dark"] body {
+    color-scheme: dark;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply m-0 font-semibold text-ink tracking-tight;
+  }
+  /* Every panel title is an h2, every in-panel subsection title is an h3 — this was previously
+     set per-instance (`style={{ fontSize: "1.2rem" }}`, 20 call sites; `"1rem"`, 6 call sites),
+     which is exactly the kind of drift a shared heading scale exists to prevent. Sizing lives here
+     once; call sites only ever control spacing around a heading, never its size. */
+  h1 {
+    @apply text-2xl;
+  }
+  h2 {
+    @apply text-xl;
+  }
+  h3 {
+    @apply text-base;
+  }
+
+  a {
+    @apply text-ink no-underline;
+  }
+  a:hover {
+    @apply underline;
+  }
+}
+
+@layer components {
+  .kicker {
+    @apply text-xs font-medium uppercase tracking-wide text-ink-muted;
+  }
+
+  .shell {
+    @apply mx-auto max-w-3xl px-6;
+  }
+
+  /* Every panel's top-level section stack (previously `style={{ display: "grid", gap: "1.8rem" }}`
+     inlined at 9 separate call sites) — the vertical rhythm between a panel's major sections. */
+  .panel-stack {
+    @apply grid gap-7;
+  }
+
+  /* A panel's title + trailing action(s) on one line (e.g. "Vendor — network" + a Close button) —
+     previously `style={{ display: "flex", alignItems: "baseline", gap: "0.8rem", flexWrap: "wrap" }}`
+     at 8 call sites. */
+  .panel-header-row {
+    @apply flex flex-wrap items-baseline gap-3;
+  }
+
+  /* A panel's intro paragraph under its h2 — previously `className="muted" style={{ maxWidth:
+     "68ch" }}` at 15 call sites, the platform's standard prose measure for a one-paragraph
+     explanation of what the panel does. Same text treatment as `.muted` (kept in sync manually —
+     see that rule below), plus the measure constraint. */
+  .lede {
+    @apply max-w-[68ch] text-sm text-ink-secondary;
+  }
+
+  /* The masthead — solid brand color, deliberately the one place in the product that isn't
+     near-monochrome (see --brand's comment above). No hairline rule under it; separation comes
+     from a soft elevation shadow instead, per the "no horizontal line in header/footer" design
+     instruction. Every child below opts INTO white/translucent-white explicitly — nothing here
+     relies on inheritance alone, so a child added later doesn't silently render dark-on-dark. */
+  .topbar {
+    @apply relative z-10 bg-brand;
+    box-shadow: 0 1px 3px rgba(13, 13, 13, 0.16);
+  }
+  .topbar .shell {
+    @apply flex items-center gap-3 py-3.5;
+    max-width: none;
+    padding-left: 1.5rem;
+    padding-right: 1.75rem;
+  }
+
+  .brand {
+    @apply text-[17px] font-semibold tracking-tight text-ink;
+  }
+  .topbar .brand {
+    @apply text-white;
+  }
+  .topbar a {
+    color: white;
+  }
+  .topbar .who {
+    @apply text-white/90;
+  }
+  .topbar .who .mono {
+    @apply text-white/60;
+  }
+  /* Buttons on the masthead read as translucent-white chips, except `.btn-primary` (the signed-out
+     "Sign in" pill) which goes fully solid white-on-brand — the one clear call-to-action in the
+     bar, the same treatment Docker Desktop's own "Sign in" button gets. */
+  .topbar .btn {
+    @apply border-white/25 bg-white/10 text-white;
+  }
+  .topbar .btn:hover {
+    @apply bg-white/20;
+  }
+  .topbar .btn-primary {
+    @apply border-white bg-white text-brand;
+  }
+  .topbar .btn-primary:hover {
+    @apply bg-white/90;
+  }
+  .topbar .avatar {
+    @apply bg-white/15 text-white;
+  }
+
+  .avatar {
+    @apply inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-ink text-[12px] font-semibold text-paper;
+  }
+
+  /* App shell: fixed sidebar rail + fluid main column. */
+  .app-body {
+    @apply flex min-h-screen flex-col;
+  }
+  .app-main-row {
+    @apply flex flex-1;
+  }
+
+  .sidebar {
+    @apply flex flex-shrink-0 flex-col bg-surface;
+    width: 232px;
+    transition: width 150ms ease;
+  }
+  .sidebar-collapsed {
+    width: 60px;
+  }
+  .sidebar-toggle {
+    @apply m-2 flex h-8 w-8 flex-shrink-0 cursor-pointer items-center justify-center self-end rounded text-ink-secondary;
+  }
+  .sidebar-toggle:hover {
+    @apply bg-line;
+  }
+  .sidebar-nav {
+    @apply flex flex-1 flex-col gap-0.5 overflow-y-auto px-2 pb-4;
+  }
+  .sidebar-group-label {
+    @apply mb-1 mt-4 h-4 px-2.5 text-[11px] font-medium uppercase tracking-wide text-ink-muted;
+  }
+
+  .nav-item {
+    @apply flex items-center gap-2.5 rounded px-2.5 py-2 text-[13px] font-medium text-ink-secondary;
+  }
+  a.nav-item:hover {
+    @apply bg-line text-ink no-underline;
+  }
+  .nav-item-active {
+    @apply bg-paper text-ink shadow-sm;
+  }
+  .nav-item-disabled {
+    @apply cursor-default text-ink-muted opacity-60;
+  }
+  .nav-item-badge {
+    @apply ml-auto rounded-full bg-line px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-ink-muted;
+  }
+
+  .main-content {
+    @apply flex-1 overflow-x-hidden;
+  }
+  .main-content .shell {
+    max-width: 900px;
+  }
+
+  .site-footer .shell {
+    max-width: none;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  .who {
+    @apply flex items-center gap-3 text-[13px] text-ink-secondary;
+  }
+
+  .card {
+    @apply rounded-md border border-line-strong bg-paper p-4;
+  }
+
+  .report-markdown h1 {
+    @apply mb-3 text-lg font-semibold text-ink;
+  }
+  .report-markdown .report-heading {
+    @apply mb-1.5 mt-5 flex items-center gap-2 text-[15px] font-semibold text-ink first:mt-0;
+  }
+  .report-markdown p {
+    @apply mb-3 text-[13px] leading-relaxed text-ink-secondary;
+  }
+  .report-markdown em {
+    @apply not-italic text-xs text-ink-muted;
+  }
+  .report-markdown blockquote {
+    @apply mb-2 border-l-2 border-line-strong pl-3 text-[13px] italic text-ink-secondary;
+  }
+
+  /* Report letterhead — the document-style header above the rendered Markdown body
+   * (ReportsPanel.tsx). */
+  .report-letterhead-meta {
+    @apply flex flex-wrap gap-8 border-b border-line pb-4;
+  }
+
+  /* Executive summary card — parsed from the backend's own summary sentence, never computed
+   * independently of it (see ReportExecutiveSummary in ReportsPanel.tsx). */
+  .report-summary-card {
+    @apply mb-5 rounded-md border border-line-strong bg-surface p-4;
+  }
+  .report-severity-bar {
+    @apply mt-2.5 flex h-2 w-full min-w-[80px] overflow-hidden rounded-full bg-line;
+  }
+  .report-severity-segment {
+    @apply h-full;
+  }
+
+  /* A finding's "Status: … · Control: …" line, rendered as a real status chip instead of italic
+   * prose. */
+  .report-meta {
+    @apply mb-3 flex items-center gap-1 text-sm;
+  }
+
+  /* An evidence citation, grouped with its "source chunk" attribution — a quote-mark accent
+   * distinguishes cited evidence from surrounding prose without relying on color alone. */
+  .report-evidence {
+    @apply relative mb-3 rounded border border-line bg-surface py-2 pl-5 pr-3 text-[13px] text-ink-secondary;
+  }
+  .report-evidence::before {
+    content: "\201C";
+    @apply absolute left-1.5 top-0 text-lg leading-none text-ink-muted;
+  }
+  .report-evidence p {
+    @apply mb-1 italic last:mb-0;
+  }
+  .report-evidence-source {
+    @apply text-xs not-italic text-ink-muted;
+  }
+
+  /* A finding with no cited evidence — deliberately not styled like routine muted text elsewhere
+   * on this page. An unsupported finding is a real gap a reviewer must notice, not an absence to
+   * skim past (the ``.notice.warn`` treatment other permission/validation gaps already use). */
+  .report-evidence-gap {
+    @apply mb-3;
+  }
+
+  .panel-grid {
+    @apply grid gap-3;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
+
+  /* An engagement's entry point (EngagementList.tsx) — a full-width row so the "Open workspace"
+     affordance is never squeezed into a small square card, with enough hover lift that it reads
+     as a real navigational door, not a static content card. */
+  .workspace-card {
+    @apply flex items-center justify-between gap-6 rounded-md border border-line-strong bg-paper p-5 no-underline;
+    transition:
+      box-shadow 150ms ease,
+      border-color 150ms ease;
+  }
+  .workspace-card:hover {
+    @apply border-ink no-underline;
+    box-shadow: 0 4px 20px rgba(13, 13, 13, 0.08);
+  }
+  .workspace-card-cta {
+    @apply flex flex-shrink-0 items-center gap-1.5 rounded border border-ink bg-ink px-3.5 py-2 text-[13px] font-medium text-paper;
+  }
+  .workspace-card:hover .workspace-card-cta {
+    @apply bg-black;
+  }
+
+  /* Monitoring (MonitoringPanel.tsx) — an at-a-glance status banner plus per-service cards,
+     replacing a bare table with something that reads as a real status page. */
+  .status-banner {
+    @apply flex items-center gap-2.5 rounded-md border px-4 py-3 text-sm;
+  }
+  .status-banner-ok {
+    @apply border-risk-low/30 bg-risk-low-bg text-risk-low;
+  }
+  .status-banner-down {
+    @apply border-risk-critical/30 bg-risk-critical-bg text-risk-critical;
+  }
+  .service-card {
+    @apply flex flex-wrap items-center justify-between gap-4;
+  }
+  .service-card-status {
+    @apply flex flex-wrap items-center gap-4 text-sm;
+  }
+  .service-icon {
+    @apply flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full;
+  }
+  .service-icon-ok {
+    @apply bg-risk-low-bg text-risk-low;
+  }
+  .service-icon-down {
+    @apply bg-risk-critical-bg text-risk-critical;
+  }
+  .service-icon-neutral {
+    @apply bg-surface text-ink-secondary;
+  }
+  .service-link-card {
+    @apply flex items-center gap-3 no-underline;
+  }
+  .service-link-card:hover {
+    @apply border-ink no-underline;
+    box-shadow: 0 4px 20px rgba(13, 13, 13, 0.08);
+  }
+
+  /* AI Copilot's chat thread (CopilotPanel.tsx). */
+  .copilot-thread {
+    @apply grid gap-4 overflow-y-auto pr-1;
+    max-height: 60vh;
+  }
+  .copilot-message {
+    @apply flex items-start gap-2.5;
+  }
+  .copilot-message-user {
+    @apply flex-row-reverse;
+  }
+  .copilot-avatar {
+    @apply mt-1.5 flex-shrink-0 text-ink-muted;
+  }
+  .copilot-bubble {
+    @apply max-w-[75%] rounded-md border border-line-strong bg-surface px-4 py-2.5 text-[13px] leading-relaxed text-ink;
+  }
+  .copilot-bubble p {
+    @apply mb-2 last:mb-0;
+  }
+  .copilot-message-user .copilot-bubble {
+    @apply border-ink bg-ink text-paper;
+  }
+  .copilot-empty {
+    @apply flex flex-col items-center justify-center py-10 text-center text-ink-muted;
+  }
+  .copilot-thinking {
+    @apply text-sm italic text-ink-muted;
+  }
+  .copilot-composer {
+    @apply flex items-end gap-2.5;
+  }
+  .copilot-composer-input {
+    @apply flex-1 resize-none;
+  }
+
+  .btn {
+    @apply flex-shrink-0 cursor-pointer whitespace-nowrap rounded border border-line-strong bg-paper px-3.5 py-2 text-[13px] font-medium text-ink;
+  }
+  .btn:hover {
+    @apply bg-surface;
+  }
+  .btn-primary {
+    @apply border-ink bg-ink text-paper;
+  }
+  .btn-primary:hover {
+    @apply bg-black;
+  }
+  .btn-danger {
+    @apply border-line-strong text-risk-critical;
+  }
+  .btn:disabled {
+    @apply cursor-not-allowed opacity-50;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium;
+  }
+  .sev-critical {
+    @apply text-risk-critical;
+  }
+  .sev-critical::before {
+    content: "";
+    @apply h-1.5 w-1.5 rounded-full bg-risk-critical;
+  }
+  .sev-high,
+  .sev-medium {
+    @apply text-risk-high;
+  }
+  .sev-high::before,
+  .sev-medium::before {
+    content: "";
+    @apply h-1.5 w-1.5 rounded-full bg-risk-high;
+  }
+  .sev-low {
+    @apply text-risk-low;
+  }
+  .sev-low::before {
+    content: "";
+    @apply h-1.5 w-1.5 rounded-full bg-risk-low;
+  }
+
+  .status-draft {
+    @apply text-ink-secondary;
+  }
+  .status-confirmed {
+    @apply text-risk-low;
+  }
+  .status-rejected {
+    @apply text-risk-critical;
+  }
+  .status-open {
+    @apply text-ink-secondary;
+  }
+  /* Investigation lifecycle: closed is a resolved terminal state, the same "neutral, not alarming"
+     treatment a confirmed finding gets — closing is the intended outcome, not a failure. */
+  .status-closed {
+    @apply text-risk-low;
+  }
+  /* Anomaly dispositions: a true positive is a confirmed real risk (flag it), a false positive is
+     cleared (same treatment as a finding rejected as inapplicable — resolved, not alarming). */
+  .status-true_positive {
+    @apply text-risk-critical;
+  }
+  .status-false_positive {
+    @apply text-risk-low;
+  }
+
+  /* Agent run lifecycle (Phase 5 §15-§17) and HITL decisions. */
+  .status-pending,
+  .status-running {
+    @apply text-ink-secondary;
+  }
+  .status-awaiting_human_review,
+  .status-cannot_conclude,
+  .status-edit {
+    @apply text-risk-high;
+  }
+  .status-completed,
+  .status-approve {
+    @apply text-risk-low;
+  }
+  .status-halted,
+  .status-failed,
+  .status-reject {
+    @apply text-risk-critical;
+  }
+
+  table.data {
+    @apply w-full border-collapse text-sm;
+  }
+  table.data thead th {
+    @apply border-b border-line px-2.5 py-2 text-left text-xs font-medium uppercase tracking-wide text-ink-muted;
+  }
+  table.data tbody td {
+    @apply border-b border-line px-2.5 py-3 align-top;
+  }
+
+  .muted {
+    @apply text-sm text-ink-secondary;
+  }
+  .mono {
+    @apply font-mono text-sm text-ink-secondary;
+  }
+
+  input.field,
+  textarea.field,
+  select.field {
+    @apply w-full rounded border border-line-strong bg-paper px-3 py-2 text-sm text-ink;
+  }
+  input.field:focus,
+  textarea.field:focus,
+  select.field:focus {
+    @apply outline-none ring-2 ring-ink/10 border-ink;
+  }
+
+  .notice {
+    @apply rounded border border-line-strong bg-surface px-4 py-3 text-sm text-ink-secondary;
+  }
+  .notice.warn {
+    @apply border-risk-high/30 text-risk-high;
+  }
+  .notice.error {
+    @apply border-risk-critical/30 text-risk-critical;
+  }
+
+  /* Skeleton loading — replaces bare "Loading…" text so a table/card grid's layout doesn't jump
+     once real content arrives. Pulse is gated behind prefers-reduced-motion below, same as every
+     other animation in this file. */
+  .skeleton {
+    @apply rounded bg-line;
+  }
+
+  /* Toasts: ephemeral confirmation that a mutation landed. Errors deliberately stay in ErrorNotice
+     instead (see Toast.tsx) — a trace_id shouldn't auto-dismiss after four seconds. */
+  .toast-stack {
+    position: fixed;
+    bottom: 1.25rem;
+    right: 1.25rem;
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-width: 360px;
+  }
+  .toast {
+    @apply flex items-start justify-between gap-3 rounded-md border border-line-strong bg-paper px-4 py-3 text-sm text-ink;
+    box-shadow: 0 4px 16px rgba(13, 13, 13, 0.1);
+  }
+  .toast-error {
+    @apply border-risk-critical/30 text-risk-critical;
+  }
+  .toast-dismiss {
+    @apply cursor-pointer text-ink-muted;
+    line-height: 1;
+  }
+
+  /* Modal overlay shared by the confirm dialog and the command palette — one dim layer, two
+     different panels on top of it. */
+  .dialog-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(13, 13, 13, 0.4);
+    padding: 1rem;
+  }
+  .dialog {
+    @apply w-full max-w-[420px] rounded-md border border-line-strong bg-paper p-5;
+    box-shadow: 0 12px 32px rgba(13, 13, 13, 0.2);
+  }
+
+  /* Command palette (Cmd/Ctrl+K) trigger — a white search pill on the brand-color masthead,
+     always in that context today (layout.tsx), so it's styled for it directly rather than scoped
+     under `.topbar`. */
+  .command-trigger {
+    @apply flex min-w-[220px] items-center gap-2 rounded-full border border-transparent bg-white px-4 py-2 text-[13px] text-ink-muted;
+  }
+  .command-trigger:hover {
+    @apply text-ink-secondary;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.35);
+  }
+  .command-trigger .kbd {
+    @apply ml-auto;
+  }
+  .kbd {
+    @apply rounded border border-line-strong bg-surface px-1.5 py-0.5 text-[11px] font-medium text-ink-muted;
+  }
+  .command-palette {
+    @apply w-full max-w-[520px] overflow-hidden rounded-md border border-line-strong bg-paper;
+    box-shadow: 0 12px 32px rgba(13, 13, 13, 0.2);
+  }
+  .command-input {
+    @apply w-full border-b border-line bg-transparent px-4 py-3 text-sm text-ink outline-none;
+  }
+  .command-list {
+    @apply grid gap-0.5 overflow-y-auto p-2;
+    max-height: 320px;
+  }
+  .command-item {
+    @apply flex w-full cursor-pointer items-center gap-2.5 rounded px-3 py-2 text-left text-[13px] text-ink-secondary;
+  }
+  .command-item-active {
+    @apply bg-surface text-ink;
+  }
+}
+
+/* Print stylesheet — "Print / Save as PDF" on a report (ReportsPanel.tsx) is real functionality
+   (the browser's own print pipeline), not a stand-in for the document export the backend doesn't
+   build yet. Anything chrome-like (`.no-print`) disappears; the report itself gets full width and
+   avoids splitting a finding's heading from its own body across a page break. */
+@media print {
+  .topbar,
+  .sidebar,
+  .site-footer,
+  .toast-stack,
+  .no-print {
+    display: none !important;
+  }
+  .main-content .shell {
+    max-width: none;
+    padding: 0;
+  }
+  .report-print-area .card {
+    border: none;
+    padding: 0;
+  }
+  .report-markdown .report-heading,
+  .report-evidence,
+  .report-summary-card {
+    break-inside: avoid;
+  }
+}
+
+/* Motion only to orient (page transitions, expand/collapse) — never decorative, per the design
+   philosophy's §1-2. Gated behind prefers-reduced-motion: no-preference so a user who has asked
+   the OS for reduced motion gets instant, static changes instead — the same accessibility
+   discipline SeverityChip's "never color alone" already applies to this design system. */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(2px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .fade-in {
+    animation: fade-in 180ms ease-out;
+  }
+
+  /* A larger, one-time entrance for the landing page hero only — the one screen a first-time
+     visitor sees before they've formed any expectation of the product's restraint elsewhere.
+     Still one direction, still finishes quickly, still never loops. `--stagger` (set inline per
+     element) offsets each entrance slightly so the hero reads top-to-bottom instead of all at
+     once. */
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .fade-in-up {
+    opacity: 0;
+    animation: fade-in-up 500ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: var(--stagger, 0ms);
+  }
+
+  @keyframes skeleton-pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+  .skeleton {
+    animation: skeleton-pulse 1.4s ease-in-out infinite;
+  }
+}

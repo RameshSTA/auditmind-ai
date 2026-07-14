@@ -1,0 +1,25 @@
+# dependencies
+/node_modules
+
+# next.js
+/.next/
+/out/
+next-env.d.ts
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+
+# env files (dev-auth keys live in code as a documented dev-only stand-in; real secrets never here)
+.env
+.env.local
+.env*.local
+
+# typescript
+*.tsbuildinfo

@@ -1,0 +1,39 @@
+# OTel Collector config (Phase 10 §5) — the single fan-out point every service reports to.
+# Receives OTLP from apps/api (traces + metrics), forwards metrics to Prometheus via remote-write
+# (Phase 10 §6's "push, not pull" — sidesteps target discovery entirely, the same reasoning that
+# section gives for why remote-write over scrape-based Prometheus) and logs traces to stdout for
+# now, since no trace-storage backend (Jaeger/Tempo) is in this increment's scope — see
+# docs/implementation/increment-13-observability.md's "what's deferred" section.
+
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+processors:
+  batch: {}
+
+exporters:
+  # Traces have nowhere durable to land yet (no Jaeger/Tempo service in this compose stack) —
+  # logging them makes the pipeline observably working (`docker compose logs otel-collector`
+  # shows real spans arriving) without standing up a trace backend speculatively.
+  debug:
+    verbosity: basic
+  prometheus_remote_write:
+    endpoint: "http://prometheus:9090/api/v1/write"
+    resource_to_telemetry_conversion:
+      enabled: true
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [debug]
+    metrics:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [prometheus_remote_write]
