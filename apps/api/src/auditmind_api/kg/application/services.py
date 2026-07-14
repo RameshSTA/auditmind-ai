@@ -1,6 +1,5 @@
-"""Application service for the Knowledge Graph context (Phase 4 §3, Increment 09). No SQL, no
-Cypher, no HTTP — only coordination of ports, the same pattern every prior context's service
-established."""
+"""Application service for the Knowledge Graph context. No SQL, no Cypher, no HTTP — only
+coordination of ports, the same pattern every prior context's service established."""
 
 from __future__ import annotations
 
@@ -31,7 +30,7 @@ class KnowledgeGraphService:
     async def resolve_vendors(self, *, engagement_id: str) -> int:
         """Reads every transaction with a vendor name, groups by normalized name so every raw
         spelling variant of the same vendor resolves to one stable graph identity, and upserts the
-        result into both the Postgres bridge tables and Neo4j (Phase 4 §4).
+        result into both the Postgres bridge tables and Neo4j.
 
         Idempotent and self-healing by design, not just by accident: safe to call repeatedly on
         the same engagement (e.g. after importing more transactions) because (1) a previously-

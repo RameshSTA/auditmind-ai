@@ -1,11 +1,11 @@
-"""Integration tests proving the ingestion schema's Row-Level Security policies (Phase 4 §12)
-actually isolate engagements at the database level.
+"""Integration tests proving the ingestion schema's Row-Level Security policies actually isolate
+engagements at the database level.
 
-Unlike Increment 02's ``identity.engagement_members`` policy (a direct session-variable equality
-check), these policies derive authorization via a subquery against ``identity.engagement_members``
-— a user may see a document/chunk row if and only if they are *currently* a member of its
+Unlike the ``identity.engagement_members`` policy (a direct session-variable equality check),
+these policies derive authorization via a subquery against ``identity.engagement_members`` — a
+user may see a document/chunk row if and only if they are *currently* a member of its
 ``engagement_id``. This file proves that subquery-based approach holds under the same attack
-shape Increment 02 already proved against the simpler policy.
+shape already proved against the simpler policy.
 """
 
 from __future__ import annotations

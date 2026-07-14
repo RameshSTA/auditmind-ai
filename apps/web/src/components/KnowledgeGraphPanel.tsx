@@ -1,8 +1,8 @@
 "use client";
 
 /**
- * Knowledge Graph — vendor list resolved from this engagement's transactions (Increment 09), plus
- * a vendor-360 drill-down (every transaction paid to one vendor). Reads Neo4j through the API's
+ * Knowledge Graph — vendor list resolved from this engagement's transactions, plus a vendor-360
+ * drill-down (every transaction paid to one vendor). Reads Neo4j through the API's
  * knowledge_graph endpoints; nothing here is a mock graph visualization standing in for real data.
  */
 import { useState } from "react";

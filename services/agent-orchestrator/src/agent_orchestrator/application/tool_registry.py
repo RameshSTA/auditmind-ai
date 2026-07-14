@@ -1,15 +1,15 @@
-"""The tool registry (Phase 5 §12) — least-privilege tool access, enforced by construction.
+"""The tool registry — least-privilege tool access, enforced by construction.
 
-Phase 5 §12 lists exactly which agent may call which tool. Encoding that as a reviewed table here
-(rather than as scattered per-call-site checks) means the least-privilege rule is one auditable
-artifact: a call from any agent not listed for a tool is rejected before it reaches the backing
-API. This is the graph-runtime half of the same "remove the capability rather than prompt against
-it" discipline Phase 5 §3 applies to raw SQL.
+A reviewed table lists exactly which agent may call which tool. Encoding that as a reviewed table
+here (rather than as scattered per-call-site checks) means the least-privilege rule is one
+auditable artifact: a call from any agent not listed for a tool is rejected before it reaches the
+backing API. This is the graph-runtime half of the same "remove the capability rather than prompt
+against it" discipline this codebase applies to raw SQL.
 
 Only the *authorization* half of the registry is built here. The tools themselves (``hybrid_search``
 against ``apps/api``'s ``/v1/search``, ``graph_traverse`` against ``/v1/graph``, etc.) are HTTP
-calls into the core API that this service does not yet make — see Increment 12's doc §6 for why the
-tool *implementations* are deferred while the *registry that governs them* is built now.
+calls into the core API that this service does not yet make — the *implementations* are deferred
+while the *registry that governs them* is built now.
 """
 
 from __future__ import annotations
@@ -17,9 +17,9 @@ from __future__ import annotations
 from agent_orchestrator.domain.agents import AgentRole
 from agent_orchestrator.domain.entities import ToolPermission
 
-# The registry exactly as Phase 5 §12's table specifies it. Each tool names the agent(s) permitted
-# to call it; the write-capable tools (``submit_finding_draft``, ``request_human_review``) are
-# flagged so a future rate-limit / circuit-breaker policy (Phase 5 §12) can treat writes distinctly.
+# Each tool names the agent(s) permitted to call it; the write-capable tools
+# (``submit_finding_draft``, ``request_human_review``) are flagged so a future rate-limit /
+# circuit-breaker policy can treat writes distinctly.
 _REGISTRY: dict[str, ToolPermission] = {
     "hybrid_search": ToolPermission(
         tool_name="hybrid_search", allowed_agents=frozenset({AgentRole.RETRIEVAL.value})
@@ -44,8 +44,8 @@ _REGISTRY: dict[str, ToolPermission] = {
         tool_name="get_confirmed_findings",
         allowed_agents=frozenset({AgentRole.REPORT_GENERATION.value}),
     ),
-    # submit_finding_draft is the one tool any specialist may call (post-Guardrail), per §12 — the
-    # write path into apps/api's reporting context. Idempotent by design (§14's idempotency key).
+    # submit_finding_draft is the one tool any specialist may call (post-Guardrail) — the write
+    # path into apps/api's reporting context. Idempotent by design (keyed on an idempotency key).
     "submit_finding_draft": ToolPermission(
         tool_name="submit_finding_draft",
         allowed_agents=frozenset(
@@ -96,7 +96,7 @@ _REGISTRY: dict[str, ToolPermission] = {
 
 
 def is_tool_allowed(*, tool_name: str, agent: AgentRole) -> bool:
-    """Whether ``agent`` is permitted to call ``tool_name`` per the registry (Phase 5 §12).
+    """Whether ``agent`` is permitted to call ``tool_name`` per the registry.
 
     An unknown tool name is denied (returns ``False``), not treated as unrestricted — the safe
     default for a least-privilege registry is deny, so a typo or an unregistered tool fails closed.
@@ -108,7 +108,7 @@ def is_tool_allowed(*, tool_name: str, agent: AgentRole) -> bool:
 
 
 def tools_for_agent(agent: AgentRole) -> frozenset[str]:
-    """Every tool ``agent`` is permitted to call — backs the Planner's ``list_available_tools``
-    (Phase 5 §1), which queries the registry for what a task type may use before writing the plan.
+    """Every tool ``agent`` is permitted to call — backs the Planner's ``list_available_tools``,
+    which queries the registry for what a task type may use before writing the plan.
     """
     return frozenset(name for name, perm in _REGISTRY.items() if agent.value in perm.allowed_agents)

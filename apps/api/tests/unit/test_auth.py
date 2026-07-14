@@ -1,4 +1,4 @@
-"""Unit tests for JWT validation (Phase 2 §7, Phase 11 §1/§4).
+"""Unit tests for JWT validation.
 
 Tokens are signed and verified against a locally-generated RSA keypair (see
 ``tests/conftest.py``) — no network call to a live Entra ID tenant is made or needed, which is

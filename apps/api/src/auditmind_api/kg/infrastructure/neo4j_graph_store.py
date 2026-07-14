@@ -1,12 +1,12 @@
-"""Adapter for the ``GraphStore`` port: Neo4j itself (Phase 4 §3).
+"""Adapter for the ``GraphStore`` port: Neo4j itself.
 
 **Security note, the one genuinely novel risk this context introduces**: every other bounded
 context's isolation guarantee comes from Postgres Row-Level Security — the database itself refuses
 to return or accept a row outside the caller's engagement, proven directly in each context's own
-``test_*_rls.py`` (Increments 02-08). Neo4j has no equivalent mechanism (Phase 4 §12: "every node
-carries an ``engagement_id`` property because Neo4j has no native row-level security
-equivalent"). That means isolation here is an application-code guarantee, not a database one —
-every single Cypher query below filters on ``engagement_id`` as part of the node pattern itself
+``test_*_rls.py``. Neo4j has no equivalent mechanism: every node carries an ``engagement_id``
+property because Neo4j has no native row-level security equivalent. That means isolation here is
+an application-code guarantee, not a database one — every single Cypher query below filters on
+``engagement_id`` as part of the node pattern itself
 (``MATCH (v:Vendor {id: $vendor_id, engagement_id: $engagement_id})``), never as an afterthought
 post-filter, so a caller who guesses another engagement's vendor id gets a genuine "not found"
 (zero rows), the same observable behavior Postgres RLS produces — proven directly by

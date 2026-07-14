@@ -1,4 +1,4 @@
-"""Unit tests for document parsers (Phase 6 §3)."""
+"""Unit tests for document parsers."""
 
 from __future__ import annotations
 

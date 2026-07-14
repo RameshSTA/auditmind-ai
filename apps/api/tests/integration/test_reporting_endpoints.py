@@ -1,7 +1,7 @@
 """Full-stack integration tests: real HTTP requests through the real FastAPI app, against the
-real local Postgres, exercising the finding lifecycle end-to-end (Phase 1 FR-7, FR-8) — create,
-cite evidence, confirm/reject (the mandatory human sign-off gate), and generate a report. Only the
-Entra JWKS network call is replaced, as in ``test_ingestion_endpoints.py``.
+real local Postgres, exercising the finding lifecycle end-to-end — create, cite evidence,
+confirm/reject (the mandatory human sign-off gate), and generate a report. Only the Entra JWKS
+network call is replaced, as in ``test_ingestion_endpoints.py``.
 """
 
 from __future__ import annotations
@@ -40,7 +40,7 @@ async def admin_engine() -> AsyncIterator[AsyncEngine]:
 @pytest_asyncio.fixture
 async def seeded_engagement(admin_engine: AsyncEngine) -> AsyncIterator[dict[str, str]]:
     """One engagement with three members of different roles (Auditor, FraudAnalyst,
-    ComplianceManager — the three permitted to author findings per Phase 11 §2's RBAC matrix) plus
+    ComplianceManager — the three permitted to author findings per the RBAC matrix) plus
     a non-member outsider, a chunk to cite as evidence, and a second engagement with its own chunk
     the ``auditor`` user is *also* a member of — the setup ``test_..._cross_engagement_evidence``
     needs to exercise ``ChunkLookup``'s cross-engagement check over real HTTP, not just fakes."""
@@ -158,8 +158,8 @@ async def seeded_engagement(admin_engine: AsyncEngine) -> AsyncIterator[dict[str
 
     async with admin_engine.begin() as conn:
         # audit_trail.events has an FK into identity.engagements — must be cleared before the
-        # engagement itself, or that DELETE fails with a foreign-key violation (confirm/reject now
-        # write an audit event per Increment 06).
+        # engagement itself, or that DELETE fails with a foreign-key violation (confirm/reject
+        # writes an audit event).
         await conn.execute(text("DELETE FROM audit_trail.events"))
         await conn.execute(text("DELETE FROM reporting.report_findings"))
         await conn.execute(text("DELETE FROM reporting.reports"))
@@ -281,7 +281,7 @@ def test_outsider_cannot_create_a_finding(
 def test_cae_cannot_create_a_finding(
     client: TestClient, rsa_keypair: KeyMaterial, seeded_engagement: dict[str, str]
 ) -> None:
-    """Per Phase 11 §2's RBAC matrix, CAE may read findings but not author them — only Auditor,
+    """Per the RBAC matrix, CAE may read findings but not author them — only Auditor,
     Fraud Analyst, and Compliance Manager may run analysis / create findings."""
     engagement_id = seeded_engagement["engagement"]
     headers = _auth_header(rsa_keypair, seeded_engagement["cae_user"])
@@ -318,7 +318,7 @@ def test_auditor_can_confirm_a_finding(
 def test_compliance_manager_cannot_confirm_a_finding(
     client: TestClient, rsa_keypair: KeyMaterial, seeded_engagement: dict[str, str]
 ) -> None:
-    """Per Phase 11 §2's RBAC matrix, confirming/rejecting a finding (HITL) is Auditor/Fraud
+    """Per the RBAC matrix, confirming/rejecting a finding (HITL) is Auditor/Fraud
     Analyst only — Compliance Manager can author a draft but not disposition it."""
     engagement_id = seeded_engagement["engagement"]
     auditor_headers = _auth_header(rsa_keypair, seeded_engagement["auditor_user"])

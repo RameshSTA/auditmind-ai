@@ -1,7 +1,7 @@
-"""SQLAlchemy ORM models for the ``kg`` Postgres schema (Phase 4 §4) — the Postgres side of the
-Knowledge Graph context's "bridge" to Neo4j. Registered on the shared ``Base``
-(``shared/orm_base.py``) so Alembic autogenerate sees them, the same convention every other
-context's ``infrastructure/models.py`` follows.
+"""SQLAlchemy ORM models for the ``kg`` Postgres schema — the Postgres side of the Knowledge Graph
+context's "bridge" to Neo4j. Registered on the shared ``Base`` (``shared/orm_base.py``) so Alembic
+autogenerate sees them, the same convention every other context's ``infrastructure/models.py``
+follows.
 """
 
 from __future__ import annotations

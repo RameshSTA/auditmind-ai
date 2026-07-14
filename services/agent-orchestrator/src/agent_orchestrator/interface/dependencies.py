@@ -1,19 +1,19 @@
 """FastAPI dependencies wiring identity, persistence, and the orchestration service into the
-request lifecycle (Phase 3 §1) — the only layer in this service allowed to import FastAPI.
+request lifecycle — the only layer in this service allowed to import FastAPI.
 
 **Why this resolves identity via raw SQL against ``identity.*`` instead of importing
-``apps/api``'s identity context**: the two services are separate deployables (ADR-001) that never
-share a Python package, but they share one physical database (Phase 4 §1). Reading another
-context's tables directly through a raw, parameterized query — never through that context's ORM
-class — is the exact convention ``apps/api`` itself already uses across bounded contexts
-(``risk``'s ``AuditTrailRecorder`` and ``Neo4jVendorCentralitySource``, Increment 10); this module
-applies the same rule across the service boundary.
+``apps/api``'s identity context**: the two services are separate deployables that never share a
+Python package, but they share one physical database. Reading another context's tables directly
+through a raw, parameterized query — never through that context's ORM class — is the exact
+convention ``apps/api`` itself already uses across bounded contexts (``risk``'s
+``AuditTrailRecorder`` and ``Neo4jVendorCentralitySource``); this module applies the same rule
+across the service boundary.
 
 **What this service deliberately does NOT do**: JIT-provision a new ``identity.users`` row for an
-unrecognized token subject. That provisioning is ``apps/api``'s identity context's job
-(Increment 02) — a caller must already have signed into the main application at least once. A
-token whose subject has no matching ``identity.users`` row is rejected here with a clear 401
-rather than silently creating a second, divergent user-provisioning path.
+unrecognized token subject. That provisioning is ``apps/api``'s identity context's job — a caller
+must already have signed into the main application at least once. A token whose subject has no
+matching ``identity.users`` row is rejected here with a clear 401 rather than silently creating a
+second, divergent user-provisioning path.
 """
 
 from __future__ import annotations
@@ -50,9 +50,9 @@ async def get_current_db_user_id(
     session: AsyncSession = Depends(get_db_session),
 ) -> str:
     """Resolves the validated token subject to an existing ``identity.users`` id, then binds the
-    Row-Level Security context for every subsequent query in this request's transaction (Phase 4
-    §12) — the same ``set_rls_user_context`` call, against the same session variable, every
-    engagement-scoped table in the platform relies on.
+    Row-Level Security context for every subsequent query in this request's transaction — the same
+    ``set_rls_user_context`` call, against the same session variable, every engagement-scoped
+    table in the platform relies on.
     """
     result = await session.execute(
         text("SELECT id FROM identity.users WHERE entra_object_id = :oid"),
@@ -73,14 +73,14 @@ def require_engagement_member(
     *allowed_roles: str,
 ) -> Callable[..., Coroutine[Any, Any, str]]:
     """FastAPI dependency factory: re-checks engagement membership against the database on every
-    request (Phase 11 §4 — engagement scope is never trusted from the JWT). Relies on FastAPI's
-    path-parameter injection — the route this is used on must declare ``{engagement_id}``.
+    request — engagement scope is never trusted from the JWT. Relies on FastAPI's path-parameter
+    injection — the route this is used on must declare ``{engagement_id}``.
 
     Usage: ``Depends(require_engagement_member())`` for "any member", or
     ``Depends(require_engagement_member("Auditor", "FraudAnalyst"))`` to additionally restrict by
-    role — the same two roles ``apps/api``'s finding sign-off gate restricts to (Increment 04),
-    since an agent run's HITL approval is the identical governance act (``domain/agents.py``'s
-    ``HitlDecision`` docstring).
+    role — the same two roles ``apps/api``'s finding sign-off gate restricts to, since an agent
+    run's HITL approval is the identical governance act (``domain/agents.py``'s ``HitlDecision``
+    docstring).
     """
 
     async def _check(
@@ -151,9 +151,9 @@ def get_copilot_actions_api_client(
 def get_llm_client(settings: Settings = Depends(get_settings)) -> LlmClient:
     """The real LiteLLM gateway adapter — its own dependency (not inlined into
     ``get_orchestration_service``) specifically so tests can override *only* this piece with a
-    fake and still exercise the real request-scoped session/repositories underneath it (Increment
-    12's HTTP integration tests do exactly this — no ``ANTHROPIC_API_KEY`` exists in this
-    environment, the same "genuinely unverifiable without a key" boundary the increment doc names).
+    fake and still exercise the real request-scoped session/repositories underneath it (the HTTP
+    integration tests do exactly this — no model provider API key exists in this environment, so
+    a live call is genuinely unverifiable without one).
     """
     router_config = load_gateway_config(settings.litellm_config_path)
     return LiteLlmGatewayClient(router_config=router_config)
@@ -167,7 +167,7 @@ def get_llm_client(settings: Settings = Depends(get_settings)) -> LlmClient:
 # a `KeyError` on the Planner's first read of `state["task"]`, against the real HTTP stack). This
 # module-level singleton is the smallest fix that makes the HITL pause/resume flow survive across
 # requests within one running process; it is still not durable across a process restart — that gap
-# is the genuinely deferred one (`AsyncPostgresSaver`, Increment 12's doc §"deferred").
+# is genuinely deferred pending a persistent checkpointer (`AsyncPostgresSaver`).
 _checkpointer = InMemorySaver()
 
 

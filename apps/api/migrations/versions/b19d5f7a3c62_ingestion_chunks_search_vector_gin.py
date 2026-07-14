@@ -1,4 +1,4 @@
-"""ingestion.chunks: search_vector generated column + GIN index (Increment 07, Phase 6 §10)
+"""ingestion.chunks: search_vector generated column + GIN index
 
 Adds the "keyword leg" of the Retrieval Agent: a generated ``tsvector`` column computed from
 ``ingestion.chunks.text`` by Postgres itself on every insert (``GENERATED ALWAYS AS ... STORED`` —
@@ -6,9 +6,9 @@ never written by application code, so it can never drift out of sync with ``text
 GIN index for fast full-text search.
 
 This migration does not create a new schema or grant anything new: ``auditmind_app`` already holds
-table-level ``SELECT`` on ``ingestion.chunks`` from Increment 03, and a table-level grant covers
-columns added later by ``ALTER TABLE ... ADD COLUMN`` automatically — no new `GRANT` statement is
-needed for the new `retrieval` context to read this column.
+table-level ``SELECT`` on ``ingestion.chunks``, and a table-level grant covers columns added later
+by ``ALTER TABLE ... ADD COLUMN`` automatically — no new `GRANT` statement is needed for the new
+`retrieval` context to read this column.
 
 Revision ID: b19d5f7a3c62
 Revises: a7c4e912f568

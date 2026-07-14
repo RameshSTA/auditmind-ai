@@ -1,4 +1,4 @@
-"""Unit tests for Settings (Phase 3 §4: configuration from environment variables only)."""
+"""Unit tests for Settings (configuration from environment variables only)."""
 
 from __future__ import annotations
 

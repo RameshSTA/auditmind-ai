@@ -129,9 +129,9 @@ def shutdown_telemetry(tracer_provider: TracerProvider, meter_provider: MeterPro
 def current_trace_id() -> str | None:
     """The active span's trace id as a hex string, or ``None`` if no span is active — what
     ``main.py``'s request middleware binds into every structlog line so "a log line and its OTel
-    trace are always joinable" (Phase 10 §1), replacing the request-local ``uuid4()`` that
-    property only accidentally satisfied before (same value per request, but no relationship to
-    the actual distributed trace)."""
+    trace are always joinable", replacing the request-local ``uuid4()`` that property only
+    accidentally satisfied before (same value per request, but no relationship to the actual
+    distributed trace)."""
     span_context = trace.get_current_span().get_span_context()
     if not span_context.is_valid:
         return None

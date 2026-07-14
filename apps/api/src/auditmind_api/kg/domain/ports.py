@@ -1,4 +1,4 @@
-"""Adapter ports (Phase 3 §1) for the Knowledge Graph context.
+"""Adapter ports for the Knowledge Graph context.
 
 ``TransactionSource`` is the one thing this context needs from ``risk``: a way to read transactions
 that carry a vendor name, to resolve into graph entities. Its own minimal protocol, not a shared
@@ -7,7 +7,7 @@ cross-context read in this codebase establishes.
 
 ``EntityCandidateRepository`` and ``GraphStore`` are this context's own concerns — the first is the
 Postgres "bridge" table pair this context owns (``kg.entity_candidates``,
-``kg.entity_resolution_map``, Phase 4 §4), the second is Neo4j itself.
+``kg.entity_resolution_map``), the second is Neo4j itself.
 """
 
 from __future__ import annotations
@@ -24,8 +24,8 @@ from auditmind_api.kg.domain.entities import VendorEntity, VendorNetwork
 class TransactionForResolution:
     """The minimal shape this context needs from a transaction it does not own — an id to key the
     resulting candidate by, and just enough to resolve + graph a vendor relationship. Deliberately
-    not ``risk``'s own ``Transaction`` entity (Phase 3 §1 — a bounded context never imports
-    another's domain model)."""
+    not ``risk``'s own ``Transaction`` entity — a bounded context never imports another's domain
+    model."""
 
     transaction_id: str
     vendor_name: str
@@ -73,7 +73,7 @@ class GraphStore(Protocol):
         ``/healthz`` is documented to never check downstream dependencies, and blocking API
         startup on Neo4j being reachable would be exactly that check in disguise. Called instead
         from ``KnowledgeGraphService.resolve_vendors``, once per call, the same lazy-setup
-        discipline Increment 08's BGE-M3 model load already established."""
+        discipline the BGE-M3 model load already established elsewhere in this codebase."""
         ...
 
     async def merge_vendor_and_transaction(

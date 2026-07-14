@@ -1,5 +1,5 @@
-"""Integration tests proving Row-Level Security actually isolates users at the database level
-(Phase 4 §12, Phase 11 §2 Layer 3) — not merely that application code remembers to filter.
+"""Integration tests proving Row-Level Security actually isolates users at the database level —
+not merely that application code remembers to filter.
 
 Two separate connections are used deliberately:
 

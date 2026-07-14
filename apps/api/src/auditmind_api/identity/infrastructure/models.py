@@ -1,10 +1,10 @@
-"""SQLAlchemy ORM models for the ``identity`` Postgres schema (Phase 4 §1).
+"""SQLAlchemy ORM models for the ``identity`` Postgres schema.
 
 This is the only module in the identity context allowed to know about SQLAlchemy. Domain entities
 (plain dataclasses in ``domain.entities``) are mapped to/from these models at the repository
 boundary and are never used interchangeably with them — the same "persistence model is not a
-domain entity" separation Phase 3 §4 already applies to API request/response schemas, applied
-here to the ORM layer instead.
+domain entity" separation already applied to API request/response schemas, applied here to the
+ORM layer instead.
 """
 
 from __future__ import annotations
@@ -55,7 +55,7 @@ class EngagementModel(Base):
 
 
 class CredentialModel(Base):
-    """Local email/password credentials (Increment 14: self-service signup). One row per user,
+    """Local email/password credentials for self-service signup. One row per user,
     enforced by ``user_id`` being both primary key and a unique FK — a second ``create`` call for
     the same user is a programming error, not a supported "update password" path (unbuilt)."""
 
@@ -71,8 +71,7 @@ class CredentialModel(Base):
 
 class EngagementMembershipModel(Base):
     """Row-Level Security is enabled on this table by the Alembic migration, not here — SQLAlchemy
-    models describe shape, not policy (Phase 4 §12's policy lives in the migration, Increment 02
-    docs)."""
+    models describe shape, not policy, and the RLS policy itself lives in the migration."""
 
     __tablename__ = "engagement_members"
     __table_args__ = {"schema": "identity"}

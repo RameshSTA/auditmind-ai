@@ -101,7 +101,7 @@ def _service(
         run_repository=run_repository,
         hitl_repository=hitl_repository or FakeHitlRepository(),
         checkpointer=InMemorySaver(),
-        default_model="claude-fast",
+        default_model="fast-model",
         max_replans=max_replans,
     )
 

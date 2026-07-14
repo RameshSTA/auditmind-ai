@@ -115,5 +115,5 @@ jobs:
     if: github.event_name == 'push'
     steps:
       - uses: actions/checkout@v4
-      - name: Build image (no push — registry push wired up when ACR credentials exist, Phase 12 §6)
+      - name: Build image (no push — registry push wired up when ACR credentials exist)
         run: docker build -t auditmind-agent-orchestrator:${{ github.sha }} services/agent-orchestrator

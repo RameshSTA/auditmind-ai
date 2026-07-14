@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 #
-# Multi-stage build (Phase 12 §1): the build stage carries compilers and dev tooling; the runtime
+# Multi-stage build: the build stage carries compilers and dev tooling; the runtime
 # stage ships only the installed package and its runtime dependencies, as a non-root user.
 #
 # Pinned to an exact version tag (3.12.10-slim, never a floating `3.12-slim` or `latest`) rather
@@ -12,7 +12,7 @@
 
 FROM python:3.12.10-slim AS build
 
-# Increment 10 (Phase 7 §2-§3) added `hdbscan`, which has no prebuilt wheel for this
+# `hdbscan` has no prebuilt wheel for this
 # platform/Python combination and compiles Cython-generated C extensions at install time — a
 # bare `python:*-slim` image has no compiler at all, and `pip install` fails with `gcc: No such
 # file or directory` without this. Build tools stay confined to this build stage; the runtime
@@ -43,7 +43,7 @@ RUN pip install --no-cache-dir --prefix=/install .
 
 FROM python:3.12.10-slim AS runtime
 
-# Non-root user (Phase 12 §1, Phase 11 OWASP A05 — Security Misconfiguration).
+# Non-root user (OWASP A05 — Security Misconfiguration).
 RUN groupadd --gid 1000 auditmind && \
     useradd --uid 1000 --gid auditmind --shell /usr/sbin/nologin --create-home auditmind
 
@@ -53,7 +53,7 @@ WORKDIR /app
 
 # Migration files ship in the same image (alembic is already a main dependency in pyproject.toml)
 # so `docker run <image> alembic upgrade head` works against any environment this image is
-# deployed to, without a separate migration-only image to keep in sync (Phase 12 §7).
+# deployed to, without a separate migration-only image to keep in sync.
 COPY alembic.ini ./
 COPY migrations ./migrations
 
@@ -62,7 +62,7 @@ COPY migrations ./migrations
 # /data/blobs (docker-compose.yml's `blob_storage` mount) would still be unwritable by uid 1000 on
 # first boot. docker-entrypoint.py runs as root, fixes that volume's ownership, then drops
 # privileges to `auditmind` via exec before running CMD — the app process itself still ends up
-# non-root (Phase 12 §1, Phase 11 OWASP A05), just one step later than a bare USER instruction.
+# non-root (OWASP A05), just one step later than a bare USER instruction.
 # Services that override this image's entrypoint (e.g. docker-compose.yml's `migrate`, which runs
 # `alembic` directly and never touches /data/blobs) bypass this script entirely and must set
 # `user:` themselves to stay non-root.
@@ -71,7 +71,7 @@ RUN chmod +x /usr/local/bin/docker-entrypoint.py
 
 EXPOSE 8000
 
-# Liveness is intentionally the only thing this check verifies (Phase 12 §13) — readiness (which
+# Liveness is intentionally the only thing this check verifies — readiness (which
 # will check downstream dependencies once they exist) is a separate HTTP endpoint, not this probe.
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/healthz', timeout=2)" || exit 1

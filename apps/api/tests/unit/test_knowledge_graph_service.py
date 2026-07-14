@@ -1,4 +1,4 @@
-"""Unit tests for KnowledgeGraphService (Phase 3 §1 application layer) — against in-memory fakes."""
+"""Unit tests for KnowledgeGraphService (application layer) — against in-memory fakes."""
 
 from __future__ import annotations
 

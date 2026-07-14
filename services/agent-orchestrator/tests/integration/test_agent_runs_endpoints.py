@@ -1,9 +1,8 @@
 """Full-stack HTTP integration tests — real requests, real Postgres, real RLS. The graph itself
 runs against a fake ``LlmClient`` and a fake ``RagApiClient``, both injected via dependency
 overrides, deliberately independent of whatever real provider key or reachable apps/api instance
-this environment may or may not have (the same "genuinely unverifiable without X" boundary the
-increment doc names, for the two components a fake stands in for) — everything above those two
-adapters (routing, HTTP, RBAC, RLS, persistence, the HITL resume path) is exercised for real."""
+this environment may or may not have — everything above those two adapters (routing, HTTP, RBAC,
+RLS, persistence, the HITL resume path) is exercised for real."""
 
 from __future__ import annotations
 
@@ -49,9 +48,9 @@ async def admin_engine() -> AsyncIterator[AsyncEngine]:
 async def engagement_with_auditor(admin_engine: AsyncEngine) -> AsyncIterator[dict[str, str]]:
     """Seeds one engagement with two members of *different* database roles — an Auditor and a
     CAE. Authorization in this service is resolved entirely from the ``identity.engagement_members``
-    row, never from a caller's JWT ``roles`` claim (Phase 11 §4), so proving a role-gated 403
-    requires a member whose *database* role is actually disallowed, not just a token that claims
-    to be some other role for the same identity."""
+    row, never from a caller's JWT ``roles`` claim, so proving a role-gated 403 requires a member
+    whose *database* role is actually disallowed, not just a token that claims to be some other
+    role for the same identity."""
     ids = {
         "tenant": str(uuid.uuid4()),
         "engagement": str(uuid.uuid4()),
@@ -138,7 +137,7 @@ def client(monkeypatch: pytest.MonkeyPatch, rsa_keypair: KeyMaterial) -> Iterato
     """A test client against the real settings/database/auth stack, with only the LLM client
     swapped for a fake (via FastAPI's dependency-override mechanism) — everything else (session,
     repositories, RBAC, RLS) is real, proving the whole stack above the gateway adapter end to
-    end. Mirrors ``apps/api``'s identical integration-test client fixture (Increment 02)."""
+    end. Mirrors ``apps/api``'s identical integration-test client fixture."""
     monkeypatch.setenv("AGENT_ENTRA_CLIENT_ID", TEST_AUDIENCE)
     monkeypatch.setenv("AGENT_ENTRA_ISSUER", TEST_ISSUER)
     monkeypatch.setenv("AGENT_ENTRA_JWKS_URI", "https://fake-entra.example/keys")
@@ -171,7 +170,7 @@ def client(monkeypatch: pytest.MonkeyPatch, rsa_keypair: KeyMaterial) -> Iterato
     app.dependency_overrides[get_llm_client] = lambda: fake_llm
     # The RAG tool client is overridden the same way — these tests prove the HTTP/RBAC/RLS/HITL
     # stack end to end, deliberately independent of whether apps/api is reachable from this
-    # process, the same "genuinely unverifiable without X" boundary the fake LLM client draws.
+    # process, the same boundary the fake LLM client draws.
     app.dependency_overrides[get_api_client] = lambda: FakeApiClient()
 
     with TestClient(app) as test_client:
@@ -240,8 +239,8 @@ def test_start_run_rejects_a_role_not_permitted_to_author(
 ) -> None:
     """The engagement's *CAE* member (read-only, per the seeded ``identity.engagement_members``
     row) is denied — role gating is enforced server-side against that membership row, not
-    whatever role a caller's own token happens to claim (Phase 11 §4). The token here honestly
-    carries 'CAE' too, matching the database, to keep the test's premise unambiguous."""
+    whatever role a caller's own token happens to claim. The token here honestly carries 'CAE'
+    too, matching the database, to keep the test's premise unambiguous."""
     headers = _auth_headers(
         rsa_keypair, subject=engagement_with_auditor["cae_entra_oid"], roles=["CAE"]
     )
@@ -342,7 +341,7 @@ def test_hitl_resolve_rejects_a_cae_member(
 ) -> None:
     """The sign-off gate is restricted to Auditor/FraudAnalyst — a CAE member of the same
     engagement (read-only, per the seeded membership row) is denied, the same role split
-    ``apps/api``'s finding confirm/reject endpoints enforce (Increment 04)."""
+    ``apps/api``'s finding confirm/reject endpoints enforce."""
     auditor_headers = _auth_headers(
         rsa_keypair, subject=engagement_with_auditor["entra_oid"], roles=["Auditor"]
     )

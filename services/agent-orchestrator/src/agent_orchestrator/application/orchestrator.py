@@ -2,18 +2,17 @@
 
 Composes the three pieces the graph needs: the injected :class:`LlmClient` (real gateway or fake),
 the :class:`RunRepository` (persists the ``agent.runs`` row), and a checkpointer. It builds the
-graph, records the run, and drives one execution up to the human-in-the-loop interrupt (Phase 5
-§15) — then stops, because resumption is a separate act that may happen minutes or days later from
-a fresh process (§15's whole point: an interrupt is a durable pause, not an in-memory hold).
-``resume_after_review`` is that separate act — it feeds a reviewer's decision back into the same
-checkpointed thread, wherever the graph left off.
+graph, records the run, and drives one execution up to the human-in-the-loop interrupt — then
+stops, because resumption is a separate act that may happen minutes or days later from a fresh
+process: an interrupt is a durable pause, not an in-memory hold. ``resume_after_review`` is that
+separate act — it feeds a reviewer's decision back into the same checkpointed thread, wherever the
+graph left off.
 
 What this service does *not* do: make the agents produce real audit findings. Every LLM-calling
 node routes through the injected ``LlmClient``; with the real gateway and no API key that raises a
 clean ``LlmProviderNotConfiguredError`` at the first model call (the Planner). So ``start_run``
 persists the run, builds the graph, and — in an unconfigured environment — surfaces that typed 503
-rather than fabricating output. That is the exact built-vs-unverifiable line (Increment 12's doc,
-§"deferred").
+rather than fabricating output. That is the built-vs-unverifiable line for this scaffold.
 """
 
 from __future__ import annotations
@@ -56,17 +55,17 @@ class OrchestrationService:
 
     async def _classify_terminal_status(self, config: RunnableConfig) -> RunStatus:
         """Inspects the checkpoint's own ``next`` pointer to classify where the graph actually
-        stopped, rather than guessing (Phase 5 §17's distinct-outcomes requirement).
+        stopped, rather than guessing.
 
         ``next`` is non-empty exactly when the compiled graph's ``interrupt_before=[_HITL]`` fired
-        — a genuine, durable pause (§15) — so a non-empty ``next`` is unambiguously
+        — a genuine, durable pause — so a non-empty ``next`` is unambiguously
         ``AWAITING_HUMAN_REVIEW``. Every other stopping point is a real ``END``, and the graph's own
         topology (``application/graph.py``) makes the two ``END``-reaching paths distinguishable
         from the final state alone: a hard Guardrail stop always leaves a ``violation``-severity
         flag in ``guardrail_flags`` (the only way to route to ``END`` other than through HITL or
         cannot-conclude); anything else that reached ``END`` without pausing did so via the
-        evaluation-driven ``cannot_conclude`` route (§8/§14/§17's honest "could not reach a
-        confident answer" terminal, AC-01).
+        evaluation-driven ``cannot_conclude`` route — the honest "could not reach a confident
+        answer" terminal.
         """
         snapshot = await self._graph.aget_state(config)
         if snapshot.next:
@@ -84,7 +83,7 @@ class OrchestrationService:
 
         Records the ``agent.runs`` row first (so the run is durable and RLS-scoped before any work),
         then invokes the graph. The graph's ``thread_id`` is the run id — that is what ties every
-        checkpoint (Phase 5 §16) and any resume back to this specific run. In an unconfigured
+        checkpoint and any resume back to this specific run. In an unconfigured
         environment the first LLM node raises ``LlmProviderNotConfiguredError``, the status is set
         to ``FAILED``, and the error propagates to the caller as a 503 — the run row still exists,
         recording the attempt.
@@ -120,7 +119,7 @@ class OrchestrationService:
             # checkpoint (which is what actually resumes execution). Without this row,
             # `GET .../hitl-interrupts` would have nothing to show a reviewing UI even though the
             # graph really is paused; `resume_after_review` still works off the run id alone, but a
-            # reviewer needs something to list and to attach their reason/decision to (Phase 5 §15).
+            # reviewer needs something to list and to attach their reason/decision to.
             await self._hitl_repository.open_interrupt(
                 HitlInterrupt(
                     id="",
@@ -140,7 +139,7 @@ class OrchestrationService:
         )
 
     async def resume_after_review(self, *, run_id: str, decision: HitlDecision) -> RunStatus:
-        """Feeds a reviewer's decision back into a run paused at the HITL interrupt (Phase 5 §15).
+        """Feeds a reviewer's decision back into a run paused at the HITL interrupt.
 
         ``Command(resume=...)`` is what LangGraph delivers as the return value of the in-node
         ``interrupt(...)`` call (``application/graph.py``'s ``_hitl_node``) — the graph continues
@@ -148,16 +147,15 @@ class OrchestrationService:
         one that started it, which is the whole point of a durable interrupt. Approval routes to
         Report Generation and ends ``COMPLETED``; rejection or an edit ends the run without a
         published report — both the AI's draft and the human's decision remain in the checkpoint
-        history either way (§15's "both versions preserved"), this method only advances the durable
-        ``agent.runs.status`` to match.
+        history either way, this method only advances the durable ``agent.runs.status`` to match.
 
         Rejection/edit maps to ``HALTED`` rather than a dedicated "human rejected" status: the
         domain model (``domain/agents.py``) does not yet distinguish "a reviewer declined to
         publish" from "a guardrail hard-stopped the run" as separate terminal states — both mean
         "this run ends with no approved report," and the *reviewer's own decision* (with their
         reason, on ``agent.hitl_interrupts``) is the durable record of which one actually happened.
-        Adding a dedicated status is a small, real schema change, named here rather than done
-        silently (Increment 12 doc §"deferred").
+        Adding a dedicated status is a small, real schema change, named here as a known gap rather
+        than done silently.
         """
         config: RunnableConfig = {"configurable": {"thread_id": run_id}}
         try:

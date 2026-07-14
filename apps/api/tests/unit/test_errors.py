@@ -1,4 +1,4 @@
-"""Unit tests for the RFC 7807 error envelope (Phase 3 §5)."""
+"""Unit tests for the RFC 7807 error envelope."""
 
 from __future__ import annotations
 

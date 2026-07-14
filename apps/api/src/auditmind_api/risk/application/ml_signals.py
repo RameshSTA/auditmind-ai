@@ -1,6 +1,6 @@
-"""Multivariate outlier scoring (Isolation Forest) and cohort clustering (HDBSCAN) — Phase 7 §2's
-"Multivariate outlier scoring" and §3's clustering box, the two ML-dependent tiers Increment 05
-left entirely unbuilt pending `scikit-learn`/`hdbscan`.
+"""Multivariate outlier scoring (Isolation Forest) and cohort clustering (HDBSCAN) — the two
+ML-dependent tiers of the fraud-scoring ensemble, left unbuilt until `scikit-learn`/`hdbscan`
+were added.
 
 Pure functions over a feature matrix (``features.py``'s ``TransactionFeatures``), no I/O — model
 *fitting* is CPU computation over data already in hand, not a call to an external system, so this
@@ -77,9 +77,9 @@ def compute_isolation_forest_scores(features: list[TransactionFeatures]) -> dict
 def compute_hdbscan_noise_flags(features: list[TransactionFeatures]) -> dict[str, bool]:
     """Returns ``transaction_id -> is_noise``. A "noise" point (HDBSCAN's cluster label ``-1``) is
     a transaction that doesn't fit any cohort of at least ``_HDBSCAN_MIN_CLUSTER_SIZE`` similar
-    transactions — Phase 7 §3's selection reasoning for HDBSCAN over K-Means specifically: "it does
-    not force every transaction into a cluster... regardless of fit." Empty below the minimum
-    sample size, same reasoning as the Isolation Forest gate above.
+    transactions — the selection reasoning for HDBSCAN over K-Means specifically: it does not
+    force every transaction into a cluster regardless of fit. Empty below the minimum sample size,
+    same reasoning as the Isolation Forest gate above.
 
     **Everything coming back as noise is a legitimate result, not a bug — confirmed empirically
     while building this, worth stating explicitly so the next person who sees an all-noise result
@@ -90,8 +90,7 @@ def compute_hdbscan_noise_flags(features: list[TransactionFeatures]) -> dict[str
     to be stable relative to, and correctly comes back 100% noise. Verified directly: a clean,
     well-separated synthetic population (~200 points, 5 injected outliers) correctly isolates
     exactly the outliers; the same population size with no real internal structure (e.g. every
-    feature independently random) correctly comes back entirely noise. See the increment doc's
-    testing section for the numbers.
+    feature independently random) correctly comes back entirely noise.
     """
     if len(features) < _MINIMUM_SAMPLE_SIZE:
         return {}

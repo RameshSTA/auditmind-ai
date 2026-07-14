@@ -1,7 +1,7 @@
-"""Domain entities for the Reporting & Audit Trail context (Phase 4 §1, Phase 1 FR-7/FR-8).
+"""Domain entities for the Reporting & Audit Trail context.
 
-Plain, framework-free dataclasses — no SQLAlchemy, no FastAPI (Phase 3 §1 layering), the same
-convention ``identity`` and ``ingestion`` already established.
+Plain, framework-free dataclasses — no SQLAlchemy, no FastAPI, the same layering convention
+``identity`` and ``ingestion`` already established.
 """
 
 from __future__ import annotations
@@ -19,14 +19,14 @@ class FindingSeverity(str, Enum):
 
 
 class FindingStatus(str, Enum):
-    """``draft`` / ``confirmed`` / ``rejected`` per Phase 4 §1's schema table.
+    """``draft`` / ``confirmed`` / ``rejected``.
 
     Every finding starts ``DRAFT`` and transitions exactly once, to either ``CONFIRMED`` or
-    ``REJECTED`` — the mandatory human sign-off gate FR-7.1 requires before any finding is treated
-    as audit-ready. There is deliberately no path back to ``DRAFT``: a rejected or confirmed
-    finding is a disposed one, and correcting it means creating a new finding, not mutating the
-    record of what was decided (the same "the record only ever grows" discipline the design intends
-    for ``audit_trail.events``, applied here to the disposition itself).
+    ``REJECTED`` — the mandatory human sign-off gate before any finding is treated as audit-ready.
+    There is deliberately no path back to ``DRAFT``: a rejected or confirmed finding is a disposed
+    one, and correcting it means creating a new finding, not mutating the record of what was
+    decided (the same "the record only ever grows" discipline ``audit_trail.events`` follows,
+    applied here to the disposition itself).
     """
 
     DRAFT = "draft"
@@ -54,10 +54,9 @@ class Finding:
 class FindingEvidence:
     """One citation: a finding, a chunk it draws on, and the exact claim that chunk supports.
 
-    This junction table *is* the citation graph FR-8.1/AC-05 require — a finding without at least
-    one ``FindingEvidence`` row is an unsupported claim, which is exactly the thing the platform's
-    "citation-only answers" principle (Phase 1 risk register) exists to prevent from being
-    presented as fact.
+    This junction table *is* the citation graph — a finding without at least one
+    ``FindingEvidence`` row is an unsupported claim, which is exactly what the platform's
+    "citation-only answers" principle exists to prevent from being presented as fact.
     """
 
     id: str

@@ -1,4 +1,4 @@
-"""SQLAlchemy ORM models for the ``risk`` Postgres schema (Phase 4 §1).
+"""SQLAlchemy ORM models for the ``risk`` Postgres schema.
 
 This is the only module in the risk context allowed to know about SQLAlchemy — the same
 "persistence model is not a domain entity" separation every prior context established.
@@ -70,8 +70,8 @@ class RiskScoreModel(Base):
     engagement_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), ForeignKey("identity.engagements.id"), nullable=False, index=True
     )
-    # Not a foreign key — polymorphic per Phase 4 §1 (transaction / vendor / control); see the
-    # migration's own docstring for why.
+    # Not a foreign key — polymorphic (transaction / vendor / control); see the migration's own
+    # docstring for why.
     subject_type: Mapped[str] = mapped_column(String, nullable=False)
     subject_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), nullable=False)
     score: Mapped[Decimal] = mapped_column(Numeric(5, 2), nullable=False)

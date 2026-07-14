@@ -1,6 +1,6 @@
 """Full-stack integration tests: real HTTP requests through the real FastAPI app, against the
 real local Postgres, exercising the complete upload → dedup-check → store → parse → chunk →
-persist chain (Phase 1 UC-01, Phase 6 §1) — only the Entra JWKS network call is replaced, as in
+persist chain — only the Entra JWKS network call is replaced, as in
 ``test_identity_endpoints.py``.
 """
 

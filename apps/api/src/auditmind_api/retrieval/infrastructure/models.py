@@ -1,7 +1,7 @@
-"""SQLAlchemy ORM model for the ``retrieval`` Postgres schema (Phase 4 §2).
+"""SQLAlchemy ORM model for the ``retrieval`` Postgres schema.
 
-``chunk_embeddings`` is the first table this context owns — until Increment 08 it only ever read a
-column ``ingestion.chunks`` owns (Increment 07's ``search_vector``). Registered on the shared
+``chunk_embeddings`` is the first table this context owns — before it existed, this context only
+ever read a column ``ingestion.chunks`` owns (``search_vector``). Registered on the shared
 ``Base`` (``shared/orm_base.py``) so Alembic autogenerate sees it, the same convention every other
 context's ``infrastructure/models.py`` follows.
 """
@@ -18,7 +18,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from auditmind_api.shared.orm_base import Base
 
-# BGE-M3's dense output dimension (Phase 4 §2) — fixed by the model, matches the migration.
+# BGE-M3's dense output dimension — fixed by the model, matches the migration.
 _EMBEDDING_DIM = 1024
 
 

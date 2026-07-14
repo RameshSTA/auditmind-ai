@@ -1,13 +1,13 @@
 """risk schema: transactions, anomalies
 
-Implements the ``risk.transactions`` / ``risk.anomalies`` pair from Phase 4 §1, scoped to what
-Increment 05 actually builds — the rule engine's three checks (Benford's Law, duplicate-payment
-matching, threshold/round-dollar detection). ``risk.risk_scores`` (the weighted-logistic combiner's
-output) is deferred entirely: it has nothing to combine until the ML-dependent signals (Isolation
-Forest, HDBSCAN, graph centrality) this increment does not build also exist. See the increment doc.
+Implements the ``risk.transactions`` / ``risk.anomalies`` pair, scoped to the rule engine's three
+checks built here (Benford's Law, duplicate-payment matching, threshold/round-dollar detection).
+``risk.risk_scores`` (the weighted-logistic combiner's output) is deferred entirely: it has
+nothing to combine until the ML-dependent signals (Isolation Forest, HDBSCAN, graph centrality)
+not built here also exist.
 
-Reuses the subquery-based Row-Level Security pattern from Increments 03-04 on both tables — both
-have a genuine write path this increment exercises.
+Reuses the subquery-based Row-Level Security pattern established elsewhere on both tables — both
+have a genuine write path exercised here.
 
 Revision ID: f3a1c9d7b204
 Revises: d0e0b50dff42
@@ -93,10 +93,9 @@ def upgrade() -> None:
     )
     op.create_index("ix_anomalies_engagement_id", "anomalies", ["engagement_id"], schema="risk")
 
-    # Least-privilege grants (Phase 11 §7/§8). `transactions` is insert-only from the app role's
-    # perspective — nothing in this increment ever mutates an imported transaction. `anomalies`
-    # gets a column-scoped UPDATE for exactly the disposition transition, the same pattern
-    # `reporting.findings` established in Increment 04.
+    # Least-privilege grants. `transactions` is insert-only from the app role's perspective —
+    # nothing here ever mutates an imported transaction. `anomalies` gets a column-scoped UPDATE
+    # for exactly the disposition transition, the same pattern `reporting.findings` established.
     op.execute(f"GRANT USAGE ON SCHEMA risk TO {_APP_ROLE}")
     op.execute(f"GRANT SELECT, INSERT ON risk.transactions TO {_APP_ROLE}")
     op.execute(f"GRANT SELECT, INSERT ON risk.anomalies TO {_APP_ROLE}")

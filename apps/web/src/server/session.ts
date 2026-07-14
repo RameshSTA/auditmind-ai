@@ -1,8 +1,8 @@
 /**
  * Server-side session.
  *
- * Mirrors the Phase 2 §7 posture: the browser holds ONLY an httpOnly, SameSite cookie; it never
- * holds a bearer token. In the real design the cookie keys into a server-side session store
+ * The browser holds ONLY an httpOnly, SameSite cookie; it never holds a bearer token. In the
+ * real design the cookie keys into a server-side session store
  * holding Entra tokens. In this dev stand-in the cookie holds the resolved identity's claims
  * (subject, display name, roles) as JSON — never a token, and never readable by client JS (it's
  * httpOnly) — the bearer token is still minted fresh, server-side, per outbound API call (see

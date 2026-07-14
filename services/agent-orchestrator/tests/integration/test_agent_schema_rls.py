@@ -1,6 +1,6 @@
-"""Integration tests proving the `agent` schema's Row-Level Security policies (Phase 4 §12) — the
-same subquery-based pattern every prior increment's RLS proof uses, applied to `agent.runs` and
-`agent.hitl_interrupts` (Increment 12)."""
+"""Integration tests proving the `agent` schema's Row-Level Security policies — the same
+subquery-based pattern every RLS proof elsewhere in this platform uses, applied to `agent.runs`
+and `agent.hitl_interrupts`."""
 
 from __future__ import annotations
 

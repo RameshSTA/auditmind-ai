@@ -1,20 +1,19 @@
-"""The weighted-linear risk combiner (Phase 7 §4) — turns the ensemble's independent signals into
-one composite score with a reportable per-signal breakdown. Pure function, no I/O, the same shape
+"""The weighted-linear risk combiner — turns the ensemble's independent signals into one
+composite score with a reportable per-signal breakdown. Pure function, no I/O, the same shape
 as ``rules.py``/``ml_signals.py``.
 
-**Weighted-linear, not weighted-logistic.** Phase 7 §4 presents both as options and selects
-primarily for properties they *share* — "every factor's contribution is a direct, reportable
-coefficient... auditors can reweight per engagement and understand exactly what changed" — not for
-the logistic curve specifically. Every signal here is already normalized to a common `[0, 100]`
-scale by its own producer (``ml_signals.py``'s min-max normalization, the rule-engine severity
-mapping below, the graph-centrality scaling below), so a weighted arithmetic mean already *is* a
-linear combiner satisfying that selection reasoning, without introducing an arbitrary logistic
-steepness parameter this codebase has no principled way to choose.
+**Weighted-linear, not weighted-logistic.** The choice selects primarily for properties the two
+approaches *share* — every factor's contribution is a direct, reportable coefficient, so auditors
+can reweight per engagement and understand exactly what changed — not for the logistic curve
+specifically. Every signal here is already normalized to a common `[0, 100]` scale by its own
+producer (``ml_signals.py``'s min-max normalization, the rule-engine severity mapping below, the
+graph-centrality scaling below), so a weighted arithmetic mean already *is* a linear combiner
+satisfying that reasoning, without introducing an arbitrary logistic steepness parameter this
+codebase has no principled way to choose.
 
-**Per-engagement reweighting (Phase 1 FR-4.2) is not implemented — the weights below are fixed
-constants.** A genuine reweighting UI/API needs a place to store an engagement's chosen weights
-(a new column or table) and a decision about who's allowed to change them; out of scope for this
-increment, see the increment doc.
+**Per-engagement reweighting is not implemented — the weights below are fixed constants.** A
+genuine reweighting UI/API needs a place to store an engagement's chosen weights (a new column or
+table) and a decision about who's allowed to change them; out of scope for now.
 """
 
 from __future__ import annotations
@@ -41,9 +40,8 @@ _SEVERITY_SCORES: dict[AnomalySeverity, float] = {
 
 # A vendor with this many (or more) transactions in the engagement is treated as "established" —
 # contributing nothing extra to risk. Below that, risk scales up toward a brand-new, one-off
-# vendor — the same "new vendor, low tenure" risk factor Phase 7 §5's own waterfall example (Fig.
-# 2) shows as a *positive* (risk-increasing) contributor, not an arbitrary interpretation invented
-# for this codebase.
+# vendor — a "new vendor, low tenure" risk factor treated as a *positive* (risk-increasing)
+# contributor, not an arbitrary interpretation invented for this codebase.
 _CENTRALITY_ESTABLISHED_THRESHOLD = 10
 
 

@@ -3,8 +3,8 @@ import type { FindingSeverity } from "@/lib/types";
 import type { BffError } from "@/lib/client-api";
 
 /**
- * Severity chip. Per Phase 13 §9 (accessibility), colour is never the ONLY signal — the label text
- * carries the severity too, so a colour-blind or monochrome reader loses nothing.
+ * Severity chip. Colour is never the ONLY signal — the label text carries the severity too, so a
+ * colour-blind or monochrome reader loses nothing.
  */
 export function SeverityChip({ severity }: { severity: FindingSeverity }) {
   return <span className={`chip sev-${severity}`}>{severity}</span>;
@@ -31,9 +31,9 @@ export function Avatar({ name }: { name: string }) {
 }
 
 /**
- * Error notice. Renders the backend's RFC 7807 message and trace_id when present — the trace_id is
- * exactly what Phase 10 §1 binds to every request so a user can quote it to support, so surfacing
- * it here (not hiding it) is the point, not a leak.
+ * Error notice. Renders the backend's RFC 7807 message and trace_id when present — the trace_id
+ * is bound to every request so a user can quote it to support, so surfacing it here (not hiding
+ * it) is the point, not a leak.
  *
  * A 403 gets its own calmer framing ("Restricted", not "error") — access control correctly
  * denying a request is expected, routine platform behavior, not a broken page, and shouldn't read

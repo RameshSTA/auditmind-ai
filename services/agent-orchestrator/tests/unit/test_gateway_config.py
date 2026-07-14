@@ -1,4 +1,4 @@
-"""Unit tests for the LiteLLM gateway config loader (Phase 2 ADR-005)."""
+"""Unit tests for the LiteLLM gateway config loader."""
 
 from __future__ import annotations
 
@@ -16,7 +16,7 @@ def test_loads_the_real_committed_config() -> None:
     config_path = Path(__file__).parents[2] / "config" / "litellm.yaml"
     config = load_gateway_config(str(config_path))
     aliases = {entry["model_name"] for entry in config["model_list"]}
-    assert "claude-primary" in aliases
+    assert "primary-model" in aliases
 
 
 def test_missing_file_raises_validation_error() -> None:

@@ -1,4 +1,4 @@
-"""Unit tests for structure-aware chunking (Phase 6 §5)."""
+"""Unit tests for structure-aware chunking."""
 
 from __future__ import annotations
 

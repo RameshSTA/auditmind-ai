@@ -1,4 +1,4 @@
-"""Repository and adapter ports (Phase 3 §1) for the Reporting & Audit Trail context.
+"""Repository and adapter ports for the Reporting & Audit Trail context.
 
 The application layer depends on these interfaces; infrastructure provides the only
 implementations. No SQLAlchemy import belongs here.
@@ -20,10 +20,10 @@ class FindingRepository(Protocol):
     async def list_for_engagement(self, engagement_id: str) -> list[Finding]: ...
 
     async def list_confirmed_for_engagement(self, engagement_id: str) -> list[Finding]:
-        """Only ``CONFIRMED`` findings — the sole input a report is ever compiled from (Phase 1
-        AC-05: "no report content sourced from an unconfirmed AI draft"). Filtering here, in the
-        repository the report-generation path actually calls, makes it structurally impossible for
-        a caller to assemble a report from anything else, rather than relying on every call site to
+        """Only ``CONFIRMED`` findings — the sole input a report is ever compiled from ("no
+        report content sourced from an unconfirmed AI draft"). Filtering here, in the repository
+        the report-generation path actually calls, makes it structurally impossible for a caller
+        to assemble a report from anything else, rather than relying on every call site to
         remember to filter correctly."""
         ...
 
@@ -52,8 +52,8 @@ class ReportRepository(Protocol):
     async def list_for_engagement(self, engagement_id: str) -> list[Report]: ...
 
     async def next_version_for_engagement(self, engagement_id: str) -> int:
-        """Reports are versioned per engagement (Phase 4 §1) — this returns the version number the
-        *next* report for this engagement should use, computed from what already exists rather than
+        """Reports are versioned per engagement — this returns the version number the *next*
+        report for this engagement should use, computed from what already exists rather than
         left to the caller to track."""
         ...
 
@@ -67,9 +67,9 @@ class ReportRepository(Protocol):
 
 class ReportFileStorage(Protocol):
     """Where an exported report PDF's bytes live — its own minimal port, not a reuse of
-    ``ingestion``'s ``BlobStorage`` (Phase 3 §1: a context defines the shape of what it needs,
-    never imports another context's infrastructure class directly). A real Azure Blob Storage
-    adapter later is a new file behind this same protocol, exactly like ``ingestion``'s own port.
+    ``ingestion``'s ``BlobStorage``: a context defines the shape of what it needs, never imports
+    another context's infrastructure class directly. A real Azure Blob Storage adapter later is a
+    new file behind this same protocol, exactly like ``ingestion``'s own port.
     """
 
     async def put(self, *, engagement_id: str, report_id: str, content: bytes) -> str: ...
@@ -82,7 +82,7 @@ class ChunkLookup(Protocol):
 
     Deliberately its own minimal protocol rather than importing ``ingestion.domain.ports`` directly
     — each bounded context defines the shape of what it needs from another context, not the other
-    context's own port (Phase 3 §1's boundary applies between contexts, not just between layers).
+    context's own port. This boundary applies between contexts, not just between layers.
 
     This is what makes ``FindingEvidence.chunk_id`` safe to accept from a caller. Row-Level Security
     on ``ingestion.chunks`` already stops a user from looking up a chunk in an engagement they have

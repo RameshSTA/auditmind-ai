@@ -1,23 +1,72 @@
-# AuditMind AI
+<div align="center">
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=200&section=header&text=AuditMind%20AI&fontSize=52&fontColor=ffffff&animation=fadeIn&fontAlignY=38&desc=Enterprise%20Agentic-AI%20Audit%20Intelligence%20Platform&descAlignY=60&descSize=18&descColor=cccccc" width="100%"/>
+</div>
 
-### Enterprise Agentic-AI Audit Intelligence Platform
+<div align="center">
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=18&duration=3000&pause=800&color=1A7A8C&center=true&vCenter=true&width=760&lines=Hybrid+RAG+%7C+Agentic+LangGraph+Runtime+%7C+ML+Fraud+Ensemble;Row-Level+Security+%7C+Human-in-the-Loop+Sign-off;Evidence-Cited+Findings+%E2%80%94+Never+a+Fabricated+Citation" alt="Typing SVG" />
+</div>
 
-**Version:** 0.1.0 · **Status:** Actively developed, pre-production · **License:** Proprietary — see [License](#21-license) · **Author:** Ramesh Shrestha
+<br/>
 
-<p align="left">
-  <img alt="backend" src="https://img.shields.io/badge/backend-FastAPI%20%2B%20hexagonal-3b6e4d?style=flat-square">
-  <img alt="frontend" src="https://img.shields.io/badge/frontend-Next.js%2015%20%2B%20React%2019-1c2a4a?style=flat-square">
-  <img alt="agents" src="https://img.shields.io/badge/agents-LangGraph%20%2B%20LiteLLM-6b4fa0?style=flat-square">
-  <img alt="data" src="https://img.shields.io/badge/data-Postgres%20%2B%20pgvector%20%2B%20Neo4j-2c5f7c?style=flat-square">
-  <img alt="tests" src="https://img.shields.io/badge/unit%20tests-241%20passing-2f6f3e?style=flat-square">
-  <img alt="status" src="https://img.shields.io/badge/status-pre--production-9b6b1f?style=flat-square">
-</p>
+<div align="center">
 
-AuditMind AI is a working platform for internal-audit and financial-controls teams: upload
-engagement evidence, ingest transaction ledgers, and get evidence-cited risk findings — with
-mandatory human sign-off — backed by hybrid retrieval, a knowledge graph, a forensic-accounting
-rule engine, an ML fraud-scoring ensemble, and a conversational AI Copilot that takes real actions
-instead of describing what it would do.
+**Version:** 0.1.0 &nbsp;·&nbsp; **Status:** Actively developed, pre-production &nbsp;·&nbsp; **Author:** [Ramesh Shrestha](https://github.com/RameshSTA)
+
+[![Backend](https://img.shields.io/badge/Backend-FastAPI%20%2B%20Hexagonal-3b6e4d?style=for-the-badge)](#4-technology-stack)&nbsp;
+[![Frontend](https://img.shields.io/badge/Frontend-Next.js%2015%20%2B%20React%2019-1c2a4a?style=for-the-badge)](#4-technology-stack)&nbsp;
+[![Agents](https://img.shields.io/badge/Agents-LangGraph%20%2B%20LiteLLM-6b4fa0?style=for-the-badge)](#5-ai-architecture)&nbsp;
+[![Data](https://img.shields.io/badge/Data-Postgres%20%2B%20pgvector%20%2B%20Neo4j-2c5f7c?style=for-the-badge)](#12-database-design)&nbsp;
+[![Tests](https://img.shields.io/badge/Unit%20Tests-241%20passing-2f6f3e?style=for-the-badge)](#16-testing)&nbsp;
+[![License](https://img.shields.io/badge/License-Proprietary-9b6b1f?style=for-the-badge)](#21-license)
+
+</div>
+
+<br/>
+
+<div align="center">
+
+### 🎬 Live Walkthrough
+
+<img src="assets/demo-walkthrough.gif" alt="AuditMind AI demo walkthrough — sign in, evidence search, fraud detection, AI Copilot, findings sign-off, and report generation" width="90%"/>
+
+<sub>Recorded end-to-end against a live local stack (Postgres + Neo4j + FastAPI + LangGraph agent runtime + Next.js) with the checked-in sample engagement — nothing staged.</sub>
+
+</div>
+
+---
+
+<div align="center">
+
+### The Problem
+
+</div>
+
+<div align="justify">
+
+A financial-controls audit generates hundreds of source documents and thousands of ledger
+transactions per engagement, and manual workpaper review does not scale with that volume. Most
+"AI audit tools" on the market solve this by cutting a corner: either they summarize documents
+with no traceable evidence back to source text, or they let an LLM directly assert a finding with
+no human gate before it counts. AuditMind AI refuses both shortcuts.
+
+</div>
+
+| Without AuditMind AI | With AuditMind AI |
+|---|---|
+| Evidence review is manual, page by page, across hundreds of documents | Hybrid keyword + semantic search across every document, cited to an exact source offset |
+| Fraud signals hide in thousands of transactions no reviewer can eyeball at scale | A forensic rule engine *and* an ML ensemble score every transaction, cross-validated against its own accuracy |
+| "AI audit tools" assert findings with no traceable evidence | Every finding is evidence-cited and requires mandatory human confirm/reject before it counts |
+| A chatbot describes what it *would* do | An AI Copilot takes six real backend actions directly, or hands off to a 9-role LangGraph investigation agent |
+| Vendor fraud rings hide across differently-formatted vendor names | A Neo4j knowledge graph resolves vendor identity deterministically and exposes the full payment network |
+
+<div align="justify">
+
+**AI can propose, retrieve, and draft — but every artifact that leaves the system as a finding or
+report must be explicitly signed off by a person**, and every action the AI takes must be a real,
+auditable operation, never a fabricated confirmation. This shows up down to the level of individual
+prompts: the AI Copilot's own reference material (`copilot_reference.py`) is written to describe
+*only what the platform can currently do*, specifically so the model can never describe a
+designed-but-unbuilt feature as if it already shipped.
 
 > **Scope note.** Everything described in this document reflects what is actually implemented and
 > verified in this repository today, down to the exact rule thresholds, model hyperparameters, and
@@ -25,7 +74,11 @@ instead of describing what it would do.
 > [Future Enhancements](#19-future-enhancements) or inline as a stated gap — rather than glossed
 > over. This document does not describe aspirational features.
 
+</div>
+
 ---
+
+<div align="justify">
 
 ## Table of Contents
 
@@ -677,10 +730,6 @@ Row-Level Security policy.
 
 ## 8. Retrieval-Augmented Generation (RAG)
 
-A focused deep-dive on the RAG pipeline lives in
-[`docs/architecture/rag-pipeline.md`](docs/architecture/rag-pipeline.md); this section summarizes
-it.
-
 **Offline / ingestion pipeline:** document upload → SHA-256 content-hash dedup check → parse (text
 extraction) → paragraph-aware chunking → chunk rows written to `ingestion.chunks` (with a
 generated `tsvector` column for keyword search) → a separate, explicit embedding step
@@ -1291,7 +1340,7 @@ In rough priority order:
 
 ## 20. Contributing
 
-See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the full standard. In summary:
+The contribution standard for this repository:
 
 - **Branch naming:** `type/short-description` (`feat/`, `fix/`, `refactor/`, `docs/`, `chore/`, `ci/`)
 - **Commits:** Conventional Commits, scoped to the bounded context touched, with a body explaining *why*
@@ -1328,7 +1377,10 @@ accounting literature (Nigrini) underpinning the leading-digit anomaly test in
 [Section 9](#9-fraud-detection--the-ml-risk-ensemble). Authentication is built against
 **Microsoft Entra ID**'s OIDC/JWKS standard.
 
+</div>
+
 ---
 
-<sub>For a focused deep-dive on the retrieval pipeline specifically, see
-<a href="docs/architecture/rag-pipeline.md"><code>docs/architecture/rag-pipeline.md</code></a>.</sub>
+<div align="center">
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=150&section=footer&animation=fadeIn" width="100%"/>
+</div>

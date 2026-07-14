@@ -7,8 +7,8 @@
  *   2. mints/attaches the bearer token, and
  *   3. translates the API's RFC 7807 problem+json into a shape the UI can render calmly.
  *
- * No browser code imports this module. That's the Phase 13 §12 rule ("auth is invisible to the
- * frontend") made structural: a React component literally cannot reach the token or the API host.
+ * No browser code imports this module — "auth is invisible to the frontend" made structural: a
+ * React component literally cannot reach the token or the API host.
  */
 import { mintDevToken, type DevPersona } from "@/server/dev-auth";
 
@@ -46,7 +46,7 @@ interface ApiRequestOptions {
 /**
  * Issues an authenticated request to the API as the given persona and returns parsed JSON.
  * Throws `ApiError` (carrying the problem+json + status) on any non-2xx, so callers can map a
- * 403/404/422 to the right UI treatment (Phase 13 §13) rather than swallowing it.
+ * 403/404/422 to the right UI treatment rather than swallowing it.
  */
 export async function apiFetch<T>(
   persona: DevPersona,

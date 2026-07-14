@@ -1,9 +1,9 @@
-"""SQLAlchemy ORM models for the ``reporting`` Postgres schema (Phase 4 §1).
+"""SQLAlchemy ORM models for the ``reporting`` Postgres schema.
 
 This is the only module in the reporting context allowed to know about SQLAlchemy — the same
 "persistence model is not a domain entity" separation ``identity`` and ``ingestion`` already
 established. Cross-context foreign keys (``identity.*``, ``ingestion.chunks``) are declared as
-table-path strings, never by importing another context's ORM class (Increment 03's convention).
+table-path strings, never by importing another context's ORM class.
 """
 
 from __future__ import annotations
@@ -82,8 +82,7 @@ class ReportModel(Base):
     # as `finding_ids` below, so a report's content never drifts if a finding's evidence changes
     # after the fact.
     body_markdown: Mapped[str] = mapped_column(Text, nullable=False)
-    # Left null in this increment — actual document export (PDF/docx generation) is deferred, see
-    # the increment doc's "what's explicitly deferred" section.
+    # Null until the PDF is first exported (rendered lazily on request), then stable.
     exported_uri: Mapped[str | None] = mapped_column(String, nullable=True)
 
 

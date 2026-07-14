@@ -1,14 +1,14 @@
 """reporting schema: findings, finding_evidence, reports, report_findings
 
 Implements the ``reporting.findings`` / ``reporting.finding_evidence`` / ``reporting.reports``
-cluster from Phase 4 §1 (scoped to what Increment 04 actually builds — ``source_run_id`` is
-deferred until ``agent.runs`` exists, see the increment doc), plus a ``report_findings`` junction
-table that snapshots exactly which confirmed findings a report compiled, not designed in the
-Phase 4 doc's abbreviated column list but necessary for a report to reference its own contents.
+cluster (scoped to what is built here — ``source_run_id`` is deferred until ``agent.runs``
+exists), plus a ``report_findings`` junction table that snapshots exactly which confirmed
+findings a report compiled — not part of the original abbreviated column list but necessary for
+a report to reference its own contents.
 
-Reuses Increment 03's stronger, subquery-based Row-Level Security pattern (derived fresh from
+Reuses the stronger, subquery-based Row-Level Security pattern (derived fresh from
 ``identity.engagement_members`` on every query) across all four tables — every one of them has a
-genuine write path this increment exercises.
+genuine write path exercised here.
 
 Revision ID: d0e0b50dff42
 Revises: ea15243395ac
@@ -123,9 +123,9 @@ def upgrade() -> None:
         schema="reporting",
     )
 
-    # Least-privilege grants (Phase 11 §7/§8). `findings` is the one table this context actually
-    # updates post-insert (the confirm/reject disposition) — scoped to exactly those four columns,
-    # never a blanket UPDATE, the same discipline `ingestion.documents`' status-only grant set.
+    # Least-privilege grants. `findings` is the one table this context actually updates
+    # post-insert (the confirm/reject disposition) — scoped to exactly those four columns, never
+    # a blanket UPDATE, the same discipline `ingestion.documents`' status-only grant set.
     op.execute(f"GRANT USAGE ON SCHEMA reporting TO {_APP_ROLE}")
     op.execute(f"GRANT SELECT, INSERT ON reporting.findings TO {_APP_ROLE}")
     op.execute(
@@ -148,10 +148,9 @@ def upgrade() -> None:
             """
         )
 
-    # `report_findings` has no `engagement_id` column of its own (Phase 4 §1's schema doesn't list
-    # one for this junction table) — its policy joins through `reporting.reports` instead, the same
-    # "is the caller a member of the engagement this row ultimately belongs to" question, answered
-    # via the one extra hop this table's shape requires.
+    # `report_findings` has no `engagement_id` column of its own — its policy joins through
+    # `reporting.reports` instead, the same "is the caller a member of the engagement this row
+    # ultimately belongs to" question, answered via the one extra hop this table's shape requires.
     op.execute(
         """
         CREATE POLICY report_findings_engagement_member_only ON reporting.report_findings

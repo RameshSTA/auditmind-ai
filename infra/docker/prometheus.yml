@@ -1,4 +1,4 @@
-# Minimal config — metrics arrive via remote-write from the OTel Collector (Phase 10 §6), not
+# Minimal config — metrics arrive via remote-write from the OTel Collector, not
 # scraping, so there's no `scrape_configs` target for apps/api itself. Prometheus still scrapes
 # its own `/metrics` for basic self-monitoring, the standard minimal config every Prometheus
 # instance ships with.

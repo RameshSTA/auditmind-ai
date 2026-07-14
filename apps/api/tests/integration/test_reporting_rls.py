@@ -1,7 +1,7 @@
-"""Integration tests proving the reporting schema's Row-Level Security policies (Phase 4 §12)
-actually isolate engagements at the database level, across all four tables Increment 04 adds.
+"""Integration tests proving the reporting schema's Row-Level Security policies actually isolate
+engagements at the database level, across all four tables in the schema.
 
-Same subquery-based pattern as Increment 03's ``ingestion`` schema, plus one new shape:
+Same subquery-based pattern as the ``ingestion`` schema, plus one new shape:
 ``reporting.report_findings`` has no ``engagement_id`` column of its own, so its policy joins
 through ``reporting.reports`` instead — this file proves that join-based variant holds under the
 same attack shape the direct-column policies are already proven against.

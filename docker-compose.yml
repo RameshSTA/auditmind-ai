@@ -1,18 +1,18 @@
-# Local development and CI integration-test environment only — never a deployment target
-# (Phase 12 §2). Runs the same container image apps/api/Dockerfile builds for production.
+# Local development and CI integration-test environment only — never a deployment target.
+# Runs the same container image apps/api/Dockerfile builds for production.
 #
-# Neo4j became load-bearing in Increment 09 (Knowledge Graph) — the `api` service's
+# Neo4j became load-bearing for Knowledge Graph — the `api` service's
 # AUDITMIND_NEO4J_* env vars below point it at this container by service hostname, not localhost.
-# Postgres is load-bearing as of Increment 02 (Identity & Access): the `migrate` service applies
-# every schema migration before `api` is allowed to start. Increment 03 (Ingestion) adds a
+# Postgres is load-bearing for Identity & Access: the `migrate` service applies
+# every schema migration before `api` is allowed to start. Ingestion adds a
 # `blob_storage` volume — the local-filesystem stand-in for Azure Blob Storage
 # (`ingestion/infrastructure/local_blob_storage.py`) needs to persist uploaded evidence across
-# container restarts the same way Postgres's data does. Increment 13 (Observability) adds
+# container restarts the same way Postgres's data does. Observability adds
 # `otel-collector`/`prometheus`/`grafana` — `api` pushes traces/metrics to the Collector via OTLP
-# (Phase 10 §5's "services never talk to Prometheus... directly"), which forwards metrics to
-# Prometheus over remote-write (§6); Grafana (§7) is pre-provisioned with a datasource and
-# dashboard so `docker compose up` gives a working dashboard with no manual clicking. Increment 12
-# (Agent Orchestration) adds `agent-migrate`/`agent-orchestrator` — a second, independently
+# ("services never talk to Prometheus... directly"), which forwards metrics to
+# Prometheus over remote-write; Grafana is pre-provisioned with a datasource and
+# dashboard so `docker compose up` gives a working dashboard with no manual clicking.
+# Agent Orchestration adds `agent-migrate`/`agent-orchestrator` — a second, independently
 # deployable service (ADR-001) sharing this same Postgres instance under its own schema/migration
 # history, built from services/agent-orchestrator/Dockerfile rather than apps/api/Dockerfile.
 
@@ -20,7 +20,7 @@ services:
   postgres:
     image: pgvector/pgvector:pg16
     environment:
-      # This is the migration/admin role (Phase 11 §7/§8) — the running API never connects as
+      # This is the migration/admin role — the running API never connects as
       # this user. See the `api` service below for the least-privilege `auditmind_app` role it
       # actually uses, which the `migrate` step creates.
       POSTGRES_USER: auditmind
@@ -73,7 +73,7 @@ services:
         condition: service_healthy
 
   agent-migrate:
-    # Agent Orchestration's own migration (Increment 12, ADR-001 separate deployable) — a distinct
+    # Agent Orchestration's own migration (ADR-001 separate deployable) — a distinct
     # step from `migrate` above because it is a distinct Alembic history against a distinct
     # version table (`agent_orchestrator_alembic_version`, see migrations/env.py's own comment for
     # why sharing apps/api's `alembic_version` table breaks both services' `upgrade head`).
@@ -109,7 +109,7 @@ services:
       AGENT_ENTRA_JWKS_URI: ""
       # The same least-privilege `auditmind_app` role apps/api's `api` service connects as —
       # `agent-migrate` (above) grants it access to the `agent` schema; RLS on `agent.*` only
-      # actually constrains this role, never the migration/admin role (Phase 11 §7/§8).
+      # actually constrains this role, never the migration/admin role.
       AGENT_DATABASE_HOST: postgres
       AGENT_DATABASE_PORT: "5432"
       AGENT_DATABASE_NAME: auditmind
@@ -119,13 +119,12 @@ services:
       # submit_finding_draft calls into apps/api, forwarding the caller's own bearer token.
       # `api` (not `localhost`) because both services run in this compose network.
       AGENT_CORE_API_BASE_URL: "http://api:8000"
-      # ADR-005 defaults to Anthropic's Claude (ANTHROPIC_API_KEY); this environment routes the
-      # LiteLLM gateway to OpenAI instead (config/litellm.yaml's header explains the swap), using
-      # whatever key is in the shell/`.env` at `docker compose up` time. `${OPENAI_API_KEY}` is a
-      # reference, never the value — the real key lives only in the gitignored root `.env` file
+      # The LLM provider credential LiteLLM reads at call time (see config/litellm.yaml), using
+      # whatever key is in the shell/`.env` at `docker compose up` time. `${AGENT_LLM_API_KEY}` is
+      # a reference, never the value — the real key lives only in the gitignored root `.env` file
       # (never committed) or the invoking shell's environment. Unset, the service still starts and
       # every non-LLM step of a run still works; the first model call raises a typed 503.
-      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      AGENT_LLM_API_KEY: ${AGENT_LLM_API_KEY:-}
     ports:
       - "8001:8000" # 8000 is apps/api's port — this is the second HTTP service in this stack.
     depends_on:
@@ -149,23 +148,23 @@ services:
       AUDITMIND_ENTRA_ISSUER: ""
       AUDITMIND_ENTRA_JWKS_URI: ""
       # The least-privilege role `migrate` (above) creates and grants — never the superuser
-      # `auditmind` role Postgres itself is configured with (Phase 11 §7/§8).
+      # `auditmind` role Postgres itself is configured with.
       AUDITMIND_DATABASE_HOST: postgres
       AUDITMIND_DATABASE_PORT: "5432"
       AUDITMIND_DATABASE_NAME: auditmind
       AUDITMIND_DATABASE_APP_USER: auditmind_app
       AUDITMIND_DATABASE_APP_PASSWORD: "auditmind_app_local_dev_only"
-      # Knowledge Graph context (Increment 09, Phase 4 §3) — `neo4j`, not `localhost`, is the
+      # Knowledge Graph context — `neo4j`, not `localhost`, is the
       # right hostname here: container-to-container traffic on the compose network, the same
       # `postgres`-not-`localhost` pattern the database settings above already use.
       AUDITMIND_NEO4J_URI: "bolt://neo4j:7687"
       AUDITMIND_NEO4J_USER: neo4j
       AUDITMIND_NEO4J_PASSWORD: "auditmind_local_dev_only"
-      # Local filesystem stand-in for Azure Blob Storage (Increment 03, Phase 6 §1) — mounted as
+      # Local filesystem stand-in for Azure Blob Storage — mounted as
       # a named volume below so uploaded evidence survives a container restart, the same
       # guarantee `postgres_data` gives the database.
       AUDITMIND_BLOB_STORAGE_ROOT: /data/blobs
-      # Observability (Increment 13, Phase 10 §5) — `otel-collector`, not `localhost`, same
+      # Observability — `otel-collector`, not `localhost`, same
       # container-to-container hostname convention as postgres/neo4j above.
       AUDITMIND_OTEL_EXPORTER_ENDPOINT: "otel-collector:4317"
     volumes:
@@ -184,7 +183,7 @@ services:
 
   otel-collector:
     # `-contrib`, not the core image — the `prometheusremotewrite` exporter this config uses
-    # isn't in the core distribution (Phase 10 §6's remote-write choice needs it). Pinned to
+    # isn't in the core distribution (the remote-write choice needs it). Pinned to
     # 0.156.0, not the originally-tried 0.116.0 — that older tag's arm64 manifest is broken
     # (confirmed directly: `docker run otel/opentelemetry-collector-contrib:0.116.0 --version`
     # fails with `exec /otelcol-contrib: no such file or directory` even with no config/volumes
@@ -204,7 +203,7 @@ services:
     image: prom/prometheus:v3.0.1
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
-      # Phase 10 §6: push (remote-write), not pull (scrape) — Container Apps' dynamic scaling is
+      # Push (remote-write), not pull (scrape) — Container Apps' dynamic scaling is
       # the production reason, but the same flag is what makes the Collector's
       # `prometheusremotewrite` exporter have anywhere to write to in local dev too.
       - "--web.enable-remote-write-receiver"
@@ -228,7 +227,7 @@ services:
       - ./infra/docker/grafana/provisioning:/etc/grafana/provisioning:ro
       - grafana_data:/var/lib/grafana
     ports:
-      - "3001:3000" # 3000 is apps/web's dev server port — see docs/implementation/increment-11-frontend.md
+      - "3001:3000" # 3000 is apps/web's dev server port, so Grafana maps to 3001 instead
     depends_on:
       prometheus:
         condition: service_started

@@ -10,13 +10,6 @@
         "AUDITMIND_DEV_AUTH": "1"
       },
       "port": 3000
-    },
-    {
-      "name": "analytics",
-      "runtimeExecutable": ".venv/bin/python",
-      "runtimeArgs": ["-m", "streamlit", "run", "app.py", "--server.headless", "true"],
-      "cwd": "analytics",
-      "port": 8501
     }
   ]
 }

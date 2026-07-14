@@ -1,7 +1,7 @@
 """FastAPI dependencies wiring the Identity context into the request lifecycle.
 
-This is the only layer in the identity context allowed to import FastAPI (Phase 3 §1) — the
-``interface/`` layer.
+This is the only layer in the identity context allowed to import FastAPI — the ``interface/``
+layer.
 """
 
 from __future__ import annotations
@@ -49,12 +49,11 @@ async def get_current_db_user(
 ) -> User:
     """Resolves (or JIT-provisions) the internal ``identity.users`` row for the validated Entra
     identity, then binds the Row-Level Security context for every subsequent query in this
-    request's transaction (Phase 4 §12).
+    request's transaction.
 
     ``display_name``/``email`` are populated from the token subject as a placeholder — enriching
-    them from Microsoft Graph is explicitly out of scope for this increment (see the increment
-    doc). Using the subject here is an honest placeholder value, not a silent fabrication of data
-    that looks real.
+    them from Microsoft Graph is explicitly out of scope for now. Using the subject here is an
+    honest placeholder value, not a silent fabrication of data that looks real.
     """
     user = await identity_service.resolve_or_provision_user(
         entra_object_id=auth_user.subject,
@@ -68,8 +67,8 @@ async def get_current_db_user(
 def require_engagement_member(
     *allowed_roles: EngagementRole,
 ) -> Callable[..., Coroutine[Any, Any, EngagementMembership]]:
-    """FastAPI dependency factory: the concrete implementation of Phase 11 §4's decision that
-    engagement scope is always re-checked against the database, never trusted from the JWT.
+    """FastAPI dependency factory that ensures engagement scope is always re-checked against the
+    database, never trusted from the JWT.
 
     Usage: ``Depends(require_engagement_member())`` for "any member", or
     ``Depends(require_engagement_member(EngagementRole.AUDITOR, EngagementRole.CAE))`` to

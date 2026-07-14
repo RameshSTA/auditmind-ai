@@ -1,7 +1,6 @@
 """Full-stack integration tests: real HTTP requests through the real FastAPI app, against the
-real local Postgres and real Neo4j, exercising transaction import (Increment 05) → vendor
-resolution → vendor listing/detail (Increment 09). Only the Entra JWKS network call is replaced,
-as in the other endpoint test files.
+real local Postgres and real Neo4j, exercising transaction import → vendor resolution → vendor
+listing/detail. Only the Entra JWKS network call is replaced, as in the other endpoint test files.
 """
 
 from __future__ import annotations

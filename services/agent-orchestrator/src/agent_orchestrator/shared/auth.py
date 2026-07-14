@@ -1,16 +1,16 @@
-"""Entra ID (Azure AD) JWT validation (Phase 2 §7, Phase 11 §1/§4/§5).
+"""Entra ID (Azure AD) JWT validation.
 
 Byte-for-byte the same validation logic ``apps/api``'s ``shared/auth.py`` uses — same JWKS
 time-caching client, same signature/issuer/audience/expiry checks — duplicated here rather than
-imported, because the two services are separate deployables (ADR-001) that never share a Python
-package. A caller of this service has already authenticated once against the platform's one Entra
-tenant (the same token that got them into the main API); this module validates that same token
-independently, the same way a second resource server behind one identity provider always does.
+imported, because the two services are separate deployables that never share a Python package. A
+caller of this service has already authenticated once against the platform's one Entra tenant (the
+same token that got them into the main API); this module validates that same token independently,
+the same way a second resource server behind one identity provider always does.
 
 As in ``apps/api``, only coarse role claims are trusted from the token. Engagement-level membership
 is never read from the JWT — this service re-checks it against ``identity.engagement_members`` on
-every request (``interface/dependencies.py``), the same "membership can change intra-day, roles
-change rarely" split Phase 11 §4 establishes.
+every request (``interface/dependencies.py``), since membership can change intra-day while roles
+change rarely.
 """
 
 from __future__ import annotations

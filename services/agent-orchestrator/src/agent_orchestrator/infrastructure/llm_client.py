@@ -1,18 +1,15 @@
-"""The real LiteLLM-gateway adapter for the :class:`LlmClient` port (Phase 2 ADR-005, Phase 5 §12).
+"""The real LiteLLM-gateway adapter for the :class:`LlmClient` port.
 
 This is the concrete adapter every agent node's model call terminates at in production. It routes a
 request through LiteLLM — never through a provider SDK directly — so the provider decision lives in
 ``config/litellm.yaml``'s model list, not in this code. Swapping providers, or adding a fallback
-model, is a config edit behind this unchanged adapter, which is the entire justification for a
-gateway (ADR-005). ADR-005 defaults to Anthropic's Claude; this environment runs on OpenAI instead
-(the credential actually available here — see config/litellm.yaml's header), which is exactly the
-kind of swap the gateway indirection exists to make cheap.
+model, is a config edit behind this unchanged adapter.
 
 **The exact line between built and unverifiable-without-a-key runs through this file.** Everything
 above it in the stack — the graph, the routing, the reducers, the checkpointer, the repositories,
 the HTTP interface — is built and verified against real infrastructure with a *fake* ``LlmClient``.
 This adapter is the one component that cannot be verified against the real provider until an
-``OPENAI_API_KEY`` exists, because verifying it *is* making a real model call. What it *can* and
+``AGENT_LLM_API_KEY`` exists, because verifying it *is* making a real model call. What it *can* and
 does verify without a key: that a missing key produces a clean, typed
 :class:`LlmProviderNotConfiguredError` (503) rather than a raw provider traceback — see
 ``tests/unit/test_llm_client.py``.
@@ -35,10 +32,9 @@ class LiteLlmGatewayClient:
 
     Constructed with the parsed gateway config (a plain dict, loaded by ``gateway_config.py``) so
     the model-alias -> provider-model routing is data this adapter reads, not logic it hardcodes.
-    The provider credential (``OPENAI_API_KEY`` in this environment; ``ANTHROPIC_API_KEY`` under
-    ADR-005's default) is read by LiteLLM itself from the environment at call time (ADR-005 — the
-    gateway owns provider credentials); this adapter never reads, stores, or logs the key, only
-    checks its *presence* to fail fast with a clear error.
+    The provider credential (``AGENT_LLM_API_KEY``) is read by LiteLLM itself from the environment
+    at call time — this adapter never reads, stores, or logs the key, only checks its *presence*
+    to fail fast with a clear error.
     """
 
     def __init__(self, *, router_config: dict[str, Any]) -> None:
@@ -51,13 +47,12 @@ class LiteLlmGatewayClient:
         }
 
     def _require_provider(self) -> None:
-        if not os.environ.get("OPENAI_API_KEY"):
+        if not os.environ.get("AGENT_LLM_API_KEY"):
             raise LlmProviderNotConfiguredError(
-                "No OPENAI_API_KEY is set in the environment. The Agent Orchestration service "
+                "No AGENT_LLM_API_KEY is set in the environment. The Agent Orchestration service "
                 "builds its graph and runs every non-LLM step without one, but a model call "
-                "requires it. Set OPENAI_API_KEY (this environment routes the LiteLLM gateway to "
-                "OpenAI instead of ADR-005's default Anthropic Claude — see config/litellm.yaml) "
-                "and retry."
+                "requires it. Set AGENT_LLM_API_KEY (see config/litellm.yaml for the configured "
+                "provider) and retry."
             )
 
     async def complete(
@@ -66,9 +61,9 @@ class LiteLlmGatewayClient:
         """Make one gateway completion call and return a provider-agnostic :class:`ModelResponse`.
 
         ``model`` is a LiteLLM alias from the config; it is resolved to its provider model id via
-        the config's ``litellm_params`` so a node names ``"claude-primary"``, never a raw
-        ``"anthropic/claude-..."`` string (ADR-005). Raises :class:`LlmProviderNotConfiguredError`
-        before any network call if no key is present.
+        the config's ``litellm_params`` so a node names ``"primary-model"``, never a raw provider
+        model id. Raises :class:`LlmProviderNotConfiguredError` before any network call if no key
+        is present.
         """
         self._require_provider()
 

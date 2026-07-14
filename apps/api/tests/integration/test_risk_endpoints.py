@@ -1,7 +1,6 @@
 """Full-stack integration tests: real HTTP requests through the real FastAPI app, against the
-real local Postgres, exercising transaction import → rule-engine scan → anomaly disposition
-(Phase 7 §1-§2). Only the Entra JWKS network call is replaced, as in the other endpoint test
-files.
+real local Postgres, exercising transaction import → rule-engine scan → anomaly disposition.
+Only the Entra JWKS network call is replaced, as in the other endpoint test files.
 """
 
 from __future__ import annotations
@@ -97,8 +96,8 @@ async def seeded_engagement(admin_engine: AsyncEngine) -> AsyncIterator[dict[str
 
     async with admin_engine.begin() as conn:
         # audit_trail.events has an FK into identity.engagements — must be cleared before the
-        # engagement itself, or that DELETE fails with a foreign-key violation (disposition now
-        # writes an audit event per Increment 06).
+        # engagement itself, or that DELETE fails with a foreign-key violation (disposition
+        # writes an audit event).
         await conn.execute(text("DELETE FROM audit_trail.events"))
         await conn.execute(text("DELETE FROM risk.anomalies"))
         await conn.execute(text("DELETE FROM risk.transactions"))
@@ -363,8 +362,8 @@ def test_auditor_can_disposition_an_anomaly(
 def test_compliance_manager_cannot_disposition_an_anomaly(
     client: TestClient, rsa_keypair: KeyMaterial, seeded_engagement: dict[str, str]
 ) -> None:
-    """Per Phase 11 §2's RBAC matrix, the HITL disposition row is Auditor/Fraud Analyst only —
-    the same restriction Increment 04 applied to confirming/rejecting a finding."""
+    """Per the RBAC matrix, the HITL disposition row is Auditor/Fraud Analyst only — the same
+    restriction applied to confirming/rejecting a finding."""
     engagement_id = seeded_engagement["engagement"]
     auditor_headers = _auth_header(rsa_keypair, seeded_engagement["auditor_user"])
     compliance_headers = _auth_header(

@@ -1,4 +1,4 @@
-"""Unit tests for the rule engine (Phase 7 §1-§2) — pure functions over plain data, no I/O."""
+"""Unit tests for the rule engine — pure functions over plain data, no I/O."""
 
 from __future__ import annotations
 

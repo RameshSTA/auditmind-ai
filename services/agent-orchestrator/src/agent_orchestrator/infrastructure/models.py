@@ -1,23 +1,21 @@
-"""SQLAlchemy ORM models for the ``agent`` Postgres schema (Phase 4 §1, Phase 5 §16).
+"""SQLAlchemy ORM models for the ``agent`` Postgres schema.
 
 The only module in this service allowed to know about SQLAlchemy — the same "persistence model is
-not a domain entity" separation ``apps/api`` establishes. Three tables, exactly as Phase 4 §1's
-``agent.runs / checkpoints / hitl_interrupts`` table specifies.
+not a domain entity" separation ``apps/api`` establishes. Three tables: ``agent.runs``,
+``agent.checkpoints``, and ``agent.hitl_interrupts``.
 
 ``agent.checkpoints`` is modelled here so this service's migration owns the table, but note who
 writes it: the LangGraph Postgres checkpointer (``langgraph-checkpoint-postgres``) owns the *rows*
 — it creates its own auxiliary tables and reads/writes the serialized state blobs itself. This ORM
 model exists for schema ownership, grants, and RLS; application code never inserts into it directly
-(that is the checkpointer's job, invoked implicitly by the compiled graph on every superstep, Phase
-5 §16). See Increment 12's doc §2 and §"deferred" for exactly where that boundary sits and what is
-built vs. deferred here.
+(that is the checkpointer's job, invoked implicitly by the compiled graph on every superstep).
 
 **Columns referencing ``identity.*`` carry no ORM-level ``ForeignKey``, only a plain UUID column.**
 The *database* constraint still exists — this service's own migration declares a real
 ``sa.ForeignKey(...)`` in its raw DDL (``migrations/versions/e1f2a3b4c5d6_...py``), enforced by
 Postgres regardless of what the ORM knows. But this service's ``Base``/metadata (``orm_base.py``)
-is deliberately its own, separate from ``apps/api``'s (ADR-001, separate deployables, never a
-shared Python package) — it has no ``identity.users``/``identity.engagements`` ``Table`` object
+is deliberately its own, separate from ``apps/api``'s — the two are separate deployables that never
+share a Python package — so it has no ``identity.users``/``identity.engagements`` ``Table`` object
 registered on it at all. SQLAlchemy's unit-of-work needs every ``ForeignKey`` target actually
 resolvable within the *same* ``MetaData`` to compute flush-order dependencies, so an ORM-level FK
 string pointing at a table this metadata has never heard of raises `NoReferencedTableError` the
@@ -42,7 +40,7 @@ from agent_orchestrator.infrastructure.orm_base import Base
 
 
 class AgentRunModel(Base):
-    """``agent.runs`` — one row per LangGraph invocation (Phase 4 §1)."""
+    """``agent.runs`` — one row per LangGraph invocation."""
 
     __tablename__ = "runs"
     __table_args__ = {"schema": "agent"}
@@ -59,10 +57,9 @@ class AgentRunModel(Base):
 
 
 class AgentCheckpointModel(Base):
-    """``agent.checkpoints`` — the LangGraph checkpointer's durable state snapshots (Phase 4 §1,
-    Phase 5 §16). ``state`` is JSONB: every state channel is JSON-serializable by construction
-    (Phase 5 §11), so the whole state persists verbatim per superstep. Written by the checkpointer,
-    not by this service's application code."""
+    """``agent.checkpoints`` — the LangGraph checkpointer's durable state snapshots. ``state`` is
+    JSONB: every state channel is JSON-serializable by construction, so the whole state persists
+    verbatim per superstep. Written by the checkpointer, not by this service's application code."""
 
     __tablename__ = "checkpoints"
     __table_args__ = {"schema": "agent"}
@@ -73,7 +70,7 @@ class AgentCheckpointModel(Base):
     )
     # Denormalized onto the checkpoint row so its RLS policy is a single-hop membership check, not a
     # join through agent.runs — the same denormalization convention every engagement-scoped table
-    # in this platform uses (Increment 03/04).
+    # in this platform uses.
     engagement_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), nullable=False, index=True)
     step_name: Mapped[str] = mapped_column(String, nullable=False)
     state: Mapped[dict[str, Any]] = mapped_column(JSONB, nullable=False)
@@ -83,12 +80,12 @@ class AgentCheckpointModel(Base):
 
 
 class HitlInterruptModel(Base):
-    """``agent.hitl_interrupts`` — one row per human checkpoint (Phase 4 §1, Phase 5 §15).
+    """``agent.hitl_interrupts`` — one row per human checkpoint.
 
     Created ``pending`` (``decision`` NULL) when the graph pauses; resolved when a reviewer
     dispositions it. ``decision IS NULL`` distinguishes an open interrupt from a resolved one, the
     same append-then-resolve shape ``apps/api``'s reporting context uses for finding disposition —
-    both the AI draft and the human decision stay durable (Phase 5 §15's 'both versions preserved').
+    both the AI draft and the human decision stay durable.
     """
 
     __tablename__ = "hitl_interrupts"

@@ -1,5 +1,5 @@
 """Application services — orchestrate domain entities through ports. No SQL, no HTTP, no
-framework import here (Phase 3 §1); this is the layer unit tests exercise against fakes."""
+framework import here; this is the layer unit tests exercise against fakes."""
 
 from __future__ import annotations
 
@@ -146,9 +146,9 @@ class IdentityService:
     ) -> EngagementMembership:
         """Looked up fresh from the database on every call — never from a cached JWT claim.
 
-        This is the concrete implementation of Phase 11 §4's decision: engagement membership can
-        change intra-day (reassignment, conflict-of-interest removal), so it is never safe to
-        trust a value cached in a token for its lifetime the way a coarse role claim is.
+        Engagement membership can change intra-day (reassignment, conflict-of-interest removal),
+        so it is never safe to trust a value cached in a token for its lifetime the way a coarse
+        role claim is.
         """
         membership = await self._memberships.get_membership(
             user_id=user_id, engagement_id=engagement_id

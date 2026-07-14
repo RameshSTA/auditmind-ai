@@ -1,6 +1,5 @@
-"""Investigations-specific exceptions, built on the shared RFC 7807 error hierarchy (Increment 01 /
-Phase 3 §5). Lives in the application layer, not domain — the same convention every prior context
-established."""
+"""Investigations-specific exceptions, built on the shared RFC 7807 error hierarchy. Lives in the
+application layer, not domain — the same convention every prior context established."""
 
 from __future__ import annotations
 

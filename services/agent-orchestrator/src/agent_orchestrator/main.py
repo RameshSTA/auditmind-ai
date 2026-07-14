@@ -1,8 +1,8 @@
-"""Composition root for the Agent Orchestration service (ADR-001's separate deployable).
+"""Composition root for the Agent Orchestration service, deployed separately from ``apps/api``.
 
-This module's only job is wiring settings, logging, exception handlers, and routes together (Phase
-3 §1) — it contains no business logic of its own, the same restraint ``apps/api``'s ``main.py``
-holds itself to.
+This module's only job is wiring settings, logging, exception handlers, and routes together — it
+contains no business logic of its own, the same restraint ``apps/api``'s ``main.py`` holds itself
+to.
 """
 
 from __future__ import annotations
@@ -57,9 +57,9 @@ from agent_orchestrator.shared.settings import get_settings
 
 logger = get_logger(__name__)
 
-# The same two roles apps/api's finding sign-off gate restricts to (Increment 04) — starting a run
-# is the authoring act, resolving a HITL interrupt is the sign-off act, and both governance acts
-# are held to the identical role matrix (domain/agents.py's HitlDecision docstring).
+# The same two roles apps/api's finding sign-off gate restricts to — starting a run is the
+# authoring act, resolving a HITL interrupt is the sign-off act, and both governance acts are
+# held to the identical role matrix (domain/agents.py's HitlDecision docstring).
 _CAN_START_RUNS = ("Auditor", "FraudAnalyst", "ComplianceManager")
 _CAN_RESOLVE_HITL = ("Auditor", "FraudAnalyst")
 
@@ -81,7 +81,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
 
 def create_app() -> FastAPI:
     """Builds the FastAPI application. A function, not a module-level side effect, so tests can
-    construct independent app instances (Phase 3 §1's own convention in ``apps/api``)."""
+    construct independent app instances (the same convention ``apps/api`` uses)."""
     app = FastAPI(
         title="AuditMind AI — Agent Orchestration",
         version="0.1.0",
@@ -94,8 +94,8 @@ def create_app() -> FastAPI:
     @app.middleware("http")
     async def bind_trace_id(request: Request, call_next):  # type: ignore[no-untyped-def]
         """Binds a trace id to every log line for this request and echoes it back in the response
-        header (Phase 10 §1) — the same contract ``apps/api`` establishes, so a trace id a caller
-        sees from either service is the same kind of thing."""
+        header — the same contract ``apps/api`` establishes, so a trace id a caller sees from
+        either service is the same kind of thing."""
         trace_id = request.headers.get("x-trace-id") or str(uuid.uuid4())
         request.state.trace_id = trace_id
         structlog.contextvars.clear_contextvars()
@@ -106,12 +106,12 @@ def create_app() -> FastAPI:
 
     @app.get("/healthz", tags=["health"])
     async def liveness() -> dict[str, str]:
-        """Liveness probe (Phase 12 §13): the process is up. Checks nothing else."""
+        """Liveness probe: the process is up. Checks nothing else."""
         return {"status": "alive"}
 
     @app.get("/readyz", tags=["health"])
     async def readiness() -> JSONResponse:
-        """Readiness probe (Phase 12 §13): verifies the database is actually reachable."""
+        """Readiness probe: verifies the database is actually reachable."""
         try:
             engine = get_engine()
             async with engine.connect() as conn:
@@ -135,9 +135,9 @@ def create_app() -> FastAPI:
         _membership: str = Depends(require_engagement_member(*_CAN_START_RUNS)),
         orchestration_service: OrchestrationService = Depends(get_orchestration_service),
     ) -> RunResponse:
-        """Starts a new agent run (Phase 5 §1) and drives it to its first stopping point — the
-        HITL interrupt in a configured environment, or a typed 503 if no model provider is
-        configured (see ``application/orchestrator.py``)."""
+        """Starts a new agent run and drives it to its first stopping point — the HITL interrupt
+        in a configured environment, or a typed 503 if no model provider is configured (see
+        ``application/orchestrator.py``)."""
         run = await orchestration_service.start_run(
             engagement_id=engagement_id,
             use_case=body.use_case,
@@ -178,8 +178,8 @@ def create_app() -> FastAPI:
         _membership: str = Depends(require_engagement_member()),
         hitl_repository: PostgresHitlRepository = Depends(get_hitl_repository),
     ) -> list[HitlInterruptResponse]:
-        """Lists a run's open (unresolved) human-review checkpoints (Phase 5 §15) — what a
-        reviewing UI polls to find the pending decision to render."""
+        """Lists a run's open (unresolved) human-review checkpoints — what a reviewing UI polls to
+        find the pending decision to render."""
         interrupts = await hitl_repository.list_open_for_run(run_id)
         return [
             HitlInterruptResponse.from_entity(i)
@@ -202,11 +202,10 @@ def create_app() -> FastAPI:
         hitl_repository: PostgresHitlRepository = Depends(get_hitl_repository),
         orchestration_service: OrchestrationService = Depends(get_orchestration_service),
     ) -> HitlInterruptResponse:
-        """Resolves the human-in-the-loop gate (Phase 5 §15) — the identical governance act
-        ``apps/api``'s finding confirm/reject endpoints perform (Increment 04), applied to an
-        agent run's draft instead of a manually-authored finding. Records the reviewer's decision
-        first (durable regardless of what happens next), then resumes the graph from its
-        checkpoint with that decision."""
+        """Resolves the human-in-the-loop gate — the identical governance act ``apps/api``'s
+        finding confirm/reject endpoints perform, applied to an agent run's draft instead of a
+        manually-authored finding. Records the reviewer's decision first (durable regardless of
+        what happens next), then resumes the graph from its checkpoint with that decision."""
         interrupt = await hitl_repository.get_interrupt(interrupt_id)
         belongs_to_run = interrupt is not None and interrupt.run_id == run_id
         belongs_to_engagement = interrupt is not None and interrupt.engagement_id == engagement_id
@@ -235,7 +234,7 @@ def create_app() -> FastAPI:
         # trigger a real investigation or a data-mutating direct action (import transactions, run
         # a scan, generate a report, ...), so it needs the same authoring rights, not the broader
         # "any member" a read-only question alone would technically need. CAE cannot chat under
-        # this rule — a real, deliberate restriction, not an oversight (see the increment doc).
+        # this rule — a deliberate restriction, not an oversight.
         _membership: str = Depends(require_engagement_member(*_CAN_START_RUNS)),
         copilot_chat_service: CopilotChatService = Depends(get_copilot_chat_service),
     ) -> list[MessageResponse]:

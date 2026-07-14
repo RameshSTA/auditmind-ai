@@ -1,6 +1,6 @@
-"""Integration tests proving cross-engagement isolation in Neo4j (Increment 09) — the guarantee
-every other bounded context gets for free from Postgres Row-Level Security, but that this context
-has to earn through application code, since Neo4j has no equivalent mechanism (see
+"""Integration tests proving cross-engagement isolation in Neo4j — the guarantee every other
+bounded context gets for free from Postgres Row-Level Security, but that this context has to earn
+through application code, since Neo4j has no equivalent mechanism (see
 ``kg/infrastructure/neo4j_graph_store.py``'s module docstring). Real Neo4j, real driver, no fakes
 — the same "don't assume, prove it against the real thing" discipline every Postgres RLS test file
 already applies, aimed at a different database engine here.

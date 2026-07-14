@@ -8,8 +8,7 @@ interface RouteContext {
 }
 
 /** POST → resolve vendor entities from the engagement's current transactions into the knowledge
- * graph (Increment 09). Idempotent and self-healing — safe to call again after importing more
- * transactions. */
+ * graph. Idempotent and self-healing — safe to call again after importing more transactions. */
 export function POST(_request: Request, context: RouteContext) {
   return withSession(async (persona) => {
     const { engagementId } = await context.params;

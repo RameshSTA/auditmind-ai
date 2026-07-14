@@ -1,5 +1,5 @@
-"""Application service for the Retrieval context (Phase 6 §10's keyword leg, §6/§7's
-vector-embedding leg). No SQL, no HTTP, no model-loading — only coordination of ports, the same
+"""Application service for the Retrieval context, covering both the keyword leg and the
+vector-embedding leg. No SQL, no HTTP, no model-loading — only coordination of ports, the same
 pattern every prior context's service established."""
 
 from __future__ import annotations
@@ -32,12 +32,12 @@ class RetrievalService:
         return await self._index.search(engagement_id=engagement_id, query=query, limit=limit)
 
     async def embed_document(self, *, engagement_id: str, document_id: str) -> int:
-        """Generates and stores embeddings for every chunk of a document (Phase 6 §6).
+        """Generates and stores embeddings for every chunk of a document.
 
-        Synchronous with the request, not the "asynchronous batch job" Phase 6 §6 designs around
-        — there is no job queue yet to run it on (see the increment doc's deferred section). A
-        document with no chunks (e.g. still ``received``, not yet parsed) embeds zero rows rather
-        than erroring; the caller can re-trigger once ingestion completes.
+        Synchronous with the request rather than an asynchronous batch job — there is no job
+        queue yet to run it on. A document with no chunks (e.g. still ``received``, not yet
+        parsed) embeds zero rows rather than erroring; the caller can re-trigger once ingestion
+        completes.
         """
         chunks = await self._chunk_text_source.list_chunk_texts(document_id=document_id)
         if not chunks:
@@ -54,7 +54,7 @@ class RetrievalService:
         self, *, engagement_id: str, query: str, limit: int = 20
     ) -> list[SearchResult]:
         """The vector-embedding leg's search — embeds the query with the same model every stored
-        chunk embedding used, then ranks by cosine similarity (Phase 6 §7)."""
+        chunk embedding used, then ranks by cosine similarity."""
         [query_embedding] = await self._embedding_generator.embed([query])
         return await self._vector_index.search(
             engagement_id=engagement_id,

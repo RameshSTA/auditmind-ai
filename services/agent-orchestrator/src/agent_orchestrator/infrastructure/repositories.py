@@ -1,12 +1,12 @@
-"""Postgres adapters for the ``RunRepository`` and ``HitlRepository`` ports (Phase 4 §1).
+"""Postgres adapters for the ``RunRepository`` and ``HitlRepository`` ports.
 
 Both write through SQLAlchemy the same way ``apps/api``'s owned-table repositories do — the
 ``agent`` schema is this service's, so it owns its writes. Every method operates within the
 request's own RLS-bound session (``app.current_user_id`` set by ``set_rls_user_context``), so none
 of these queries adds a ``WHERE engagement_id`` clause of its own for isolation: the RLS policy on
 each ``agent.*`` table enforces it, exactly as it does for every engagement-scoped table in
-``apps/api`` (Phase 4 §12). A row a caller has no membership for is invisible — a get returns
-``None`` and a list omits it, the database's doing, not a filter here.
+``apps/api``. A row a caller has no membership for is invisible — a get returns ``None`` and a
+list omits it, the database's doing, not a filter here.
 """
 
 from __future__ import annotations

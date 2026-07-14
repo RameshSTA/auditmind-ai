@@ -1,9 +1,8 @@
-# OTel Collector config (Phase 10 §5) — the single fan-out point every service reports to.
+# OTel Collector config — the single fan-out point every service reports to.
 # Receives OTLP from apps/api (traces + metrics), forwards metrics to Prometheus via remote-write
-# (Phase 10 §6's "push, not pull" — sidesteps target discovery entirely, the same reasoning that
-# section gives for why remote-write over scrape-based Prometheus) and logs traces to stdout for
-# now, since no trace-storage backend (Jaeger/Tempo) is in this increment's scope — see
-# docs/implementation/increment-13-observability.md's "what's deferred" section.
+# ("push, not pull" — sidesteps target discovery entirely, the same reasoning that
+# gives for why remote-write over scrape-based Prometheus) and logs traces to stdout for
+# now, since no trace-storage backend (Jaeger/Tempo) is in scope yet.
 
 receivers:
   otlp:

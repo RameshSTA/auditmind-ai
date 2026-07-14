@@ -1,6 +1,6 @@
-"""Reporting-specific exceptions, built on the shared RFC 7807 error hierarchy (Increment 01 /
-Phase 3 §5). Lives in the application layer, not domain — the same convention ``ingestion``'s
-exceptions module already established."""
+"""Reporting-specific exceptions, built on the shared RFC 7807 error hierarchy. Lives in the
+application layer, not domain — the same convention ``ingestion``'s exceptions module already
+established."""
 
 from __future__ import annotations
 
@@ -12,9 +12,9 @@ from auditmind_api.shared.errors import AuditMindError
 class InvalidFindingTransitionError(AuditMindError):
     """Raised when confirming or rejecting a finding that isn't currently ``draft``.
 
-    A finding is disposed exactly once (Phase 1 FR-7.1's sign-off gate); re-confirming an already
-    confirmed finding, or rejecting an already rejected one, is a client bug — a stale UI acting on
-    a finding someone else has already dispositioned — not a state the API silently accepts.
+    A finding is disposed exactly once under the sign-off gate; re-confirming an already confirmed
+    finding, or rejecting an already rejected one, is a client bug — a stale UI acting on a finding
+    someone else has already dispositioned — not a state the API silently accepts.
     """
 
     type_slug = "invalid-finding-transition"

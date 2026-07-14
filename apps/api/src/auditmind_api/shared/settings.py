@@ -1,8 +1,8 @@
 """Application configuration.
 
-Every setting is read from environment variables only (Phase 3 §4) — never hardcoded, never read
-from an ad hoc config file. This is the single place a service reaches for configuration; nothing
-else in the codebase should call ``os.environ`` directly.
+Every setting is read from environment variables only — never hardcoded, never read from an ad hoc
+config file. This is the single place a service reaches for configuration; nothing else in the
+codebase should call ``os.environ`` directly.
 """
 
 from __future__ import annotations
@@ -28,11 +28,11 @@ class Settings(BaseSettings):
 
     environment: str = Field(
         default="dev",
-        description="Deployment environment: dev | staging | prod (Phase 3 §9 / Phase 12).",
+        description="Deployment environment: dev | staging | prod.",
     )
     log_level: str = Field(default="INFO", description="Python logging level name.")
 
-    # --- Entra ID / OIDC (Phase 2 §7, Phase 11 §1/§4/§5) ---
+    # --- Entra ID / OIDC ---
     entra_tenant_id: str = Field(
         default="",
         description="Azure Entra ID tenant id, used to derive the OIDC authority.",
@@ -56,47 +56,47 @@ class Settings(BaseSettings):
         description="Clock-skew tolerance applied to exp/nbf validation.",
     )
 
-    # --- Database (Phase 4, Phase 11 §7/§8) ---
+    # --- Database ---
     database_host: str = Field(default="localhost")
     database_port: int = Field(default=5432)
     database_name: str = Field(default="auditmind")
     database_app_user: str = Field(
         default="auditmind_app",
         description="Least-privilege role the application connects as — never the migration/admin "
-        "role, so RLS policies actually apply (Phase 4 §12).",
+        "role, so RLS policies actually apply.",
     )
     database_app_password: str = Field(default="")
 
-    # --- Knowledge Graph / Neo4j (Phase 4 §3, Increment 09) ---
+    # --- Knowledge Graph / Neo4j ---
     neo4j_uri: str = Field(
         default="bolt://localhost:7687",
         description="Bolt connection URI. Neo4j has no equivalent to Postgres's least-privilege "
-        "app role + RLS story (Phase 4 §12) — every Cypher query this codebase issues must filter "
-        "by engagement_id explicitly; see kg/infrastructure/neo4j_graph_store.py.",
+        "app role + RLS story — every Cypher query this codebase issues must filter by "
+        "engagement_id explicitly; see kg/infrastructure/neo4j_graph_store.py.",
     )
     neo4j_user: str = Field(default="neo4j")
     neo4j_password: str = Field(default="")
 
-    # --- Observability (Phase 10 §5, Increment 13) ---
+    # --- Observability ---
     otel_exporter_endpoint: str = Field(
         default="localhost:4317",
         description="OTLP gRPC endpoint of the Collector every service pushes traces/metrics to "
-        "— never Prometheus or a log sink directly (Phase 10 §5). Unreachable in dev without "
-        "docker-compose's otel-collector service running; exporters batch/retry in the background "
-        "rather than failing requests when it's unreachable.",
+        "— never Prometheus or a log sink directly. Unreachable in dev without docker-compose's "
+        "otel-collector service running; exporters batch/retry in the background rather than "
+        "failing requests when it's unreachable.",
     )
 
-    # --- Ingestion / blob storage (Phase 6 §1) ---
+    # --- Ingestion / blob storage ---
     blob_storage_root: str = Field(
         default="./data/blobs",
-        description="Local filesystem root standing in for Azure Blob Storage in this increment "
-        "— see ingestion/infrastructure/local_blob_storage.py. Replaced by an Azure adapter (same "
-        "BlobStorage port, new infrastructure file) once that increment lands.",
+        description="Local filesystem root standing in for Azure Blob Storage — see "
+        "ingestion/infrastructure/local_blob_storage.py. Replaced by an Azure adapter (same "
+        "BlobStorage port, new infrastructure file) when that migration happens.",
     )
     max_upload_size_bytes: int = Field(
         default=25 * 1024 * 1024,  # 25 MB
         description="Rejects an upload before it is read into memory at all if the declared "
-        "Content-Length exceeds this — a resource-exhaustion guard (Phase 11 §10/§11).",
+        "Content-Length exceeds this — a resource-exhaustion guard.",
     )
 
     # --- Identity / self-service signup ---
@@ -104,7 +104,7 @@ class Settings(BaseSettings):
         default="00000000-0000-0000-0000-0000000000e1",
         description="Engagement a self-service signup is auto-joined to (the same fixture "
         "engagement scripts/seed_dev.py seeds). Real member-invite/admin-add flows are a future "
-        "increment; until then, self-service signup has exactly one engagement to join.",
+        "addition; until then, self-service signup has exactly one engagement to join.",
     )
 
     @property

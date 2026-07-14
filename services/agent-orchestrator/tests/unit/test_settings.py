@@ -28,10 +28,10 @@ def test_database_url_uses_asyncpg_driver() -> None:
 
 
 def test_llm_provider_configured_false_without_api_key(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    monkeypatch.delenv("AGENT_LLM_API_KEY", raising=False)
     assert Settings().llm_provider_configured is False
 
 
 def test_llm_provider_configured_true_with_api_key(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv("OPENAI_API_KEY", "sk-test-not-real")
+    monkeypatch.setenv("AGENT_LLM_API_KEY", "sk-test-not-real")
     assert Settings().llm_provider_configured is True

@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 #
-# Multi-stage build (Phase 12 §1), mirroring apps/api/Dockerfile's structure. Unlike apps/api
-# (which needs build-essential for hdbscan's C extensions, Increment 10), this service's
+# Multi-stage build, mirroring apps/api/Dockerfile's structure. Unlike apps/api
+# (which needs build-essential for hdbscan's C extensions), this service's
 # dependencies (langgraph, litellm, fastapi, sqlalchemy, ...) all ship prebuilt wheels — the build
 # stage stays compiler-free, same as the runtime stage.
 #
@@ -23,7 +23,7 @@ RUN pip install --no-cache-dir --prefix=/install .
 
 FROM python:3.12.10-slim AS runtime
 
-# Non-root user (Phase 12 §1, Phase 11 OWASP A05 — Security Misconfiguration).
+# Non-root user (OWASP A05 — Security Misconfiguration).
 RUN groupadd --gid 1000 auditmind && \
     useradd --uid 1000 --gid auditmind --shell /usr/sbin/nologin --create-home auditmind
 
@@ -33,7 +33,7 @@ WORKDIR /app
 
 # Migration files ship in the same image (alembic is already a main dependency) so
 # `docker run <image> alembic upgrade head` works against any environment this image is deployed
-# to — the same self-contained-migration convention apps/api/Dockerfile uses (Phase 12 §7).
+# to — the same self-contained-migration convention apps/api/Dockerfile uses.
 COPY alembic.ini ./
 COPY migrations ./migrations
 COPY config ./config
@@ -42,7 +42,7 @@ USER auditmind
 
 EXPOSE 8000
 
-# Liveness only (Phase 12 §13) — readiness is the separate /readyz endpoint, not this probe.
+# Liveness only — readiness is the separate /readyz endpoint, not this probe.
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/healthz', timeout=2)" || exit 1
 

@@ -2,7 +2,7 @@
   "name": "@auditmind/web",
   "version": "0.1.0",
   "private": true,
-  "description": "AuditMind AI frontend — Next.js App Router BFF and UI (Phase 13, Increment 11).",
+  "description": "AuditMind AI frontend — Next.js App Router BFF and UI.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

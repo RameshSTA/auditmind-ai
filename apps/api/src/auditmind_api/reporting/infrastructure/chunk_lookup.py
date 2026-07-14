@@ -1,7 +1,7 @@
 """Adapter for the ``ChunkLookup`` port: reads ``ingestion.chunks`` without importing
-``ingestion``'s ORM model (Phase 3 §1 — a bounded context depends on another's *schema*, at most,
-never its infrastructure classes; the same table-path-string convention used for foreign keys in
-``reporting/infrastructure/models.py`` applies here to a plain read query too).
+``ingestion``'s ORM model — a bounded context depends on another's *schema*, at most, never its
+infrastructure classes; the same table-path-string convention used for foreign keys in
+``reporting/infrastructure/models.py`` applies here to a plain read query too.
 """
 
 from __future__ import annotations

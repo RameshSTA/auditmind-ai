@@ -1,17 +1,17 @@
 """audit_trail schema: events (append-only)
 
-Implements ``audit_trail.events`` from Phase 4 §1 — the platform's evidentiary record of who (or
-what) did what, when, and what changed. Every prior schema's write paths get *some* durability from
-their own row history (a finding's `status` column shows its current disposition), but none of them
-retain what the row looked like *before* the last change, or who made it, once a second change
-overwrites the first. This table exists to make that reconstructible, permanently.
+Implements ``audit_trail.events`` — the platform's evidentiary record of who (or what) did what,
+when, and what changed. Every other schema's write paths get *some* durability from their own row
+history (a finding's `status` column shows its current disposition), but none of them retain what
+the row looked like *before* the last change, or who made it, once a second change overwrites the
+first. This table exists to make that reconstructible, permanently.
 
-The defining property (Phase 4 §1's own words: "No UPDATE or DELETE grant exists on this table for
-any application role. A correction is a new row referencing the original event's id — the table
-only ever grows.") is enforced here the same way every other least-privilege guarantee in this
-codebase is enforced: by what is (and is not) granted to `auditmind_app`, not by application code
-choosing not to call an UPDATE it technically could. `AuditEventRepository` (the application-layer
-port) also has no `update`/`delete` method at all — belt and suspenders, not either/or.
+The defining property — no UPDATE or DELETE grant exists on this table for any application role;
+a correction is a new row referencing the original event's id, the table only ever grows — is
+enforced here the same way every other least-privilege guarantee in this codebase is enforced: by
+what is (and is not) granted to `auditmind_app`, not by application code choosing not to call an
+UPDATE it technically could. `AuditEventRepository` (the application-layer port) also has no
+`update`/`delete` method at all — belt and suspenders, not either/or.
 
 Revision ID: a7c4e912f568
 Revises: f3a1c9d7b204
@@ -57,7 +57,7 @@ def upgrade() -> None:
             nullable=False,
         ),
         sa.Column("actor_type", sa.String(), nullable=False),
-        # Polymorphic — no FK, same convention as `risk.risk_scores.subject_id` (Phase 4 §1).
+        # Polymorphic — no FK, same convention as `risk.risk_scores.subject_id`.
         sa.Column("actor_id", UUID(as_uuid=True), nullable=True),
         sa.Column("action", sa.String(), nullable=False),
         sa.Column("subject_type", sa.String(), nullable=False),

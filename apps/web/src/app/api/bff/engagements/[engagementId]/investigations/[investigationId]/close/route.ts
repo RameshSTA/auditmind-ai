@@ -10,9 +10,8 @@ interface RouteContext {
 
 /**
  * POST → close an investigation with a documented conclusion. The API restricts this to
- * Auditor / Fraud Analyst (Phase 11 §2) and 403s everyone else — the UI does not pre-judge, it
- * shows the button and surfaces the API's decision, the same discipline finding confirm/reject
- * follows.
+ * Auditor / Fraud Analyst and 403s everyone else — the UI does not pre-judge, it shows the
+ * button and surfaces the API's decision, the same discipline finding confirm/reject follows.
  */
 export function POST(request: Request, context: RouteContext) {
   return withSession(async (persona) => {

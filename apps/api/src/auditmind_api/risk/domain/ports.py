@@ -1,4 +1,4 @@
-"""Repository ports (Phase 3 §1) for the Risk & Anomaly Detection context."""
+"""Repository ports for the Risk & Anomaly Detection context."""
 
 from __future__ import annotations
 
@@ -43,7 +43,7 @@ class AnomalyRepository(Protocol):
 
 class RiskScoreRepository(Protocol):
     async def bulk_upsert(self, scores: list[RiskScore]) -> list[RiskScore]:
-        """Idempotent per ``(subject_type, subject_id, score_version)`` (Increment 10's migration
+        """Idempotent per ``(subject_type, subject_id, score_version)`` (the migration's unique
         constraint) — recomputing under the same model version refreshes the existing row rather
         than accumulating duplicates, since Isolation Forest and HDBSCAN are both
         population-relative and a score can legitimately change between runs."""
@@ -57,24 +57,23 @@ class VendorCentralitySource(Protocol):
     reading Neo4j directly (through the shared driver, not by importing ``kg``'s
     ``Neo4jGraphStore`` class), the same "define the shape of what you need, never the other
     context's own port or adapter" convention every cross-context read in this codebase already
-    follows, applied here to Neo4j instead of Postgres for the first time."""
+    follows, applied here to Neo4j instead of Postgres."""
 
     async def get_vendor_transaction_counts(
         self, *, engagement_id: str
     ) -> dict[str, int]:
         """Returns ``normalized_vendor_name -> transaction count`` — the graph's degree centrality
-        for a Vendor node (Phase 7 §6's "relational" feature family), keyed by normalized name
-        since ``risk.transactions`` has no resolved vendor entity id of its own to join against
-        (see Increment 05's own deferred note on exactly this gap). Empty if
-        ``POST .../knowledge-graph/resolve`` was never run for this engagement — vendor
+        for a Vendor node (the "relational" feature family), keyed by normalized name since
+        ``risk.transactions`` has no resolved vendor entity id of its own to join against. Empty
+        if ``POST .../knowledge-graph/resolve`` was never run for this engagement — vendor
         resolution is this signal's prerequisite, not something it triggers itself."""
         ...
 
 
 class AuditTrailRecorder(Protocol):
     """The one thing this context needs from ``audit_trail`` — its own minimal protocol, same
-    reasoning as ``reporting.domain.ports.AuditTrailRecorder``, not a shared import between the two
-    (Phase 3 §1's boundary applies between contexts, not just between layers)."""
+    reasoning as ``reporting.domain.ports.AuditTrailRecorder``, not a shared import between the
+    two: the bounded-context boundary applies between contexts, not just between layers."""
 
     async def record(
         self,

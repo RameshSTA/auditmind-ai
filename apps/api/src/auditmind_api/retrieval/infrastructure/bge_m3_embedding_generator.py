@@ -1,17 +1,14 @@
-"""Adapter for the ``EmbeddingGenerator`` port: BGE-M3, run locally via ``sentence-transformers``
-(Phase 4 §2 fixes the model choice; this covers how embedding actually happens operationally, the
-same split Phase 6 §6 draws between the two).
+"""Adapter for the ``EmbeddingGenerator`` port: BGE-M3, run locally via ``sentence-transformers``.
 
-**Deviation from Phase 6 §6, documented deliberately, same discipline as every other increment's
-"what's simplified and why":** the design routes embedding calls through the same LiteLLM gateway
-generation calls use (Phase 2 ADR-005), sharing its rate-limit and cost-tracking policy. No such
-gateway exists yet — it's Agent Orchestration territory (``services/agent-orchestrator``, still a
-placeholder), blocked on an LLM provider decision entirely separate from this increment's scope.
+**Deviation, documented deliberately:** the longer-term design routes embedding calls through the
+same gateway generation calls use, sharing its rate-limit and cost-tracking policy. No such gateway
+exists yet — it's Agent Orchestration territory (``services/agent-orchestrator``, still a
+placeholder), blocked on an LLM provider decision entirely separate from this context's scope.
 Rather than block the vector-embedding leg on that decision, this adapter runs BGE-M3 in-process
-via ``sentence-transformers``, the same "build the buildable slice, defer the infra-gated part"
-choice Increment 03 made for OCR/parsing (pure-Python parsers instead of Azure Document
-Intelligence). Swapping this adapter for a gateway-routed one later is exactly that: a swap behind
-the same ``EmbeddingGenerator`` port, not a redesign.
+via ``sentence-transformers`` — the same "build the buildable slice, defer the infra-gated part"
+choice made for OCR/parsing (pure-Python parsers instead of a cloud document-intelligence service).
+Swapping this adapter for a gateway-routed one later is exactly that: a swap behind the same
+``EmbeddingGenerator`` port, not a redesign.
 """
 
 from __future__ import annotations
@@ -29,8 +26,8 @@ _MODEL_ID = "BAAI/bge-m3"
 @lru_cache(maxsize=1)
 def _load_model() -> SentenceTransformer:
     """Loads the model once per process, not once per request — this is a multi-hundred-MB model
-    load, the same "expensive singleton" treatment ``shared/database.py``'s engine gets, applied
-    here to a model instead of a connection pool."""
+    load, the same "expensive singleton" treatment ``shared/database.py``'s engine gets, here
+    applied to a model instead of a connection pool."""
     model: SentenceTransformer = SentenceTransformer(_MODEL_ID)
     return model
 

@@ -1,4 +1,4 @@
-"""Loads the LiteLLM gateway config from ``config/litellm.yaml`` (ADR-005).
+"""Loads the LiteLLM gateway config from ``config/litellm.yaml``.
 
 The gateway config is a YAML file, not inlined Python — a model or provider change is a config
 edit, never a code change. This module is the one place that reads it, returning a plain dict

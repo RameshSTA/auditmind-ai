@@ -81,7 +81,7 @@ seed-sample:
 logs:
 	docker compose logs -f
 
-# --- services/agent-orchestrator (Increment 12, ADR-001 separate deployable) ---
+# --- services/agent-orchestrator (ADR-001 separate deployable) ---
 # Mirrors the apps/api targets above exactly, one section down, because the two are independently
 # built/tested/deployed services sharing this repo and this Makefile, not one bounded context of
 # the other.

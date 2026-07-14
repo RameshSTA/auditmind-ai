@@ -32,7 +32,7 @@ async function checkService(name: string, baseUrl: string): Promise<ServiceHealt
 /** GET → real liveness/readiness of both backend services, checked live on every call — never a
  * cached or assumed status. Requires a session (this is operational information, not public), but
  * unlike every other BFF route it doesn't call apiFetch/agentApiFetch: /healthz and /readyz are
- * intentionally unauthenticated on both services (Phase 12 §13), so no bearer token is minted. */
+ * intentionally unauthenticated on both services, so no bearer token is minted. */
 export async function GET() {
   const persona = await getSessionPersona();
   if (!persona) {

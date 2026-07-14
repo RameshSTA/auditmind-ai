@@ -1,4 +1,4 @@
-"""Unit tests for IngestionService (Phase 3 §1 application layer) — against in-memory fakes, no
+"""Unit tests for IngestionService (application layer) — against in-memory fakes, no
 database or filesystem involved."""
 
 from __future__ import annotations
@@ -160,9 +160,9 @@ async def test_ingest_document_treats_same_content_in_different_engagements_as_d
     chunk_repo: FakeChunkRepository,
     blob_storage: FakeBlobStorage,
 ) -> None:
-    """Duplicate detection is scoped per engagement (Phase 4 §1's schema) — the same file
-    uploaded to two different engagements is two distinct documents, not a cross-engagement
-    duplicate, since evidence is never implicitly shared across engagement boundaries."""
+    """Duplicate detection is scoped per engagement — the same file uploaded to two different
+    engagements is two distinct documents, not a cross-engagement duplicate, since evidence is
+    never implicitly shared across engagement boundaries."""
     parser = FakeParserRouter()
     service = IngestionService(document_repo, chunk_repo, blob_storage, parser)
 

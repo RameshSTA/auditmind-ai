@@ -1,13 +1,13 @@
-"""Tests for the compiled master graph (Phase 5 Fig. 1) — real LangGraph execution, an in-memory
-checkpointer, and a fake LlmClient. No network call, no database: this proves the graph's actual
-topology (fan-out, join, HITL interrupt, guardrail hard-stops, cannot-conclude) end to end, not
-just each routing function in isolation (that's ``test_routing.py``).
+"""Tests for the compiled master graph — real LangGraph execution, an in-memory checkpointer, and
+a fake LlmClient. No network call, no database: this proves the graph's actual topology (fan-out,
+join, HITL interrupt, guardrail hard-stops, cannot-conclude) end to end, not just each routing
+function in isolation (that's ``test_routing.py``).
 
 Every assertion here was first confirmed by hand against the real compiled graph before being
-written down (the same "verify against the real thing" discipline this codebase applies to
-BGE-M3/HDBSCAN/Neo4j in other increments) — ``build_graph`` has no fakeable seam of its own, so
-"real LangGraph execution" is the only way to prove this module's topology actually behaves as its
-own docstring claims.
+written down (the same "verify against the real thing" discipline this codebase applies elsewhere,
+e.g. BGE-M3/HDBSCAN/Neo4j) — ``build_graph`` has no fakeable seam of its own, so "real LangGraph
+execution" is the only way to prove this module's topology actually behaves as its own docstring
+claims.
 """
 
 from __future__ import annotations
@@ -43,7 +43,7 @@ def _clean_run_llm() -> FakeLlmClient:
 
 
 async def test_a_clean_run_pauses_at_the_hitl_interrupt() -> None:
-    nodes = AgentNodes(_clean_run_llm(), FakeApiClient(), default_model="claude-fast")
+    nodes = AgentNodes(_clean_run_llm(), FakeApiClient(), default_model="fast-model")
     graph = build_graph(nodes, checkpointer=InMemorySaver(), max_replans=2)
     config = _config("run-clean")
 
@@ -56,7 +56,7 @@ async def test_a_clean_run_pauses_at_the_hitl_interrupt() -> None:
 
 
 async def test_approving_the_hitl_interrupt_runs_report_generation_to_completion() -> None:
-    nodes = AgentNodes(_clean_run_llm(), FakeApiClient(), default_model="claude-fast")
+    nodes = AgentNodes(_clean_run_llm(), FakeApiClient(), default_model="fast-model")
     graph = build_graph(nodes, checkpointer=InMemorySaver(), max_replans=2)
     config = _config("run-approve")
     await graph.ainvoke(_initial_state("run-approve"), config)
@@ -70,7 +70,7 @@ async def test_approving_the_hitl_interrupt_runs_report_generation_to_completion
 
 
 async def test_rejecting_the_hitl_interrupt_ends_without_a_report() -> None:
-    nodes = AgentNodes(_clean_run_llm(), FakeApiClient(), default_model="claude-fast")
+    nodes = AgentNodes(_clean_run_llm(), FakeApiClient(), default_model="fast-model")
     graph = build_graph(nodes, checkpointer=InMemorySaver(), max_replans=2)
     config = _config("run-reject")
     await graph.ainvoke(_initial_state("run-reject"), config)
@@ -87,7 +87,7 @@ async def test_rejecting_the_hitl_interrupt_ends_without_a_report() -> None:
 
 async def test_a_prompt_injection_task_halts_before_any_evidence_gathering() -> None:
     llm = FakeLlmClient(default_text="should never be reached")
-    nodes = AgentNodes(llm, FakeApiClient(), default_model="claude-fast")
+    nodes = AgentNodes(llm, FakeApiClient(), default_model="fast-model")
     graph = build_graph(nodes, checkpointer=InMemorySaver(), max_replans=2)
     config = _config("run-injection")
 
@@ -107,9 +107,9 @@ async def test_evidence_that_never_scores_above_the_floor_ends_cannot_conclude()
     """An LLM that always returns empty text means Context Engineering never has anything to work
     with, so `engineered_context` stays empty and Evaluation short-circuits to 0.0 without even
     calling the judge (see `nodes.evaluation`'s own docstring) — every pass. The run exhausts its
-    re-plan budget and ends without pausing at HITL at all (Phase 5 §17's honest "could not
-    conclude")."""
-    nodes = AgentNodes(FakeLlmClient(default_text=""), FakeApiClient(), default_model="claude-fast")
+    re-plan budget and ends without pausing at HITL at all — the honest "could not conclude"
+    terminal."""
+    nodes = AgentNodes(FakeLlmClient(default_text=""), FakeApiClient(), default_model="fast-model")
     graph = build_graph(nodes, checkpointer=InMemorySaver(), max_replans=1)
     config = _config("run-inconclusive")
 

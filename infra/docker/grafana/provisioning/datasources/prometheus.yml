@@ -1,5 +1,5 @@
 # Auto-provisions the Prometheus datasource so `docker compose up` gives a working dashboard
-# without manual clicking (Phase 10 §7: "Grafana is the single operational entry point").
+# without manual clicking ("Grafana is the single operational entry point").
 apiVersion: 1
 
 datasources:

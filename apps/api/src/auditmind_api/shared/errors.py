@@ -1,4 +1,4 @@
-"""RFC 7807 (``application/problem+json``) error envelope (Phase 3 §5).
+"""RFC 7807 (``application/problem+json``) error envelope.
 
 Domain code raises a typed subclass of :class:`AuditMindError`; the exception handlers registered
 here are the *only* place that knows how to turn an exception into an HTTP response. Application
@@ -110,7 +110,7 @@ async def unhandled_exception_handler(request: Request, exc: Exception) -> JSONR
     """Backstop for any exception that is *not* an :class:`AuditMindError`.
 
     Never leaks the original exception message or a stack trace to the client — only the trace id,
-    which is what support/on-call use to find the real detail in the logs (Phase 10 §1).
+    which is what support/on-call use to find the real detail in the logs.
     """
     trace_id = _trace_id_from(request)
     logger.error("unhandled_exception", trace_id=trace_id, exc_info=exc)

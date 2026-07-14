@@ -3,9 +3,9 @@
 @tailwind utilities;
 
 /*
- * Minimal design system (Increment 11 redesign) — near-monochrome, generous whitespace, hairline
- * dividers instead of boxed cards, color spent only where it's load-bearing (risk severity). See
- * docs/implementation/increment-11-frontend.md and tailwind.config.ts for the token rationale.
+ * Minimal design system — near-monochrome, generous whitespace, hairline dividers instead of
+ * boxed cards, color spent only where it's load-bearing (risk severity). See tailwind.config.ts
+ * for the token definitions.
  *
  * Component classes are defined here via @apply rather than inlined per-component, so every page
  * re-themes from one file — the same "one place, not scattered" discipline the backend applies to
@@ -488,7 +488,7 @@
     @apply text-risk-low;
   }
 
-  /* Agent run lifecycle (Phase 5 §15-§17) and HITL decisions. */
+  /* Agent run lifecycle and HITL decisions. */
   .status-pending,
   .status-running {
     @apply text-ink-secondary;
@@ -656,10 +656,10 @@
   }
 }
 
-/* Motion only to orient (page transitions, expand/collapse) — never decorative, per the design
-   philosophy's §1-2. Gated behind prefers-reduced-motion: no-preference so a user who has asked
-   the OS for reduced motion gets instant, static changes instead — the same accessibility
-   discipline SeverityChip's "never color alone" already applies to this design system. */
+/* Motion only to orient (page transitions, expand/collapse) — never decorative. Gated behind
+   prefers-reduced-motion: no-preference so a user who has asked the OS for reduced motion gets
+   instant, static changes instead — the same accessibility discipline SeverityChip's "never
+   color alone" already applies to this design system. */
 @media (prefers-reduced-motion: no-preference) {
   @keyframes fade-in {
     from {

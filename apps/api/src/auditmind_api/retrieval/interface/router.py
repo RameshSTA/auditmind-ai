@@ -31,10 +31,9 @@ async def search_chunks(
     membership: EngagementMembership = Depends(require_engagement_member(*CAN_READ_FINDINGS)),
     retrieval_service: RetrievalService = Depends(get_retrieval_service),
 ) -> list[dict[str, object]]:
-    """The non-vector "keyword leg" of the Retrieval Agent (Phase 6 §10) — Postgres full-text
-    search over ``ingestion.chunks``, scoped to this engagement. Ranked by ``ts_rank_cd`` over
-    the generated ``search_vector`` column. See ``.../search/semantic`` for the
-    vector-embedding leg (Increment 08)."""
+    """The non-vector "keyword leg" of the Retrieval Agent — Postgres full-text search over
+    ``ingestion.chunks``, scoped to this engagement. Ranked by ``ts_rank_cd`` over the generated
+    ``search_vector`` column. See ``.../search/semantic`` for the vector-embedding leg."""
     results = await retrieval_service.search_chunks(
         engagement_id=membership.engagement_id, query=q, limit=limit
     )
@@ -50,11 +49,10 @@ async def embed_document(
     membership: EngagementMembership = Depends(require_engagement_member(*CAN_AUTHOR_FINDINGS)),
     retrieval_service: RetrievalService = Depends(get_retrieval_service),
 ) -> dict[str, object]:
-    """Generates and stores BGE-M3 embeddings for every chunk of a document (Increment 08,
-    Phase 6 §6) — synchronous with the request rather than the "asynchronous batch job" the
-    design envisions, since no job queue exists yet (see the increment doc's deferred
-    section). Idempotent: chunks already embedded by this model are skipped, not
-    re-embedded, so calling this twice on the same document is safe."""
+    """Generates and stores BGE-M3 embeddings for every chunk of a document — synchronous with
+    the request rather than an asynchronous batch job, since no job queue exists yet. Idempotent:
+    chunks already embedded by this model are skipped, not re-embedded, so calling this twice on
+    the same document is safe."""
     embedded_count = await retrieval_service.embed_document(
         engagement_id=membership.engagement_id, document_id=document_id
     )
@@ -68,9 +66,9 @@ async def search_semantic(
     membership: EngagementMembership = Depends(require_engagement_member(*CAN_READ_FINDINGS)),
     retrieval_service: RetrievalService = Depends(get_retrieval_service),
 ) -> list[dict[str, object]]:
-    """The vector-embedding leg of the Retrieval Agent (Increment 08, Phase 6 §6-7) — ranks
-    chunks by cosine similarity between the query's BGE-M3 embedding and each stored chunk
-    embedding, scoped to this engagement. Only chunks a prior call to
+    """The vector-embedding leg of the Retrieval Agent — ranks chunks by cosine similarity
+    between the query's BGE-M3 embedding and each stored chunk embedding, scoped to this
+    engagement. Only chunks a prior call to
     ``.../documents/{id}/embeddings`` has embedded are searchable here; an unembedded
     engagement's evidence returns no results, not an error — the same "search what's been
     indexed" behavior the keyword leg already has (nothing errors if `ingestion.chunks` is

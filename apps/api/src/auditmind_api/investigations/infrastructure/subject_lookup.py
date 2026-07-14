@@ -1,8 +1,8 @@
 """Adapter for the ``InvestigationSubjectLookup`` port: reads ``reporting.findings`` /
-``risk.anomalies`` / ``risk.transactions`` without importing those contexts' ORM models (Phase 3
-§1 — a bounded context depends on another's *schema*, at most, never its infrastructure classes;
-the same table-path-string convention ``reporting.PostgresChunkLookup`` established for a plain
-read query)."""
+``risk.anomalies`` / ``risk.transactions`` without importing those contexts' ORM models — a
+bounded context depends on another's *schema*, at most, never its infrastructure classes; the
+same table-path-string convention ``reporting.PostgresChunkLookup`` established for a plain
+read query."""
 
 from __future__ import annotations
 

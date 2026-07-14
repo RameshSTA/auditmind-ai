@@ -1,7 +1,6 @@
 """Full-stack integration tests: real HTTP requests through the real FastAPI app, against the real
-local Postgres, proving Postgres full-text search (Increment 07, Phase 6 §10) actually returns
-ranked, relevant results over chunks created by the real ingestion pipeline (Increment 03) — not a
-fake or a mocked index.
+local Postgres, proving Postgres full-text search actually returns ranked, relevant results over
+chunks created by the real ingestion pipeline — not a fake or a mocked index.
 """
 
 from __future__ import annotations

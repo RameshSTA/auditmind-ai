@@ -158,8 +158,8 @@ async def close_investigation(
     investigation_service: InvestigationService = Depends(get_investigation_service),
 ) -> dict[str, object]:
     """Closes an investigation with a documented conclusion — restricted to Auditor/Fraud
-    Analyst, the same two roles ``confirm_finding``/``reject_finding`` restrict to per Phase
-    11 §2's RBAC matrix, since closing a case is the same professional-judgment sign-off."""
+    Analyst, the same two roles ``confirm_finding``/``reject_finding`` restrict to, since
+    closing a case is the same professional-judgment sign-off."""
     investigation = await investigation_service.close_investigation(
         investigation_id=investigation_id,
         closed_by=db_user.id,

@@ -62,12 +62,11 @@ async def create_finding(
     db_user: User = Depends(get_current_db_user),
     reporting_service: ReportingService = Depends(get_reporting_service),
 ) -> dict[str, object]:
-    """Records a new draft finding (Phase 1 FR-7.1, Phase 4 §1).
+    """Records a new draft finding.
 
     Every finding created through this endpoint is manually authored — there is no agent
-    orchestrator yet to produce ``source_run_id``-linked findings (see the increment doc's
-    deferred section), so a human recording an observation directly is this increment's only
-    path to a finding at all.
+    orchestrator yet to produce ``source_run_id``-linked findings, so a human recording an
+    observation directly is the only path to a finding at all.
     """
     finding = await reporting_service.create_finding(
         engagement_id=membership.engagement_id,
@@ -150,8 +149,8 @@ async def confirm_finding(
     db_user: User = Depends(get_current_db_user),
     reporting_service: ReportingService = Depends(get_reporting_service),
 ) -> dict[str, object]:
-    """The mandatory human sign-off gate itself (FR-7.1) — restricted to Auditor/Fraud Analyst
-    per Phase 11 §2's RBAC matrix, the only two roles permitted to confirm or reject a finding.
+    """The mandatory human sign-off gate itself — restricted to Auditor/Fraud Analyst, the only
+    two roles permitted to confirm or reject a finding.
     """
     finding = await reporting_service.confirm_finding(finding_id=finding_id, reviewed_by=db_user.id)
     return _finding_response(finding)

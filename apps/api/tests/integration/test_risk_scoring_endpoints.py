@@ -1,8 +1,8 @@
 """Full-stack integration tests: real HTTP requests through the real FastAPI app, against the
-real local Postgres and real Neo4j, exercising the fraud-scoring ensemble (Increment 10, Phase 7
-§1-§4) — including the cross-context composition with Increment 09: a vendor resolved into the
-knowledge graph feeds this context's graph-centrality signal, proven end to end rather than
-assumed to work just because both increments' unit tests pass independently.
+real local Postgres and real Neo4j, exercising the fraud-scoring ensemble — including the
+cross-context composition where a vendor resolved into the knowledge graph feeds this context's
+graph-centrality signal, proven end to end rather than assumed to work just because each
+context's unit tests pass independently.
 """
 
 from __future__ import annotations
@@ -247,10 +247,10 @@ def test_risk_score_incorporates_rule_engine_anomaly(
 def test_risk_score_incorporates_graph_centrality_after_knowledge_graph_resolution(
     client: TestClient, rsa_keypair: KeyMaterial, seeded_engagement: dict[str, str]
 ) -> None:
-    """The cross-context proof: resolving vendors into the knowledge graph (Increment 09) makes
-    the graph-centrality signal available to risk scoring (Increment 10) — two increments'worth
-    of independently-tested code composing correctly through the real Neo4j graph, not just
-    through matching fakes in each context's own unit tests."""
+    """The cross-context proof: resolving vendors into the knowledge graph makes the
+    graph-centrality signal available to risk scoring — independently-tested code from two
+    bounded contexts composing correctly through the real Neo4j graph, not just through
+    matching fakes in each context's own unit tests."""
     engagement_id = seeded_engagement["engagement"]
     headers = _auth_header(rsa_keypair, seeded_engagement["member_entra_oid"])
     _import_transaction(client, headers, engagement_id, "Acme Corp", "500.00")

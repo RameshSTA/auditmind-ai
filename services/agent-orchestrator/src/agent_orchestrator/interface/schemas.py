@@ -1,6 +1,6 @@
-"""Request/response bodies for this service's routes (Phase 3 §1) — the only Pydantic models in
-this codebase used for JSON payloads rather than the RFC 7807 error envelope, kept in the interface
-layer alongside every other FastAPI-facing concern, the same convention ``apps/api`` uses."""
+"""Request/response bodies for this service's routes — the only Pydantic models in this codebase
+used for JSON payloads rather than the RFC 7807 error envelope, kept in the interface layer
+alongside every other FastAPI-facing concern, the same convention ``apps/api`` uses."""
 
 from __future__ import annotations
 
@@ -29,7 +29,7 @@ class ResolveHitlRequest(BaseModel):
     reason: str | None = Field(
         default=None,
         description="Required for a reject/edit decision — the documented rationale that becomes "
-        "the durable record of why a run's draft was not published (Phase 5 §15).",
+        "the durable record of why a run's draft was not published.",
     )
 
 

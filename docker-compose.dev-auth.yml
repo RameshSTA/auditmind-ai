@@ -1,5 +1,5 @@
 # DEV-ONLY overlay that switches the API from "no auth configured" to "trust the frontend's
-# dev-auth JWKS" (Increment 11). Compose merges this on top of docker-compose.yml:
+# dev-auth JWKS". Compose merges this on top of docker-compose.yml:
 #
 #   docker compose -f docker-compose.yml -f docker-compose.dev-auth.yml up -d postgres neo4j migrate api
 #

@@ -1,8 +1,8 @@
 """identity.engagement_members: engagement-roster RLS visibility (Administration, read-only)
 
 Adds a second, additive `FOR SELECT` policy on top of the `engagement_members_self_only` policy
-the identity schema migration created (Phase 4 §12): a caller may now see every membership row for
-an engagement they themselves belong to, not just their own row. Postgres OR's multiple permissive
+the identity schema migration created: a caller may now see every membership row for an engagement
+they themselves belong to, not just their own row. Postgres OR's multiple permissive
 policies together for the same command, so this strictly *widens* visibility from "your own row"
 to "your own row, plus every other row in engagements you're in" — it does not replace or weaken
 the existing policy, and cross-engagement isolation is unchanged: a member of engagement A still
@@ -24,7 +24,7 @@ search_path` pins name resolution so it can't be hijacked by a session-level `se
 — standard hardening for any `SECURITY DEFINER` routine, not specific to this table.
 
 This is exactly the "future admin feature" the original identity migration's docstring named and
-deliberately declined to build: a read-only engagement roster (Administration §"who has access"),
+deliberately declined to build: a read-only engagement roster (who has access to an engagement),
 not membership assignment (inviting/adding/removing a member), which stays a separate, unbuilt
 write-path policy. No table grants change — `auditmind_app` already had SELECT on this table; it
 additionally needs, and is granted, EXECUTE on the new function.

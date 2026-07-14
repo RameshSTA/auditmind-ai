@@ -7,8 +7,8 @@
  *
  * There is deliberately no rewrites()/proxy to the FastAPI API here: every browser-visible call
  * goes through this app's own Route Handlers under /api/* (the BFF), which attach the bearer token
- * server-side. The browser never learns the API's address or holds a token (Phase 2 §7, Phase 13
- * §12). The API base URL is read from AUDITMIND_API_BASE_URL at request time in the BFF only.
+ * server-side. The browser never learns the API's address or holds a token.
+ * The API base URL is read from AUDITMIND_API_BASE_URL at request time in the BFF only.
  *
  * @type {import('next').NextConfig}
  */

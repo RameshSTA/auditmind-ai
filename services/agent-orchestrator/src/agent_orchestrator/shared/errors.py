@@ -1,4 +1,4 @@
-"""RFC 7807 (``application/problem+json``) error envelope (Phase 3 §5).
+"""RFC 7807 (``application/problem+json``) error envelope.
 
 Same contract as ``apps/api``'s ``shared/errors.py``: domain/application code raises a typed
 subclass of :class:`AgentOrchestratorError`; the exception handlers registered here are the only
@@ -6,11 +6,10 @@ place that turns an exception into an HTTP response. Application and domain code
 ``JSONResponse`` or reach for an HTTP status code directly.
 
 The one addition specific to this service is :class:`LlmProviderNotConfiguredError` (503) — the
-typed error every LLM-calling node raises when the configured provider's API key (``OPENAI_API_KEY``
-in this environment; ``ANTHROPIC_API_KEY`` under ADR-005's default) is not present, so a run that
-reaches a model call in an unconfigured environment fails with a clear, documented 503 rather than
-a raw provider authentication traceback (see the module docstring in
-``infrastructure/llm_client.py``).
+typed error every LLM-calling node raises when the configured provider's API key
+(``AGENT_LLM_API_KEY``) is not present, so a run that reaches a model call in an unconfigured
+environment fails with a clear, documented 503 rather than a raw provider authentication
+traceback (see the module docstring in ``infrastructure/llm_client.py``).
 """
 
 from __future__ import annotations
@@ -78,9 +77,9 @@ class ValidationError(AgentOrchestratorError):
 
 
 class GuardrailViolationError(AgentOrchestratorError):
-    """A hard Guardrail stop (Phase 5 §9/§17) — never retried, surfaced as a 422 to the caller and
-    (in a fuller build) alerted to governance. Distinct from a validation error so a guardrail
-    event is filterable in the logs as its own class."""
+    """A hard Guardrail stop — never retried, surfaced as a 422 to the caller and (in a fuller
+    build) alerted to governance. Distinct from a validation error so a guardrail event is
+    filterable in the logs as its own class."""
 
     type_slug = "guardrail-violation"
     title = "Guardrail violation"
@@ -158,7 +157,7 @@ async def unhandled_exception_handler(request: Request, exc: Exception) -> JSONR
     """Backstop for any exception that is *not* an :class:`AgentOrchestratorError`.
 
     Never leaks the original exception message or a stack trace to the client — only the trace id,
-    which is what support/on-call use to find the real detail in the logs (Phase 10 §1).
+    which is what support/on-call use to find the real detail in the logs.
     """
     trace_id = _trace_id_from(request)
     logger.error("unhandled_exception", trace_id=trace_id, exc_info=exc)

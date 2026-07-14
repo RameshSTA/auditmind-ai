@@ -1,7 +1,6 @@
-"""Integration tests proving the risk schema's Row-Level Security policies (Phase 4 §12) actually
-isolate engagements at the database level — the same subquery-based pattern Increments 03-04
-established, proven again on ``risk.transactions``/``risk.anomalies``/``risk.risk_scores``
-(Increment 10)."""
+"""Integration tests proving the risk schema's Row-Level Security policies actually isolate
+engagements at the database level — the same subquery-based pattern already established
+elsewhere, proven again on ``risk.transactions``/``risk.anomalies``/``risk.risk_scores``."""
 
 from __future__ import annotations
 

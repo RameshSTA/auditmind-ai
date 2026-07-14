@@ -2,8 +2,8 @@
 without importing ``ingestion``'s ORM model (same raw-SQL boundary convention as
 ``reporting/infrastructure/chunk_lookup.py``).
 
-Reads ``search_vector`` — a generated, GIN-indexed ``tsvector`` column Increment 07's migration
-adds to ``ingestion.chunks`` (``ingestion`` still owns the table; this context only queries it).
+Reads ``search_vector`` — a generated, GIN-indexed ``tsvector`` column added by migration to
+``ingestion.chunks`` (``ingestion`` still owns the table; this context only queries it).
 """
 
 from __future__ import annotations

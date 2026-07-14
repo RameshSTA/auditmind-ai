@@ -3,7 +3,7 @@
  * (docker-compose's `agent-orchestrator`, port 8001, distinct from apps/api's port 8000). Mirrors
  * server/api-client.ts's shape exactly; kept as a separate module rather than parameterizing
  * apiFetch with a base URL because the two backends are genuinely different deployables with
- * independent lifecycles (Phase 5's ADR-001) — conflating them behind one client would blur that.
+ * independent lifecycles — conflating them behind one client would blur that.
  *
  * Reuses the same dev bearer token apps/api accepts: agent-orchestrator validates against the
  * identical platform-wide Entra tenant (see server/dev-auth.ts's header), so one mint serves both.

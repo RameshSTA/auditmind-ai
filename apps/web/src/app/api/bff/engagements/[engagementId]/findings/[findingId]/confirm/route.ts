@@ -10,8 +10,8 @@ interface RouteContext {
 
 /**
  * POST → confirm a finding through the mandatory human sign-off gate. The API restricts this to
- * Auditor / Fraud Analyst (Phase 11 §2) and 403s everyone else — the UI does not pre-judge, it
- * shows the button and surfaces the API's decision, so the gate is enforced in exactly one place.
+ * Auditor / Fraud Analyst and 403s everyone else — the UI does not pre-judge, it shows the
+ * button and surfaces the API's decision, so the gate is enforced in exactly one place.
  */
 export function POST(_request: Request, context: RouteContext) {
   return withSession(async (persona) => {

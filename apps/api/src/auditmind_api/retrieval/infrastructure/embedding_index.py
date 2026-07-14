@@ -1,5 +1,5 @@
 """Adapter for the ``ChunkVectorIndex`` port: stores and searches ``retrieval.chunk_embeddings``,
-the table this context owns (Increment 08, Phase 4 §2).
+the table this context owns.
 
 ``upsert_embeddings`` goes through the ORM (``ChunkEmbeddingModel``) — the same convention every
 other context uses for a table it owns (e.g. ``ingestion``'s ``PostgresChunkRepository``), unlike
@@ -66,9 +66,9 @@ class PgVectorChunkIndex:
         query_embedding: list[float],
         limit: int = 20,
     ) -> list[SearchResult]:
-        # ef_search trades recall for latency at query time only (Phase 6 §7) — a lower value
-        # here favors the interactive-search latency target over maximum recall; the offline
-        # evaluation harness that would use a higher value is Phase 9, not built yet.
+        # ef_search trades recall for latency at query time only — a lower value here favors the
+        # interactive-search latency target over maximum recall; an offline evaluation harness
+        # that would use a higher value is not built yet.
         await self._session.execute(text("SET LOCAL hnsw.ef_search = 40"))
         # `CAST(:x AS vector)` rather than the terser `:x::vector` — SQLAlchemy's `text()` bind
         # parameter parser reads a `:name` immediately followed by `::` as part of the same token,

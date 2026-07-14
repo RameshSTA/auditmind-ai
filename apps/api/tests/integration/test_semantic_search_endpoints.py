@@ -1,16 +1,14 @@
 """Full-stack integration tests: real HTTP requests through the real FastAPI app, against the real
-local Postgres and real pgvector, proving the vector-embedding leg (Increment 08) actually stores
-and ranks embeddings correctly — end to end through ``POST .../embeddings`` and
-``GET .../search/semantic``.
+local Postgres and real pgvector, proving the vector-embedding leg actually stores and ranks
+embeddings correctly — end to end through ``POST .../embeddings`` and ``GET .../search/semantic``.
 
 **Deliberate, documented deviation from every other integration test file in this codebase**: the
-real ``BgeM3EmbeddingGenerator`` (Increment 08's production adapter) is swapped for a fast,
-deterministic, dependency-free fake via FastAPI's ``dependency_overrides`` — see
-``FakeEmbeddingGenerator`` below for why. Everything else here is real: real HTTP requests, real
-Postgres, real pgvector storage, real cosine-distance search, real Row-Level Security. The one
-thing this suite cannot prove — that BGE-M3 itself produces semantically good embeddings — was
-verified manually against the real model this session; see the increment doc §3 for that result.
-Model *quality* evaluation belongs to Phase 9's (unbuilt) evaluation framework, not this suite.
+real ``BgeM3EmbeddingGenerator`` production adapter is swapped for a fast, deterministic,
+dependency-free fake via FastAPI's ``dependency_overrides`` — see ``FakeEmbeddingGenerator`` below
+for why. Everything else here is real: real HTTP requests, real Postgres, real pgvector storage,
+real cosine-distance search, real Row-Level Security. The one thing this suite cannot prove — that
+BGE-M3 itself produces semantically good embeddings — was verified manually against the real
+model; that quality evaluation belongs to a (not yet built) evaluation framework, not this suite.
 """
 
 from __future__ import annotations

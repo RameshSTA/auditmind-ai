@@ -1,5 +1,5 @@
 """Integration tests: the full FastAPI app, wired exactly as it runs in production, driven over
-HTTP via ``TestClient`` (Phase 3 §11).
+HTTP via ``TestClient``.
 
 The only thing replaced is the JWKS network call — ``JWKSClient._refresh`` is patched to load the
 test RSA key directly, so these tests exercise the *real* validation, middleware, exception
@@ -29,11 +29,10 @@ def client(monkeypatch: pytest.MonkeyPatch, rsa_keypair: KeyMaterial) -> Iterato
     monkeypatch.setenv("AUDITMIND_ENTRA_ISSUER", TEST_ISSUER)
     monkeypatch.setenv("AUDITMIND_ENTRA_JWKS_URI", "https://fake-entra.example/keys")
     monkeypatch.setenv("AUDITMIND_LOG_LEVEL", "WARNING")
-    # /readyz (added when Increment 02 introduced a real database) needs a reachable Postgres to
-    # report ready — pointed at the same local test instance the identity/ingestion integration
-    # tests use, falling back to a value that simply won't be reachable if none is configured, so
-    # this file's tests keep working (readiness correctly reports 503) even with no database at
-    # all, per Increment 01's original "the rest of the suite still runs without one" design.
+    # /readyz needs a reachable Postgres to report ready — pointed at the same local test instance
+    # the identity/ingestion integration tests use, falling back to a value that simply won't be
+    # reachable if none is configured, so this file's tests keep working (readiness correctly
+    # reports 503) even with no database at all — the rest of the suite still runs without one.
     monkeypatch.setenv(
         "AUDITMIND_DATABASE_HOST", os.environ.get("AUDITMIND_TEST_DB_HOST", "localhost")
     )
@@ -132,7 +131,7 @@ def test_readiness_reports_not_ready_when_database_is_unreachable(
     assert response.json() == {"status": "not_ready"}
 
 
-# --- trace id propagation (Phase 10 §1) ---
+# --- trace id propagation ---
 
 
 def test_trace_id_is_generated_when_caller_supplies_none(client: TestClient) -> None:
@@ -191,7 +190,7 @@ def test_protected_endpoint_with_expired_token_returns_401(
     assert response.status_code == 401
 
 
-# --- authorization / RBAC (Phase 11 §2) ---
+# --- authorization / RBAC ---
 
 
 def test_admin_endpoint_denies_a_caller_without_the_admin_role(

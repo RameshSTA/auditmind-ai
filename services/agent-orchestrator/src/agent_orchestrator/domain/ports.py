@@ -1,16 +1,15 @@
-"""Adapter ports (Phase 3 §1) for the Agent Orchestration context.
+"""Adapter ports for the Agent Orchestration context.
 
 The two things every LLM-calling node depends on — a way to call a model, and a way to persist a
-run — are protocols here, not concrete classes, for exactly the reason the rest of this codebase
-uses ports everywhere (see ``apps/api``'s ``retrieval`` context injecting ``EmbeddingGenerator``
-around BGE-M3): the application layer and the graph nodes stay testable against fakes, and the real
+run — are protocols here, not concrete classes, for the same reason the rest of this codebase uses
+ports everywhere (see ``apps/api``'s ``retrieval`` context injecting ``EmbeddingGenerator`` around
+BGE-M3): the application layer and the graph nodes stay testable against fakes, and the real
 LiteLLM-gateway / real-Postgres adapters are a swap behind the port, not a redesign.
 
 :class:`LlmClient` is the single most important port in the service. Every agent node that reasons
-with a model calls ``LlmClient.complete`` — never LiteLLM, never ``langchain_anthropic``, never the
-Anthropic SDK directly (ADR-005). This is what makes the whole graph runnable and testable with a
-fake client today, before any API key exists, and makes "swap Claude for another provider" a
-gateway-config change rather than a code change.
+with a model calls ``LlmClient.complete`` — never LiteLLM, never a provider SDK directly. This is
+what makes the whole graph runnable and testable with a fake client today, before any API key
+exists, and makes swapping the underlying model a gateway-config change rather than a code change.
 """
 
 from __future__ import annotations
@@ -33,12 +32,11 @@ class LlmClient(Protocol):
 
     A single method: turn a list of messages into a :class:`ModelResponse`. ``model`` is a LiteLLM
     model *alias* (a name from ``config/litellm.yaml``'s ``model_list``), not a raw provider model
-    id — routing that alias to a concrete Claude model, applying rate limits and cost tracking, and
-    supplying the provider credential are all the gateway's job (Phase 5 §12, ADR-005), invisible to
-    the caller.
+    id — routing that alias to a concrete model, applying rate limits and cost tracking, and
+    supplying the provider credential are all the gateway's job, invisible to the caller.
 
     The real adapter (``infrastructure/llm_client.py``) raises ``LlmProviderNotConfiguredError`` if
-    no ``ANTHROPIC_API_KEY`` is present; a fake adapter (used in every test) returns a canned
+    no ``AGENT_LLM_API_KEY`` is present; a fake adapter (used in every test) returns a canned
     ``ModelResponse`` with no network call. A node written against this port behaves identically
     against either — that is the entire point.
     """
@@ -49,12 +47,12 @@ class LlmClient(Protocol):
 
 
 class RunRepository(Protocol):
-    """Persistence for ``agent.runs`` (Phase 4 §1) — create a run, advance its status, read it back.
+    """Persistence for ``agent.runs`` — create a run, advance its status, read it back.
 
     Owned by this context (the ``agent`` schema is this service's), so its concrete adapter writes
     through SQLAlchemy the same way ``apps/api``'s owned-table repositories do. All access is
     engagement-scoped by the RLS policy on ``agent.runs`` — this port never adds a ``WHERE
-    engagement_id`` clause of its own, the database enforces it (Phase 4 §12).
+    engagement_id`` clause of its own, the database enforces it.
     """
 
     async def create_run(self, run: AgentRun) -> AgentRun: ...
@@ -68,9 +66,8 @@ class RunRepository(Protocol):
 
 class ApiSearchClient(Protocol):
     """Real evidence retrieval against apps/api's own search endpoints — the ``hybrid_search``
-    tool (Phase 5 §12, ``application/tool_registry.py``) and the RAG leg this service was missing
-    (Increment 12's named gap). A specialist node calls this, not the LLM, to gather real passages
-    before it ever drafts anything — the LLM only ever sees what this returns."""
+    tool (``application/tool_registry.py``). A specialist node calls this, not the LLM, to gather
+    real passages before it ever drafts anything — the LLM only ever sees what this returns."""
 
     async def semantic_search(
         self, *, engagement_id: str, query: str, limit: int = 5
@@ -80,9 +77,9 @@ class ApiSearchClient(Protocol):
 class FindingWriter(Protocol):
     """Writes an agent's evidence-grounded draft back into apps/api's reporting context as a real
     ``reporting.findings`` row, citing the real chunks its evidence came from (the
-    ``submit_finding_draft`` tool, Phase 5 §12) — the write half of the RAG loop. The finding is
-    created as a draft; apps/api's existing, unmodified human sign-off gate (an Auditor or Fraud
-    Analyst confirming/rejecting) is what makes it count, exactly as it is for a manually-authored
+    ``submit_finding_draft`` tool) — the write half of the RAG loop. The finding is created as a
+    draft; apps/api's existing, unmodified human sign-off gate (an Auditor or Fraud Analyst
+    confirming/rejecting) is what makes it count, exactly as it is for a manually-authored
     finding.
 
     Takes the full :class:`RetrievedChunk` list (not bare ids) so the adapter can attach each
@@ -103,10 +100,10 @@ class FindingWriter(Protocol):
 
 class ContextReader(Protocol):
     """Read-only context lookups against apps/api's already-computed signals — the
-    ``get_anomaly_cluster``/``get_risk_score`` and ``graph_traverse`` tools (Phase 5 §12). Plain
-    ``dict`` results (not typed entities like :class:`RetrievedChunk`): these feed a prompt as
-    contextual grounding, not a citation graph an evidence chain is built from, so the extra type
-    ceremony isn't pulling its weight the way it does for evidence chunks."""
+    ``get_anomaly_cluster``/``get_risk_score`` and ``graph_traverse`` tools. Plain ``dict`` results
+    (not typed entities like :class:`RetrievedChunk`): these feed a prompt as contextual grounding,
+    not a citation graph an evidence chain is built from, so the extra type ceremony isn't pulling
+    its weight the way it does for evidence chunks."""
 
     async def list_anomalies(self, *, engagement_id: str) -> list[dict[str, object]]: ...
 
@@ -124,12 +121,12 @@ class RagApiClient(ApiSearchClient, FindingWriter, ContextReader, Protocol):
 
 
 class HitlRepository(Protocol):
-    """Persistence for ``agent.hitl_interrupts`` (Phase 4 §1, Phase 5 §15).
+    """Persistence for ``agent.hitl_interrupts``.
 
     ``open_interrupt`` records a pending human checkpoint when the graph pauses; ``resolve``
     records the reviewer's decision. The append-then-resolve shape (rather than deleting/replacing)
-    keeps every human decision durable for the audit trail, the same 'both versions preserved'
-    property Phase 5 §15 requires and ``apps/api``'s audit_trail context already guarantees.
+    keeps every human decision durable for the audit trail, the same guarantee
+    ``apps/api``'s audit_trail context already provides.
     """
 
     async def open_interrupt(self, interrupt: HitlInterrupt) -> HitlInterrupt: ...

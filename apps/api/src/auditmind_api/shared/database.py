@@ -1,5 +1,4 @@
-"""Async SQLAlchemy engine, per-request session, and the Row-Level Security context helper
-(Phase 4 §12, Phase 11 §2 Layer 3).
+"""Async SQLAlchemy engine, per-request session, and the Row-Level Security context helper.
 
 The engine connects as the least-privilege ``auditmind_app`` role — never as the migration/admin
 role and never as a Postgres superuser — because RLS policies are silently bypassed for
@@ -65,17 +64,17 @@ async def get_db_session() -> AsyncIterator[AsyncSession]:
 async def set_rls_user_context(session: AsyncSession, *, user_id: str) -> None:
     """Binds ``app.current_user_id`` for the remainder of the current transaction only.
 
-    Every RLS policy in this schema (starting with ``identity.engagement_members``, Phase 4 §12)
-    is written against this session variable, so this call is what makes the database itself — not
+    Every RLS policy in this schema (starting with ``identity.engagement_members``) is written
+    against this session variable, so this call is what makes the database itself — not
     application code — the thing that actually enforces "a user can only see their own rows."
 
     Uses ``set_config(..., true)`` rather than ``SET LOCAL app.current_user_id = <value>`` for a
     specific reason: PostgreSQL's ``SET`` statement does not support bind parameters (it is parsed
     before parameter binding happens), so setting it directly would require string-interpolating
     ``user_id`` into the SQL text — exactly the kind of raw string construction this codebase
-    otherwise refuses to do anywhere (Phase 5 §3's parameterized-template-only rule, applied here).
-    ``set_config`` is a normal SQL function and accepts a bound parameter safely; its third
-    argument (``true``) makes the setting transaction-local, equivalent to ``SET LOCAL``.
+    otherwise refuses to do anywhere. ``set_config`` is a normal SQL function and accepts a bound
+    parameter safely; its third argument (``true``) makes the setting transaction-local,
+    equivalent to ``SET LOCAL``.
     """
     await session.execute(
         text("SELECT set_config('app.current_user_id', :user_id, true)"),

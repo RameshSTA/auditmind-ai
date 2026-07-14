@@ -1,4 +1,4 @@
-"""Repository and adapter ports (Phase 3 §1) for the Investigations context.
+"""Repository and adapter ports for the Investigations context.
 
 The application layer depends on these interfaces; infrastructure provides the only
 implementations. No SQLAlchemy import belongs here.
@@ -40,8 +40,9 @@ class InvestigationItemRepository(Protocol):
 class InvestigationSubjectLookup(Protocol):
     """The one thing this context needs from ``reporting``/``risk``: which engagement a candidate
     item (a finding, anomaly, or transaction) belongs to. Deliberately its own minimal protocol
-    rather than importing another context's port (Phase 3 §1's boundary applies between contexts,
-    not just between layers) — the same reasoning ``reporting``'s ``ChunkLookup`` documents.
+    rather than importing another context's port — the bounded-context boundary applies between
+    contexts, not just between layers — the same reasoning ``reporting``'s ``ChunkLookup``
+    documents.
 
     Row-Level Security on ``reporting.findings`` / ``risk.anomalies`` / ``risk.transactions``
     already stops a user from looking up a subject in an engagement they have no membership in at

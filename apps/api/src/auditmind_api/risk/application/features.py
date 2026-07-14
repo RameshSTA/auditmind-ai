@@ -1,14 +1,14 @@
-"""Transaction-level feature engineering (Phase 7 §6) for the ML-dependent signal sources
+"""Transaction-level feature engineering for the ML-dependent signal sources
 (``ml_signals.py``). Pure functions over a list of transactions, no I/O, no framework import —
 the same "pure computation, trivially unit-testable" shape ``rules.py`` already established, since
 building a feature vector is deterministic computation over data already in hand, not a call to an
 external system.
 
-**Scoped deliberately smaller than Phase 7 §6's full feature table.** That table lists three
-families: transaction-level, vendor-level (aggregated), and relational (from Neo4j). This module
-builds only the transaction-level family, reusing signals the rule engine (``rules.py``) already
-computes rather than re-deriving them — a round-dollar or near-threshold amount is exactly as
-meaningful a feature to an Isolation Forest as it is a standalone rule. The vendor-level family
+**Scoped deliberately smaller than the full feature set envisioned.** A complete feature set spans
+three families: transaction-level, vendor-level (aggregated), and relational (from Neo4j). This
+module builds only the transaction-level family, reusing signals the rule engine (``rules.py``)
+already computes rather than re-deriving them — a round-dollar or near-threshold amount is exactly
+as meaningful a feature to an Isolation Forest as it is a standalone rule. The vendor-level family
 needs a "trailing N days" concept this codebase has no as-of-date model for yet (every transaction
 currently imported is treated as "current," not dated relative to a scan time); the relational
 family is ``ml_signals.py``'s graph-centrality sibling, not built here since it needs Neo4j I/O this
@@ -62,9 +62,8 @@ def build_feature_matrix(
     ``normalized_amount`` is scaled against the *population's own* maximum amount (not a fixed
     currency-agnostic constant) — meaningful only relative to this engagement's own transaction
     population, the same "what's typical *here*" framing every other signal in this ensemble uses
-    (Benford's Law and duplicate-payment matching are both population-relative, not
-    absolute-threshold checks either, except the two Phase 7 §2 rules that are deliberately
-    absolute-threshold by design: structuring and round-dollar).
+    (Benford's Law and duplicate-payment matching are both population-relative too, except the
+    two rules that are deliberately absolute-threshold by design: structuring and round-dollar).
     """
     if not transactions:
         return []

@@ -10,7 +10,7 @@ dependencies = [
     "pydantic-settings>=2.6,<3.0",
     "structlog>=24.4,<25.0",
     "python-jose[cryptography]>=3.3,<4.0",
-    # Self-service signup's local email/password credentials (Increment 14, identity.credentials).
+    # Self-service signup's local email/password credentials (identity.credentials).
     "bcrypt>=4.0,<5.0",
     "httpx>=0.27,<0.28",
     "sqlalchemy[asyncio]>=2.0,<2.1",
@@ -24,21 +24,21 @@ dependencies = [
     # adding apt packages to the already-deliberately-lean runtime image (see Dockerfile's own
     # comment on the CPU-only torch install).
     "fpdf2>=2.7,<3.0",
-    # Retrieval's vector-embedding leg (Increment 08, Phase 4 §2 / Phase 6 §6-7).
+    # Retrieval's vector-embedding leg.
     "pgvector>=0.3,<0.4",
     "sentence-transformers>=5.0,<6.0",
-    # Knowledge Graph context (Increment 09, Phase 4 §3) — pinned to the 5.x driver line to match
+    # Knowledge Graph context — pinned to the 5.x driver line to match
     # the docker-compose `neo4j:5-community` server image.
     "neo4j>=5.26,<6.0",
-    # ML-dependent risk tiers (Increment 10, Phase 7 §2-§3): Isolation Forest and HDBSCAN.
+    # ML-dependent risk tiers: Isolation Forest and HDBSCAN.
     "scikit-learn>=1.5,<2.0",
     "hdbscan>=0.8,<0.9",
     # In-app model validation (risk/application/model_validation.py) — already a transitive
     # dependency of scikit-learn/hdbscan, declared explicitly since this module imports it directly.
     "numpy>=1.26,<3.0",
-    # Observability (Increment 13, Phase 10 §5): OTel SDK + auto-instrumentation. Traces and
+    # Observability: OTel SDK + auto-instrumentation. Traces and
     # metrics are pushed via OTLP to the Collector — this app never talks to Prometheus/Grafana
-    # directly (Phase 10 §5's own reasoning for why a Collector exists at all).
+    # directly (the same reasoning for why a Collector exists at all).
     "opentelemetry-api>=1.27,<2.0",
     "opentelemetry-sdk>=1.27,<2.0",
     "opentelemetry-instrumentation-fastapi>=0.48b0",
@@ -54,7 +54,7 @@ dev = [
     "ruff>=0.7,<0.8",
     "mypy>=1.13,<2.0",
     "types-python-jose>=3.3,<4.0",
-    # Enforces the hexagonal layering and bounded-context isolation documented in Phase 3 — see
+    # Enforces the hexagonal layering and bounded-context isolation documented in the architecture docs — see
     # [tool.importlinter] below.
     "import-linter>=2.0,<3.0",
 ]
@@ -93,8 +93,8 @@ mypy_path = "src"
 module = ["pgvector.*", "hdbscan.*", "sklearn.*"]
 ignore_missing_imports = true
 
-# Enforces the two rules Phase 3 §1 and every increment doc's "architectural decisions" section
-# describe but that were, until now, followed only by convention: (1) each bounded context's
+# Enforces the two rules the architectural decisions describe but that were, until now,
+# followed only by convention: (1) each bounded context's
 # domain -> application -> infrastructure -> interface chain is one-directional (e.g. a parser in
 # infrastructure/ may raise an exception type owned by application/, matching the documented
 # reason those types live above domain/, but application/ may never import infrastructure/ or

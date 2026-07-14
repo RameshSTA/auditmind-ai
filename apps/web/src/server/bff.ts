@@ -4,7 +4,7 @@
  * `withSession` resolves the persona from the httpOnly cookie (401 if none) and hands the handler
  * an authenticated context. `toResponse` translates an ApiError back into the same problem+json
  * shape and status the API produced, so the browser client sees the backend's real RFC 7807 error
- * (trace_id and all) rather than a generic 500 — the honest error surface Phase 13 §13 wants.
+ * (trace_id and all) rather than a generic 500 — an honest error surface instead of a swallowed one.
  */
 import { NextResponse } from "next/server";
 

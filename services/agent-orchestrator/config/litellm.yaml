@@ -1,44 +1,35 @@
-# LiteLLM gateway configuration (Phase 2 ADR-005, Phase 5 §12).
+# LiteLLM gateway configuration.
 #
 # This is the single declarative source of truth for which models the Agent Orchestration service
 # may call and how they are routed. Agent nodes name a *model alias* from `model_list` below (e.g.
-# `claude-primary`) — never a raw provider model id — so switching the underlying model, adding a
-# fallback, or changing a provider is an edit to THIS FILE, not to any Python code (ADR-005's whole
-# rationale: "no domain service imports a provider SDK directly").
+# `primary-model`) — never a raw provider model id — so switching the underlying model, adding a
+# fallback, or changing provider is an edit to this file, not to any Python code. No domain service
+# imports a provider SDK directly; every model call goes through this gateway.
 #
-# PROVIDER DECISION: ADR-005 chose Anthropic's Claude as the default for this project. This
-# environment runs on an OpenAI credential instead (the key actually available here) — exactly the
-# swap the alias indirection exists for: the aliases below keep their original names
-# (`claude-primary`/`claude-fast`, referenced by AGENT_DEFAULT_MODEL and by every node/test) but now
-# route to OpenAI models via `api_key: os.environ/OPENAI_API_KEY`. The key is NEVER written in this
-# file. Revert to Anthropic by pointing these two `litellm_params.model` values and the
-# `_require_provider`/`llm_provider_configured` env var check (infrastructure/llm_client.py,
-# shared/settings.py) back at `anthropic/claude-*` and `ANTHROPIC_API_KEY` — the seam this file
-# documents is exactly there so that's a config edit, not a code rewrite.
+# The provider credential is read from `AGENT_LLM_API_KEY` and is never written to this file.
+# Pointing `litellm_params.model` at a different provider's model id is the entire swap needed to
+# change providers — the alias names (`primary-model` / `fast-model`) stay stable for every caller.
 
 model_list:
-  # The default alias agent nodes route to (AGENT_DEFAULT_MODEL). GPT-4o is the strong default for
-  # this multi-agent reasoning workflow.
-  - model_name: claude-primary
+  # The default alias agent nodes route to (AGENT_DEFAULT_MODEL).
+  - model_name: primary-model
     litellm_params:
       model: openai/gpt-4o
-      api_key: os.environ/OPENAI_API_KEY
+      api_key: os.environ/AGENT_LLM_API_KEY
 
-  # A faster/cheaper alias for the lightweight, high-volume nodes (e.g. the Planner's decomposition,
-  # or an LLM-judge second opinion in Evaluation) where a smaller model is sufficient. Wired now so
-  # the routing seam exists; which nodes actually use it is a per-node `model=` override, a tuning
-  # decision deferred until real calls can be measured.
-  - model_name: claude-fast
+  # A faster/cheaper alias for lightweight, high-volume calls (e.g. the planner's decomposition, or
+  # the evaluator's groundedness check) where a smaller model is sufficient. Which nodes actually use
+  # it is a per-node `model=` override, a tuning decision deferred until real call volume exists.
+  - model_name: fast-model
     litellm_params:
       model: openai/gpt-4o-mini
-      api_key: os.environ/OPENAI_API_KEY
+      api_key: os.environ/AGENT_LLM_API_KEY
 
-# Router-level policy (Phase 5 §12 — per-tool/per-model rate limits and circuit-breaker behavior are
-# configured centrally at the gateway so one misbehaving agent cannot exhaust the shared LLM
-# resource on behalf of the whole run). These are conservative starting values, tuned once real
-# traffic exists.
+# Per-tool/per-model rate limits and circuit-breaker behavior are configured centrally at the
+# gateway so one misbehaving agent can't exhaust the shared LLM resource on behalf of the whole
+# run. These are conservative starting values, tuned once real traffic exists.
 router_settings:
-  num_retries: 3            # Phase 5 §14: 3 attempts on a gateway timeout / rate limit, then the
-                            # circuit-breaker opens (surfaced up as a retryable error class).
-  timeout: 60               # seconds per model call — a slow branch carries its own timeout (§13).
+  num_retries: 3            # attempts on a gateway timeout / rate limit before the circuit breaker
+                            # opens (surfaced up as a retryable error class).
+  timeout: 60               # seconds per model call — a slow branch carries its own timeout.
   allowed_fails: 3          # circuit-breaker: trip after this many consecutive failures.

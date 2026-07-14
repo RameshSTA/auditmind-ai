@@ -1,9 +1,9 @@
 "use client";
 
 /**
- * TanStack Query provider — Phase 13 §11's decision that server state lives in the Query cache as
- * the single source of truth, never duplicated into a separate store. One client per browser tab,
- * created inside a state initializer so it survives Fast Refresh without being recreated per render.
+ * TanStack Query provider. Server state lives in the Query cache as the single source of truth,
+ * never duplicated into a separate store. One client per browser tab, created inside a state
+ * initializer so it survives Fast Refresh without being recreated per render.
  */
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState, type ReactNode } from "react";

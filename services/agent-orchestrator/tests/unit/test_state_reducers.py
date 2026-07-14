@@ -1,4 +1,4 @@
-"""Unit tests for the state-channel reducers (Phase 5 §11) — pure functions, no LangGraph import."""
+"""Unit tests for the state-channel reducers — pure functions, no LangGraph import."""
 
 from __future__ import annotations
 

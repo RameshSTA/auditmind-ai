@@ -1,7 +1,7 @@
 """HTTP routes for the identity bounded context — self-service auth, caller identity, and
-engagement membership/roster reads. Moved out of ``main.py`` (Phase 1 of the "decouple main.py"
-increment) so this context's routes live alongside its own ``dependencies.py``/``schemas.py``,
-matching every other layer of this context's hexagonal split."""
+engagement membership/roster reads. Moved out of ``main.py`` so this context's routes live
+alongside its own ``dependencies.py``/``schemas.py``, matching every other layer of this context's
+hexagonal split."""
 
 from __future__ import annotations
 
@@ -78,7 +78,7 @@ async def login(
     tokens itself."""
     user = await identity_service.authenticate(email=body.email, password=body.password)
     # Binds RLS before the membership lookup below — same requirement as every other
-    # RLS-protected read (Phase 4 §12): without this, the row exists but is invisible.
+    # RLS-protected read: without this, the row exists but is invisible.
     await set_rls_user_context(session, user_id=user.id)
     membership = await identity_service.get_membership(
         user_id=user.id, engagement_id=settings.default_engagement_id
@@ -114,8 +114,8 @@ async def my_engagements(
     """Lists the caller's own engagement memberships, each carrying the engagement's real name —
     so the frontend never has to fall back to displaying a bare id.
 
-    Returns only the caller's own rows purely because Postgres RLS enforces it (Phase 4 §12)
-    — the query issued here has no ``WHERE user_id = ...`` clause of its own to get wrong.
+    Returns only the caller's own rows purely because Postgres RLS enforces it — the query
+    issued here has no ``WHERE user_id = ...`` clause of its own to get wrong.
     """
     engagements = await identity_service.list_current_user_engagements()
     return [
@@ -129,8 +129,8 @@ async def my_engagement_membership(
     membership: EngagementMembership = Depends(require_engagement_member()),
 ) -> dict[str, str]:
     """Returns the caller's role on a specific engagement, or a 403 if they aren't a member —
-    the concrete end-to-end proof of Phase 11 §4's "always re-check against the database"
-    decision."""
+    the concrete end-to-end proof that engagement scope is always re-checked against the
+    database."""
     return {"engagement_id": membership.engagement_id, "role": membership.role.value}
 
 

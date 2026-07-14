@@ -84,9 +84,9 @@ def make_token(
 @dataclass
 class FakeLlmClient:
     """A fake :class:`~agent_orchestrator.domain.ports.LlmClient` — every test above the gateway
-    adapter layer uses this instead of a real Claude call, the same "real integration against the
+    adapter layer uses this instead of a real model call, the same "real integration against the
     port, fake behind it" pattern every other bounded context's tests already use for their own
-    ports (e.g. ``apps/api``'s fake ``EmbeddingGenerator``, Increment 08).
+    ports (e.g. ``apps/api``'s fake ``EmbeddingGenerator``).
 
     ``responses`` lets a test script a specific reply per call (by call index); with none queued,
     ``default_text`` is returned every time — enough to drive a node or the whole graph through a

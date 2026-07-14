@@ -140,7 +140,7 @@ def _service(
         run_repository=FakeRunRepository(),
         hitl_repository=hitl_repository,
         checkpointer=InMemorySaver(),
-        default_model="claude-fast",
+        default_model="fast-model",
         max_replans=2,
     )
     service = CopilotChatService(
@@ -148,7 +148,7 @@ def _service(
         message_repository=message_repository,
         hitl_repository=hitl_repository,
         orchestration_service=orchestration,
-        default_model="claude-fast",
+        default_model="fast-model",
         actions=actions,
     )
     return service, message_repository, hitl_repository

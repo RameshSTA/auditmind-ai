@@ -1,7 +1,7 @@
 name: CI — apps/api
 
-# Runs the Phase 3 §13 pipeline stages that exist at this increment's scope: lint, type-check,
-# boundary-lint, unit tests, integration tests. The evaluation gate (Phase 3 §13, Phase 9) is
+# Runs the pipeline stages that exist at this scope: lint, type-check,
+# boundary-lint, unit tests, integration tests. The evaluation gate is
 # added once an agent or prompt exists to evaluate.
 
 on:
@@ -63,12 +63,12 @@ jobs:
   integration-tests:
     runs-on: ubuntu-latest
     needs: type-check
-    # A real Postgres service — the RLS tests (Phase 4 §12) assert an actual database-enforced
+    # A real Postgres service — the RLS tests assert an actual database-enforced
     # isolation guarantee, which cannot be verified against a mock or an in-memory substitute
     # (SQLite has no Row-Level Security at all). Credentials here are CI-only, throwaway values,
-    # not the pattern production uses (Phase 11 §7/§8 — Key Vault-managed). Uses the pgvector image
-    # (not plain `postgres:16`) since Increment 08's migration requires the `vector` extension —
-    # the same image `docker-compose.yml` already uses for local dev. Neo4j (Increment 09) is the
+    # not the pattern production uses (Key Vault-managed). Uses the pgvector image
+    # (not plain `postgres:16`) since the migration requires the `vector` extension —
+    # the same image `docker-compose.yml` already uses for local dev. Neo4j is the
     # same reasoning applied to a second database: the cross-engagement isolation tests in
     # `test_knowledge_graph_isolation.py` assert a real Neo4j-enforced (application-code-enforced,
     # see that context's own module docstring) guarantee, not something a fake can stand in for.
@@ -126,5 +126,5 @@ jobs:
     if: github.event_name == 'push'
     steps:
       - uses: actions/checkout@v4
-      - name: Build image (no push — registry push wired up when ACR credentials exist, Phase 12 §6)
+      - name: Build image (no push — registry push wired up when ACR credentials exist)
         run: docker build -t auditmind-api:${{ github.sha }} apps/api

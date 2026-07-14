@@ -50,7 +50,7 @@ PERSONAS: list[tuple[str, str, str | None]] = [
 # A real, bcrypt-hashed password seeded for every demo persona so the actual sign-in form (email +
 # password, /login) has genuine accounts to authenticate against — not just the old click-to-pick
 # list. This is the one password printed to stdout on purpose: it's a published demo credential,
-# not a secret (Increment 14).
+# not a secret.
 DEMO_PASSWORD = "AuditMind!Demo2026"
 
 def _demo_password_hash() -> str:

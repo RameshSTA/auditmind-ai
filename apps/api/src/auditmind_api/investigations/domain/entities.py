@@ -1,7 +1,7 @@
 """Domain entities for the Investigations context.
 
-Plain, framework-free dataclasses — no SQLAlchemy, no FastAPI (Phase 3 §1 layering), the same
-convention every prior context established.
+Plain, framework-free dataclasses — no SQLAlchemy, no FastAPI, the same convention every prior
+context established.
 """
 
 from __future__ import annotations

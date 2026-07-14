@@ -1,4 +1,4 @@
-"""Postgres-backed implementations of the risk repository ports (Phase 3 §1)."""
+"""Postgres-backed implementations of the risk repository ports."""
 
 from __future__ import annotations
 

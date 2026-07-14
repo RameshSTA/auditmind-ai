@@ -1,11 +1,11 @@
 """ingestion schema: documents, chunks, engagement-membership RLS
 
-Implements the ``ingestion`` schema from Phase 4 §1 (scoped to what Increment 03 actually builds —
-``document_versions`` is deferred, see the increment doc) and a stronger Row-Level Security
-pattern than Increment 02's: rather than a session variable the application must remember to set
-correctly, these policies derive authorization directly from ``identity.engagement_members`` via
-a subquery — a user can read or write a row here if and only if they are *currently* a member of
-its ``engagement_id``, checked fresh against the actual membership table on every query.
+Implements the ``ingestion`` schema (scoped to what is built here — ``document_versions`` is
+deferred) with a stronger Row-Level Security pattern than the identity schema's self-only policy:
+rather than a session variable the application must remember to set correctly, these policies
+derive authorization directly from ``identity.engagement_members`` via a subquery — a user can
+read or write a row here if and only if they are *currently* a member of its ``engagement_id``,
+checked fresh against the actual membership table on every query.
 
 Revision ID: ea15243395ac
 Revises: a0bf8e859800
@@ -74,7 +74,7 @@ def upgrade() -> None:
     op.create_index(
         "ix_documents_engagement_id", "documents", ["engagement_id"], schema="ingestion"
     )
-    # Duplicate detection (Phase 1 FR-1.4) is a database constraint, not just an application-code
+    # Duplicate detection is a database constraint, not just an application-code
     # check-then-insert — the latter has a race condition between two concurrent uploads of the
     # same file that a unique constraint closes entirely.
     op.create_unique_constraint(
@@ -99,10 +99,10 @@ def upgrade() -> None:
     op.create_index("ix_chunks_document_id", "chunks", ["document_id"], schema="ingestion")
     op.create_index("ix_chunks_engagement_id", "chunks", ["engagement_id"], schema="ingestion")
 
-    # Least-privilege grants (Phase 11 §7/§8). Unlike identity.engagement_members (read-only for
-    # the app role, Increment 02), this context's whole purpose this increment is writing new
-    # documents and chunks, so INSERT is genuinely needed — but UPDATE is scoped to the one column
-    # the app actually mutates post-insert (`status`), not a blanket UPDATE grant.
+    # Least-privilege grants. Unlike identity.engagement_members (read-only for the app role),
+    # this context's whole purpose is writing new documents and chunks, so INSERT is genuinely
+    # needed — but UPDATE is scoped to the one column the app actually mutates post-insert
+    # (`status`), not a blanket UPDATE grant.
     op.execute(f"GRANT USAGE ON SCHEMA ingestion TO {_APP_ROLE}")
     op.execute(f"GRANT SELECT, INSERT ON ingestion.documents TO {_APP_ROLE}")
     op.execute(f"GRANT UPDATE (status) ON ingestion.documents TO {_APP_ROLE}")

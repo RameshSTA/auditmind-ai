@@ -1,13 +1,13 @@
-"""Entra ID (Azure AD) JWT validation (Phase 2 §7, Phase 11 §1/§4/§5).
+"""Entra ID (Azure AD) JWT validation.
 
 Every access token is validated against Entra's published JWKS — signature, issuer, audience, and
 expiry (with clock-skew leeway) are all checked before any claim is trusted.
 
-Only coarse role claims are ever trusted from the token itself (Phase 11 §4): fine-grained
-engagement/tenant scope is deliberately *not* read from the JWT anywhere in this codebase, because
-role assignment changes rarely enough to be safe to cache for a token's short lifetime, while
-engagement membership can change intra-day and must always be re-checked against the database
-(added in the increment that introduces ``identity.engagement_members``, not this one).
+Only coarse role claims are ever trusted from the token itself: fine-grained engagement/tenant
+scope is deliberately *not* read from the JWT anywhere in this codebase, because role assignment
+changes rarely enough to be safe to cache for a token's short lifetime, while engagement membership
+can change intra-day and must always be re-checked against the database
+(``identity.engagement_members``).
 """
 
 from __future__ import annotations
@@ -168,7 +168,7 @@ async def get_current_user(
 
 
 def require_role(*allowed_roles: str) -> Any:
-    """FastAPI dependency factory enforcing coarse RBAC (Phase 2 §8 Layer 1, Phase 11 §2).
+    """FastAPI dependency factory enforcing coarse RBAC.
 
     Usage: ``Depends(require_role("Admin"))`` or ``Depends(require_role("Auditor", "CAE"))``.
     """

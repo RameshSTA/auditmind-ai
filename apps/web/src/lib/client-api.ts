@@ -1,7 +1,7 @@
 /**
  * Browser-side fetch helper against this app's own /api/bff/* handlers (never the FastAPI API
  * directly — the browser doesn't know its address). Throws `BffError` carrying the backend's
- * problem+json so components can render the API's real message + trace_id (Phase 13 §13).
+ * problem+json so components can render the API's real message + trace_id.
  */
 import type { ProblemDetail } from "@/server/api-client";
 

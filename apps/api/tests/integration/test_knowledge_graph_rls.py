@@ -1,5 +1,5 @@
-"""Integration tests proving the `kg` schema's Row-Level Security policies (Increment 09, Phase 4
-§12) actually isolate engagements at the database level — the subquery pattern for
+"""Integration tests proving the `kg` schema's Row-Level Security policies actually isolate
+engagements at the database level — the subquery pattern for
 `entity_candidates` (which has its own `engagement_id`) and the join-based pattern for
 `entity_resolution_map` (which, like `reporting.report_findings`, has no `engagement_id` column of
 its own and joins through its parent table to find one).

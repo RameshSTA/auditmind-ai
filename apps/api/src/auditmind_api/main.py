@@ -1,10 +1,10 @@
 """Composition root.
 
 This module's only job is wiring settings, logging, exception handlers, middleware, and routers
-together (Phase 3 §1) — it contains no business logic and no route bodies of its own. Each bounded
-context contributes an ``APIRouter`` from its own ``interface/router.py`` (Phase 1 of the
-"decouple main.py" increment split what used to be 44 inline route handlers in this one file out
-into their owning context's package); this file only lists them.
+together — it contains no business logic and no route bodies of its own. Each bounded context
+contributes an ``APIRouter`` from its own ``interface/router.py`` (route handlers that used to
+live inline in this one file now live in their owning context's package); this file only lists
+them.
 """
 
 from __future__ import annotations
@@ -89,12 +89,12 @@ def create_app() -> FastAPI:
 
     @app.middleware("http")
     async def bind_trace_id(request: Request, call_next):  # type: ignore[no-untyped-def]
-        """Binds a trace id to every log line emitted while handling this request (Phase 10 §1)
-        and echoes it back in the response header so a client can quote it to support.
+        """Binds a trace id to every log line emitted while handling this request and echoes it
+        back in the response header so a client can quote it to support.
 
-        Prefers the real OTel trace id (``current_trace_id()``) — the whole point of Phase 10
-        §1's "a log line and its OTel trace are always joinable" is defeated if this codebase's
-        own request-scoped id and OTel's span id are two unrelated numbers. Falls back to a fresh
+        Prefers the real OTel trace id (``current_trace_id()``) — the whole point of making "a
+        log line and its OTel trace are always joinable" is defeated if this codebase's own
+        request-scoped id and OTel's span id are two unrelated numbers. Falls back to a fresh
         uuid4 only if no span is active (confirmed this can happen: `FastAPIInstrumentor`'s ASGI
         span wraps *outside* this `@app.middleware` layer for the request as a whole, but a span
         is reliably active by the time this line runs — the fallback exists for defense, e.g. a
@@ -110,21 +110,18 @@ def create_app() -> FastAPI:
 
     @app.get("/healthz", tags=["health"])
     async def liveness() -> dict[str, str]:
-        """Liveness probe (Phase 12 §13): the process is up. Deliberately checks nothing else —
-        a slow dependency should fail readiness, not cause Container Apps to restart a healthy
+        """Liveness probe: the process is up. Deliberately checks nothing else — a slow
+        dependency should fail readiness, not cause Container Apps to restart a healthy
         process."""
         return {"status": "alive"}
 
     @app.get("/readyz", tags=["health"])
     async def readiness() -> JSONResponse:
-        """Readiness probe (Phase 12 §13): verifies the database is actually reachable, not just
-        that the process started.
-
-        Increment 01 left this checking nothing, with a note that the increment adding a database
-        connection should extend it — this is that extension. A liveness-style "always 200" would
-        have Container Apps keep routing traffic to a replica whose only database connection is
-        down, which is exactly the failure readiness probes exist to catch (unlike ``/healthz``,
-        which intentionally never checks downstream dependencies).
+        """Readiness probe: verifies the database is actually reachable, not just that the
+        process started. A liveness-style "always 200" would have Container Apps keep routing
+        traffic to a replica whose only database connection is down, which is exactly the failure
+        readiness probes exist to catch (unlike ``/healthz``, which intentionally never checks
+        downstream dependencies).
         """
         try:
             engine = get_engine()
@@ -139,9 +136,9 @@ def create_app() -> FastAPI:
     async def admin_ping(
         user: AuthenticatedUser = Depends(require_role("Admin")),
     ) -> dict[str, str]:
-        """Demonstrates ``require_role`` end-to-end (Phase 11 §2 RBAC) — a route only the Admin
-        role may call. Kept here rather than moved into a context router: it isn't owned by any
-        bounded context's business logic, it's a demonstration of a `shared/auth.py` mechanism."""
+        """Demonstrates ``require_role`` end-to-end (RBAC) — a route only the Admin role may
+        call. Kept here rather than moved into a context router: it isn't owned by any bounded
+        context's business logic, it's a demonstration of a `shared/auth.py` mechanism."""
         return {"status": "ok", "subject": user.subject}
 
     app.include_router(identity_router)

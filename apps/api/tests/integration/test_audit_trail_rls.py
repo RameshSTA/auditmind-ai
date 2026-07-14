@@ -3,11 +3,10 @@ local Postgres:
 
 1. Row-Level Security isolates it by engagement, the same subquery-based pattern proven on every
    other write-path table in this codebase.
-2. The append-only guarantee (Phase 4 §1: "No UPDATE or DELETE grant exists on this table for any
-   application role") is a real, enforced database permission — not just a convention the
-   application layer happens to follow. This is the one test in the whole suite that proves a
-   negative capability by attempting the forbidden operation directly and confirming Postgres
-   itself refuses it.
+2. The append-only guarantee ("No UPDATE or DELETE grant exists on this table for any application
+   role") is a real, enforced database permission — not just a convention the application layer
+   happens to follow. This is the one test in the whole suite that proves a negative capability by
+   attempting the forbidden operation directly and confirming Postgres itself refuses it.
 """
 
 from __future__ import annotations
@@ -187,7 +186,7 @@ async def test_app_role_can_insert_an_event_for_its_own_engagement(
 async def test_app_role_cannot_update_an_event(
     app_engine: AsyncEngine, two_engagements_with_events: dict[str, str]
 ) -> None:
-    """The append-only guarantee (Phase 4 §1) proven directly: even a member of the event's own
+    """The append-only guarantee proven directly: even a member of the event's own
     engagement, attempting the simplest possible UPDATE, is refused by Postgres — because
     ``auditmind_app`` was never granted UPDATE on this table at all (see the migration)."""
     async with app_engine.connect() as conn:

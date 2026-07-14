@@ -1,4 +1,4 @@
-"""Unit tests for AuditTrailService (Phase 3 §1 application layer) — against an in-memory fake."""
+"""Unit tests for AuditTrailService (application layer) — against an in-memory fake."""
 
 from __future__ import annotations
 

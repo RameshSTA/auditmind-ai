@@ -1,4 +1,4 @@
-"""Unit tests for the graph's pure routing decisions (Phase 5 §1, §13, §14, §17)."""
+"""Unit tests for the graph's pure routing decisions."""
 
 from __future__ import annotations
 

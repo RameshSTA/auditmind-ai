@@ -1,11 +1,10 @@
-"""Framework-free domain entities for run and human-review persistence (Phase 4 §1, Phase 5 §15).
+"""Framework-free domain entities for run and human-review persistence.
 
 These are frozen dataclasses (the same immutable-entity convention ``apps/api``'s contexts use for
 ``Finding`` / ``Anomaly`` / ``Document``) mapping one-to-one onto the ``agent.runs`` and
 ``agent.hitl_interrupts`` tables. ``agent.checkpoints`` has no entity here on purpose: its rows are
 LangGraph's own serialized checkpoint blobs, written and read exclusively by the LangGraph Postgres
-checkpointer, never constructed or interpreted by this service's application code — see the
-``application/checkpointer.py`` note and Increment 12's doc §2 for that boundary.
+checkpointer, never constructed or interpreted by this service's application code.
 """
 
 from __future__ import annotations
@@ -19,11 +18,11 @@ from agent_orchestrator.domain.agents import HitlDecision, MessageRole, MessageT
 
 @dataclass(frozen=True)
 class AgentRun:
-    """One LangGraph invocation (``agent.runs``, Phase 4 §1).
+    """One LangGraph invocation (``agent.runs``).
 
-    ``use_case`` names the task shape (e.g. ``"control_test"``, ``"fraud_triage"``) the Planner
-    decomposes — the same field Phase 4 §1's table lists. ``status`` tracks the run through the
-    lifecycle in :class:`~agent_orchestrator.domain.agents.RunStatus`.
+    ``use_case`` names the task shape (e.g. ``"control_test"``, ``"fraud_triage"``) the planner
+    decomposes. ``status`` tracks the run through the lifecycle in
+    :class:`~agent_orchestrator.domain.agents.RunStatus`.
     """
 
     id: str
@@ -37,13 +36,13 @@ class AgentRun:
 
 @dataclass(frozen=True)
 class HitlInterrupt:
-    """One human checkpoint on a run (``agent.hitl_interrupts``, Phase 4 §1, Phase 5 §15).
+    """One human checkpoint on a run (``agent.hitl_interrupts``).
 
     Created ``pending`` (``decision`` is ``None``) when the graph pauses at the interrupt node, then
     resolved when a reviewer approves/rejects/edits — the reviewer id and reason are recorded at
     that point, mirroring exactly how ``apps/api``'s reporting context records ``reviewed_by`` and
-    ``disposition_reason`` on a finding (Increment 04). ``decision is None`` distinguishes an open
-    interrupt from a resolved one without a separate status column.
+    ``disposition_reason`` on a finding. ``decision is None`` distinguishes an open interrupt from a
+    resolved one without a separate status column.
 
     ``engagement_id`` is carried on the entity (not only the table) because it is load-bearing for
     RLS: the interrupt row must be scoped to the run's engagement, and the orchestrator that opens
@@ -88,7 +87,7 @@ class ApprovalRateEstimate:
 @dataclass(frozen=True)
 class EvaluationMetrics:
     """Real, already-recorded agent-run and HITL-decision analytics for one engagement — not a
-    golden-dataset grading framework (Phase 5 has no labeled answer key to grade against yet).
+    golden-dataset grading framework (there is no labeled answer key to grade against yet).
     Every field here is a straight aggregation over ``agent.runs`` and ``agent.hitl_interrupts``
     rows this service already writes in the normal course of starting runs and resolving HITL
     gates (``application/orchestrator.py``); nothing here is computed from a fabricated or assumed
@@ -112,11 +111,10 @@ class ModelResponse:
     """The result of one gateway model call (the :class:`LlmClient` port's return type).
 
     Deliberately minimal: the generated ``text`` plus the ``model`` alias that produced it (for the
-    checkpointed audit trail — which model saw which context, Phase 5 §7) and coarse token counts
-    for the per-run cost accounting Phase 5 §12 centralizes at the gateway. It is *not* the raw
-    provider response object — keeping the port's return type provider-agnostic is the whole point
-    of routing through a gateway (ADR-005): a node reasons over ``ModelResponse``, never over an
-    Anthropic- or LiteLLM-shaped payload.
+    checkpointed audit trail — which model saw which context) and coarse token counts for the
+    per-run cost accounting the gateway centralizes. It is *not* the raw provider response object —
+    keeping the port's return type provider-agnostic is the whole point of routing through a
+    gateway: a node reasons over ``ModelResponse``, never over a provider-specific payload.
     """
 
     text: str
@@ -145,9 +143,9 @@ class RetrievedChunk:
 
     ``chunk_id``/``document_id`` are real primary keys in apps/api's ``ingestion`` schema — a
     citation built from one of these is checkable against an actual row (``GET
-    .../documents/{document_id}/chunks``), not a model-invented reference. This is the entity the
-    named RAG gap (Increment 12 doc §6) closes: nodes previously had no evidence-shaped value to
-    put in a prompt at all.
+    .../documents/{document_id}/chunks``), not a model-invented reference. This is the entity that
+    closes the named RAG gap: nodes previously had no evidence-shaped value to put in a prompt at
+    all.
     """
 
     chunk_id: str
@@ -181,12 +179,12 @@ class Message:
 
 @dataclass
 class ToolPermission:
-    """One entry in the tool registry (Phase 5 §12): a tool and the agents allowed to call it.
+    """One entry in the tool registry: a tool and the agents allowed to call it.
 
     The registry enforces least-privilege by construction — a call from any agent not in
-    ``allowed_agents`` is rejected before it reaches the backing API (§12). Modelled here as data so
-    the registry is a reviewable table (``application/tool_registry.py``), not scattered
-    per-call-site checks.
+    ``allowed_agents`` is rejected before it reaches the backing API. Modelled here as data so the
+    registry is a reviewable table (``application/tool_registry.py``), not scattered per-call-site
+    checks.
     """
 
     tool_name: str

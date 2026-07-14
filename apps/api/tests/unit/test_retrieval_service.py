@@ -1,4 +1,4 @@
-"""Unit tests for RetrievalService (Phase 3 §1 application layer) — against in-memory fakes."""
+"""Unit tests for RetrievalService (application layer) — against in-memory fakes."""
 
 from __future__ import annotations
 

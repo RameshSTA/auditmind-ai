@@ -1,7 +1,7 @@
-"""Integration tests proving `retrieval.chunk_embeddings`' Row-Level Security policy (Increment 08,
-Phase 4 §12) actually isolates engagements at the database level — the same subquery-based pattern
-Increments 03-05 already proved for their own write-path tables, now proved independently for this
-context's first owned table rather than assumed to inherit the guarantee.
+"""Integration tests proving `retrieval.chunk_embeddings`' Row-Level Security policy actually
+isolates engagements at the database level — the same subquery-based pattern already proved for
+other write-path tables, now proved independently for this context's first owned table rather
+than assumed to inherit the guarantee.
 """
 
 from __future__ import annotations

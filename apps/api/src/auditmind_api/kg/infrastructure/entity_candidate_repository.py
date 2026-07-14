@@ -1,6 +1,6 @@
 """Adapter for the ``EntityCandidateRepository`` port: reads and writes the two tables this
-context owns (``kg.entity_candidates``, ``kg.entity_resolution_map``, Phase 4 §4). Goes through
-the ORM — the same convention every other context uses for a table it owns (e.g. ``ingestion``'s
+context owns (``kg.entity_candidates``, ``kg.entity_resolution_map``). Goes through the ORM — the
+same convention every other context uses for a table it owns (e.g. ``ingestion``'s
 ``PostgresChunkRepository``), unlike the raw-SQL-only adapters this context uses to read *another*
 context's table (``transaction_source.py``).
 """

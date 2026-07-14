@@ -2,7 +2,7 @@
 
 /**
  * Monitoring — real liveness/readiness of both backend services (apps/api and
- * agent-orchestrator), checked live, plus real links out to Grafana and Prometheus (Increment 13).
+ * agent-orchestrator), checked live, plus real links out to Grafana and Prometheus.
  * Deliberately does not embed Grafana panels or scrape Prometheus metrics into this page: an
  * iframe embed or a hand-rolled metrics widget would either need Grafana anonymous-embed auth
  * wired up (not done) or duplicate a real dashboard that already exists — this links to the real

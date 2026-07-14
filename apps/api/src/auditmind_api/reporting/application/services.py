@@ -1,5 +1,4 @@
-"""Application service orchestrating findings, citations, and report generation (Phase 1 FR-7,
-FR-8, Phase 4 §1).
+"""Application service orchestrating findings, citations, and report generation.
 
 No SQL, no HTTP, no framework import here — only coordination of the ports, the same pattern
 ``IdentityService`` and ``IngestionService`` already established.
@@ -52,7 +51,7 @@ def _render_report_markdown(
     """Renders a confirmed-findings snapshot as evidence-cited Markdown — every claim in the
     document traces back to either a cited passage (a real ``FindingEvidence`` row) or is
     explicitly labelled as having none, never presented as fact without one (the "citation-only
-    answers" principle FR-8.1/AC-05 exist to enforce)."""
+    answers" principle this enforces)."""
     ordered = sorted(findings, key=lambda f: (_SEVERITY_ORDER[f.severity], f.title))
 
     lines = [f"# Audit Report — Engagement {engagement_id} (v{version})", ""]
@@ -129,8 +128,8 @@ class ReportingService:
         created_by: str,
         control_id: str | None = None,
     ) -> Finding:
-        """Records a new finding, always ``draft`` (Phase 4 §1) — nothing is audit-ready until a
-        human confirms it (FR-7.1)."""
+        """Records a new finding, always ``draft`` — nothing is audit-ready until a human
+        confirms it."""
         finding = Finding(
             id=str(uuid.uuid4()),
             engagement_id=engagement_id,
@@ -147,8 +146,7 @@ class ReportingService:
     async def attach_evidence(
         self, *, finding_id: str, chunk_id: str, citation_text: str
     ) -> FindingEvidence:
-        """Attaches one citation to a finding — the concrete building block of the citation graph
-        FR-8.1/AC-05 require.
+        """Attaches one citation to a finding — the concrete building block of the citation graph.
 
         Verifies the cited chunk actually belongs to the finding's own engagement before insert —
         see ``ChunkLookup``'s docstring for why this is needed even though Row-Level Security
@@ -251,12 +249,11 @@ class ReportingService:
 
     async def generate_report(self, *, engagement_id: str, generated_by: str) -> Report:
         """Compiles every currently ``confirmed`` finding for an engagement into a new, versioned
-        report snapshot (FR-8.1), rendered as an evidence-cited Markdown document.
+        report snapshot, rendered as an evidence-cited Markdown document.
 
         Deliberately reads from ``list_confirmed_for_engagement`` rather than accepting a
-        caller-supplied list of finding ids — the acceptance criterion this implements
-        ("no report content sourced from an unconfirmed AI draft") is enforced structurally, not
-        by trusting every call site to filter correctly.
+        caller-supplied list of finding ids — "no report content sourced from an unconfirmed AI
+        draft" is enforced structurally, not by trusting every call site to filter correctly.
 
         The rendered ``body_markdown`` is snapshotted once, here, alongside ``finding_ids`` — not
         recomputed on every read — so a report's content can never drift if evidence is attached

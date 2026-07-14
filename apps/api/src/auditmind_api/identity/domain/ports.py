@@ -1,4 +1,4 @@
-"""Repository ports (Phase 3 §1) — interfaces the application layer depends on.
+"""Repository ports — interfaces the application layer depends on.
 
 The infrastructure layer provides the only implementations of these protocols; the application
 layer imports these ports, never a concrete SQLAlchemy repository, so the persistence technology
@@ -38,7 +38,7 @@ class CredentialRepository(Protocol):
 
 
 class PasswordHasher(Protocol):
-    """A port so the application layer can be unit-tested against a fake hasher (Phase 3 §1) —
+    """A port so the application layer can be unit-tested against a fake hasher —
     the concrete algorithm (bcrypt) is an infrastructure decision, not a domain one."""
 
     def hash(self, password: str) -> str: ...
@@ -50,7 +50,7 @@ class RlsContextBinder(Protocol):
     """Binds the Row-Level Security session context for a *just-created* user, before that user
     has ever authenticated a request — the same ``set_rls_user_context`` call
     ``get_current_db_user`` makes on every request, injected as a port here so the application
-    layer can call it without importing infrastructure/SQLAlchemy directly (Phase 3 §1)."""
+    layer can call it without importing infrastructure/SQLAlchemy directly."""
 
     async def bind(self, *, user_id: str) -> None: ...
 
@@ -74,9 +74,9 @@ class EngagementMembershipRepository(Protocol):
         """Every membership row for the caller themselves — never a different user's, and
         deliberately takes no ``user_id`` parameter, so it is structurally impossible for a caller
         to (accidentally or otherwise) query on behalf of someone else. Scoped by the Row-Level
-        Security context already bound on the session (Phase 4 §12) rather than a Python-supplied
-        value, backstopped by (but, since the roster-visibility policy widened what RLS alone
-        permits, no longer solely reliant on) RLS to narrow the result."""
+        Security context already bound on the session rather than a Python-supplied value,
+        backstopped by (but, since the roster-visibility policy widened what RLS alone permits,
+        no longer solely reliant on) RLS to narrow the result."""
         ...
 
     async def list_roster_for_engagement(self, engagement_id: str) -> list[EngagementRosterEntry]:

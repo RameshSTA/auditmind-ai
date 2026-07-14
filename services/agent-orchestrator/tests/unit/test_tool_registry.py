@@ -1,4 +1,4 @@
-"""Unit tests for the least-privilege tool registry (Phase 5 §12)."""
+"""Unit tests for the least-privilege tool registry."""
 
 from __future__ import annotations
 

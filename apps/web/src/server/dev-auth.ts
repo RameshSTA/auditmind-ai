@@ -4,15 +4,15 @@
  * ─────────────────────────────────────────────────────────────────────────────────────────────
  *  WHY THIS EXISTS AND WHAT IT IS NOT
  * ─────────────────────────────────────────────────────────────────────────────────────────────
- * Phase 2 §7 / Phase 13 §12 specify the real auth flow: OIDC Authorization Code + PKCE against a
- * real Entra ID tenant, with this Next.js app acting as a confidential client (a BFF). The browser
- * holds only an httpOnly session cookie; the BFF exchanges the code, holds the tokens server-side,
- * and attaches a bearer token to every call it forwards to the FastAPI API.
+ * The real auth flow is OIDC Authorization Code + PKCE against a real Entra ID tenant, with this
+ * Next.js app acting as a confidential client (a BFF). The browser holds only an httpOnly session
+ * cookie; the BFF exchanges the code, holds the tokens server-side, and attaches a bearer token to
+ * every call it forwards to the FastAPI API.
  *
- * This increment has NO Entra tenant available (see the increment doc's environment note). Rather
- * than build the UI against a fake in-memory API, this module reproduces exactly the ONE property
- * of Entra the FastAPI backend actually validates against: it mints RS256 JWTs signed by a keypair
- * whose public half is published at a JWKS endpoint the API is pointed at. This is byte-for-byte
+ * No Entra tenant is available in this environment. Rather than build the UI against a fake
+ * in-memory API, this module reproduces exactly the ONE property of Entra the FastAPI backend
+ * actually validates against: it mints RS256 JWTs signed by a keypair whose public half is
+ * published at a JWKS endpoint the API is pointed at. This is byte-for-byte
  * the same technique the backend's own test suite uses (apps/api/tests/conftest.py's `make_token`
  * + `rsa_keypair`) — a locally-generated RSA key standing in for an Entra signing key — lifted out
  * of the test suite and into the BFF so the real UI can drive the real API end-to-end.
@@ -24,9 +24,9 @@
  * file mints validates against anything. `assertDevAuthEnabled()` below is the guard that makes
  * that switch impossible to flip on by accident in a non-dev build.
  *
- * The "personas" are the same fixed roles the backend's `EngagementRole` enum defines (Phase 11
- * §2). Choosing a persona here === choosing which Entra identity the real login would have
- * returned. The engagement-level RBAC and Row-Level Security the API enforces are entirely
+ * The "personas" are the same fixed roles the backend's `EngagementRole` enum defines. Choosing
+ * a persona here === choosing which Entra identity the real login would have returned. The
+ * engagement-level RBAC and Row-Level Security the API enforces are entirely
  * unchanged and untouched — this stand-in only answers "who is the caller," never "what may they
  * do," which stays 100% the backend's job.
  * ─────────────────────────────────────────────────────────────────────────────────────────────
@@ -99,7 +99,7 @@ export interface DevPersona {
   readonly subject: string;
   readonly displayName: string;
   /** Coarse (tenant-wide) role claim carried in the JWT — NOT the per-engagement role, which the
-   * API reads from identity.engagement_members, never from the token (Phase 11 §4). */
+   * API reads from identity.engagement_members, never from the token. */
   readonly tokenRoles: readonly string[];
   readonly note: string;
 }

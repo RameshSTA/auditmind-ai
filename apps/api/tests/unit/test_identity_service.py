@@ -1,8 +1,8 @@
-"""Unit tests for IdentityService (Phase 3 §1 application layer).
+"""Unit tests for IdentityService (application layer).
 
 Exercised entirely against in-memory fakes implementing the repository ports — no database
-involved. This is exactly what the hexagonal layering (Phase 3 §1) buys: application logic is
-testable without a real Postgres connection at all.
+involved. This is exactly what the hexagonal layering buys: application logic is testable
+without a real Postgres connection at all.
 """
 
 from __future__ import annotations

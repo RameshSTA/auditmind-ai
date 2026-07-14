@@ -1,25 +1,25 @@
-"""agent schema: runs, checkpoints, hitl_interrupts (Phase 4 §1, Phase 5 §15-§16)
+"""agent schema: runs, checkpoints, hitl_interrupts
 
 The persistence layer for the 9-agent LangGraph runtime (services/agent-orchestrator, ADR-001).
-Three tables exactly as Phase 4 §1's ``agent.runs / checkpoints / hitl_interrupts`` specifies:
+Three tables:
 
   * ``agent.runs``            — one row per graph invocation (id, engagement_id, use_case, status,
                                 initiated_by, task).
   * ``agent.checkpoints``     — the LangGraph checkpointer's durable state snapshots (run_id fk,
-                                step_name, state jsonb) — the full replay/resume source (Phase 5
-                                §16). Written by the checkpointer, not by application code.
+                                step_name, state jsonb) — the full replay/resume source. Written by
+                                the checkpointer, not by application code.
   * ``agent.hitl_interrupts`` — one row per human checkpoint (run_id fk, step_name, decision,
                                 reviewer_id, reason) — the interrupt/resume state machine's audit
-                                record (Phase 5 §15).
+                                record.
 
-Reuses the subquery-based Row-Level Security pattern from apps/api's Increments 03-05: a user may
-act on a row iff they are presently a member of that row's engagement, checked against the actual
-``identity.engagement_members`` table. ``engagement_id`` is denormalized onto every table (Phase 4
-§1's own denormalization) so each policy is a single-hop check, not a join through ``agent.runs``.
+Reuses the subquery-based Row-Level Security pattern from apps/api's identity migrations: a user
+may act on a row iff they are presently a member of that row's engagement, checked against the
+actual ``identity.engagement_members`` table. ``engagement_id`` is denormalized onto every table so
+each policy is a single-hop check, not a join through ``agent.runs``.
 
-This service runs against the same physical database as apps/api (Phase 4 §1), so the FKs into
-``identity.*`` and the grants to the shared least-privilege ``auditmind_app`` role both resolve —
-apps/api's identity migration must have run first (see migrations/README).
+This service runs against the same physical database as apps/api, so the FKs into ``identity.*``
+and the grants to the shared least-privilege ``auditmind_app`` role both resolve — apps/api's
+identity migration must have run first (see migrations/README).
 
 Revision ID: e1f2a3b4c5d6
 Revises:
@@ -40,11 +40,11 @@ branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
 
 # The least-privilege role the running service connects as — created by apps/api's identity
-# migration, granted access to the agent schema here. Never the migration/admin role (Phase 11
-# §7/§8), so RLS policies actually apply to the running service.
+# migration, granted access to the agent schema here. Never the migration/admin role, so RLS
+# policies actually apply to the running service.
 _APP_ROLE = "auditmind_app"
 
-# The same subquery apps/api's Increments 03-05 already use, applied to each agent table's own
+# The same subquery apps/api's identity migrations already use, applied to each agent table's own
 # denormalized ``engagement_id``. ``{table}`` is substituted per policy so the subquery references
 # the correct table's column.
 _MEMBERSHIP_CHECK_TEMPLATE = """
@@ -167,13 +167,12 @@ def upgrade() -> None:
         schema="agent",
     )
 
-    # Least-privilege grants (Phase 11 §7/§8). The service inserts runs, advances their status
-    # (UPDATE on runs), records checkpoints, and opens/resolves interrupts (UPDATE on
-    # hitl_interrupts) — so runs and hitl_interrupts get SELECT/INSERT/UPDATE, checkpoints get
-    # SELECT/INSERT only (a checkpoint is an immutable snapshot; the checkpointer never updates a
-    # written one). No DELETE grant anywhere: a run's history, its checkpoints, and its human
-    # decisions are retained for governance replay (Phase 5 §16, retention per Phase 4 §10), never
-    # deleted by the running service.
+    # Least-privilege grants. The service inserts runs, advances their status (UPDATE on runs),
+    # records checkpoints, and opens/resolves interrupts (UPDATE on hitl_interrupts) — so runs and
+    # hitl_interrupts get SELECT/INSERT/UPDATE, checkpoints get SELECT/INSERT only (a checkpoint is
+    # an immutable snapshot; the checkpointer never updates a written one). No DELETE grant
+    # anywhere: a run's history, its checkpoints, and its human decisions are retained for
+    # governance replay, never deleted by the running service.
     op.execute(f"GRANT USAGE ON SCHEMA agent TO {_APP_ROLE}")
     op.execute(f"GRANT SELECT, INSERT, UPDATE ON agent.runs TO {_APP_ROLE}")
     op.execute(f"GRANT SELECT, INSERT ON agent.checkpoints TO {_APP_ROLE}")

@@ -2,12 +2,11 @@
  * Response types mirroring the FastAPI backend's hand-written response builders in
  * apps/api/src/auditmind_api/main.py (`_finding_response`, `_anomaly_response`, etc.).
  *
- * Phase 13 §12's stated end state is a client TYPE-GENERATED from the OpenAPI spec, so a backend
- * contract change becomes a compile error here. That generator is deferred this increment (see the
- * increment doc's "what's deferred") — these are hand-written to match the current shapes exactly.
- * They live in one file so the eventual swap to generated types is a single-file replacement, and
- * so any drift shows up as a type error in the BFF handlers that consume them, not at runtime in
- * front of a user.
+ * The eventual end state is a client TYPE-GENERATED from the OpenAPI spec, so a backend contract
+ * change becomes a compile error here. That generator is deferred for now — these are
+ * hand-written to match the current shapes exactly. They live in one file so the eventual swap to
+ * generated types is a single-file replacement, and so any drift shows up as a type error in the
+ * BFF handlers that consume them, not at runtime in front of a user.
  */
 
 export interface Membership {

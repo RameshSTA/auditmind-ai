@@ -1,4 +1,4 @@
-"""Unit tests for RiskService (Phase 3 §1 application layer) — against in-memory fakes, no
+"""Unit tests for RiskService (application layer) — against in-memory fakes, no
 database involved."""
 
 from __future__ import annotations
