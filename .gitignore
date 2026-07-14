@@ -25,6 +25,5 @@ Thumbs.db
 .vscode/
 .idea/
 
-# Claude Code agent worktrees — ephemeral, each is its own git worktree/branch already, not
-# content to track from the main working tree.
-.claude/worktrees/
+# Claude Code tooling config/state — local dev-tool metadata, not part of the application.
+.claude/
